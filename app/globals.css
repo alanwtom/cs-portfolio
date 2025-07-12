@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", sans-serif;
 }
 
 @layer utilities {
@@ -89,7 +90,7 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-black text-white;
+    @apply bg-background text-foreground;
   }
 }
 

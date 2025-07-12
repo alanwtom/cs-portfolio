@@ -204,17 +204,41 @@ export default function Portfolio() {
               />
               <div className="ml-8 flex-1 flex flex-row justify-between items-start">
                 <div>
-                  <span className="font-bold text-base md:text-lg group-hover:text-white group-focus:text-white transition-colors duration-300">
+                  <span
+                    className={`font-bold text-base md:text-lg transition-colors duration-300 ${
+                      theme === "dark"
+                        ? "group-hover:text-white group-focus:text-white"
+                        : "group-hover:text-slate-900 group-focus:text-slate-900"
+                    }`}
+                  >
                     {item.company}
                   </span>
-                  <div className="italic text-slate-500 dark:text-slate-300 text-base mb-1 group-hover:text-slate-200 transition-colors duration-300">
+                  <div
+                    className={`italic text-base mb-1 transition-colors duration-300 ${
+                      theme === "dark"
+                        ? "text-slate-300 group-hover:text-slate-200"
+                        : "text-slate-700 group-hover:text-slate-800"
+                    }`}
+                  >
                     {item.title}
                   </div>
-                  <ul className="list-disc ml-5 text-slate-500 dark:text-slate-400 group-hover:text-slate-300 transition-colors duration-300">
+                  <ul
+                    className={`list-disc ml-5 transition-colors duration-300 ${
+                      theme === "dark"
+                        ? "text-slate-400 group-hover:text-slate-300"
+                        : "text-slate-600 group-hover:text-slate-700"
+                    }`}
+                  >
                     <li>{item.desc}</li>
                   </ul>
                 </div>
-                <span className="text-md text-slate-400 dark:text-slate-400 ml-4 whitespace-nowrap min-w-[90px] text-right pt-1 group-hover:text-white transition-colors duration-300">
+                <span
+                  className={`text-md ml-4 whitespace-nowrap min-w-[90px] text-right pt-1 transition-colors duration-300 ${
+                    theme === "dark"
+                      ? "text-slate-400 group-hover:text-white"
+                      : "text-slate-600 group-hover:text-slate-900"
+                  }`}
+                >
                   {item.years}
                 </span>
               </div>
@@ -235,11 +259,21 @@ export default function Portfolio() {
                 tabIndex={0}
               >
                 <div className="flex-1 min-w-0">
-                  <span className="font-bold text-base md:text-lg group-hover:text-white group-focus:text-white transition-colors duration-300">
+                  <span
+                    className={`font-bold text-base md:text-lg transition-colors duration-300 ${
+                      theme === "dark"
+                        ? "group-hover:text-white group-focus:text-white"
+                        : "group-hover:text-slate-900 group-focus:text-slate-900"
+                    }`}
+                  >
                     {project.title}
                   </span>
                   <div
-                    className={`mt-1 text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-2xl group-hover:text-slate-200 transition-colors duration-300`}
+                    className={`mt-1 text-sm md:text-base max-w-2xl transition-colors duration-300 ${
+                      theme === "dark"
+                        ? "text-slate-400 group-hover:text-slate-200"
+                        : "text-slate-600 group-hover:text-slate-700"
+                    }`}
                   >
                     {project.description}
                   </div>
@@ -309,7 +343,7 @@ export default function Portfolio() {
             className={`transition-all duration-300 hover:scale-110 ${
               theme === "dark"
                 ? "text-slate-400 hover:text-white"
-                : "text-slate-600 hover:text-black"
+                : "text-slate-700 hover:text-slate-900"
             }`}
             onClick={() => {
               if (!footerEmailRevealed) {
@@ -384,7 +418,7 @@ export default function Portfolio() {
             className={`transition-all duration-300 hover:scale-110 ${
               theme === "dark"
                 ? "text-slate-400 hover:text-white"
-                : "text-slate-600 hover:text-black"
+                : "text-slate-700 hover:text-slate-900"
             }`}
           >
             <Link href="https://github.com/alantomw" target="_blank">
@@ -399,7 +433,7 @@ export default function Portfolio() {
             className={`transition-all duration-300 hover:scale-110 ${
               theme === "dark"
                 ? "text-slate-400 hover:text-white"
-                : "text-slate-600 hover:text-black"
+                : "text-slate-700 hover:text-slate-900"
             }`}
           >
             <Link href="https://www.linkedin.com/in/alan-tom/" target="_blank">
@@ -412,7 +446,7 @@ export default function Portfolio() {
           className={`text-xs mt-2 transition-colors duration-300 ${
             theme === "dark"
               ? "text-slate-500 hover:text-slate-400"
-              : "text-slate-500 hover:text-slate-600"
+              : "text-slate-600 hover:text-slate-700"
           }`}
         >
           © 2025 Alan Tom. All rights reserved.
