@@ -39,7 +39,7 @@ export default function Portfolio() {
     {
       title: "Discord Bot",
       description:
-        "Discord bot for career development with resume resources, real time job and event tracking, and learning material recommendations.",
+        "discord bot for career development with resume resources, real time job and event tracking, and learning material recommendations",
       tech: ["Python", "Discord.py", "GCP", "Nox"],
       github: "https://github.com/innovateorange/DiscordBot/issues",
       demo: "https://discord.gg/cvqbKxPtHE",
@@ -47,8 +47,8 @@ export default function Portfolio() {
     {
       title: "Flow",
       description:
-        "Sleek browser extension that helps users maintain focus by blocking distracting elements while browsing.",
-      tech: ["Next.js", "TypeScript", "Chart.js", "Weather API"],
+        "sleek browser extension that helps users maintain focus by blocking distracting elements while browsing",
+      tech: ["JavaScript", "Chrome Extension API", "HTML", "CSS"],
       github: "https://github.com/alantomw/Flow",
       demo: "https://chromewebstore.google.com/detail/flow/odenofhkafaeedoohodgdndpeeadpndg",
     },
@@ -91,55 +91,23 @@ export default function Portfolio() {
         theme === "dark" ? "bg-black text-white" : "bg-white text-black"
       }`}
     >
-      {/* Navigation */}
-      <nav
-        className={`backdrop-blur-sm sticky top-0 z-50 transition-colors duration-300 ${
-          theme === "dark"
-            ? "bg-black/80 border-b border-slate-800/50"
-            : "bg-white/80 border-b border-slate-200/50"
-        }`}
-      >
-        <div className="max-w-4xl mx-auto px-8 py-6 flex items-center justify-between">
-          {/* Logo on the left */}
-          <div className="flex items-center">
-            <span
-              className="text-2xl align-middle hover:scale-110 transition-transform duration-300"
-              role="img"
-              aria-label="Map of Japan"
-            >
-              🗾
-            </span>
-          </div>
-
-          {/* Navigation links in center */}
-          <div className="hidden md:flex space-x-6">
-            {["Home", "About", "Projects", "Contact"].map((item, index) => (
-              <Link
-                key={item}
-                href={`#${item.toLowerCase()}`}
-                className={`transition-all duration-300 hover:scale-105 relative group ${
-                  theme === "dark"
-                    ? "text-slate-300 hover:text-white"
-                    : "text-slate-600 hover:text-black"
-                }`}
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                {item}
-                <span
-                  className={`absolute -bottom-1 left-0 w-0 h-0.5 transition-all duration-300 group-hover:w-full ${
-                    theme === "dark" ? "bg-white" : "bg-black"
-                  }`}
-                ></span>
-              </Link>
-            ))}
-          </div>
-
-          {/* Theme toggle on the right */}
-          <div className="flex items-center">
-            <ThemeToggle />
-          </div>
+      {/* Add a simple header with Japan emoji and theme toggle at the top */}
+      <div className="max-w-4xl mx-auto px-8 py-6 flex items-center justify-between">
+        {/* Japan emoji on the left */}
+        <div className="flex items-center">
+          <span
+            className="text-2xl align-middle hover:scale-110 transition-transform duration-300"
+            role="img"
+            aria-label="Map of Japan"
+          >
+            🗾
+          </span>
         </div>
-      </nav>
+        {/* Theme toggle on the right */}
+        <div className="flex items-center">
+          <ThemeToggle />
+        </div>
+      </div>
 
       {/* Profile Section (Avatar + Name + About Me) */}
       <section id="about" className="max-w-4xl mx-auto px-8 py-12">
