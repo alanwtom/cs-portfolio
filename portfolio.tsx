@@ -87,7 +87,7 @@ export default function Portfolio() {
 
   return (
     <div
-      className={`min-h-screen overflow-x-hidden transition-colors duration-300 ${
+      className={`min-h-screen transition-colors duration-300 ${
         theme === "dark" ? "bg-black text-white" : "bg-white text-black"
       }`}
     >
@@ -165,7 +165,7 @@ export default function Portfolio() {
             {
               color: "bg-blue-600",
               company: "iSchool at Syracuse University",
-              title: "NSF REU Reseacher",
+              title: "NSF REU Researcher",
               years: "2025 - Now",
               desc: "using NLP to analyze Trump's social media activities impact on the stock market",
             },
@@ -204,17 +204,41 @@ export default function Portfolio() {
               />
               <div className="ml-8 flex-1 flex flex-row justify-between items-start">
                 <div>
-                  <span className="font-bold text-base md:text-lg group-hover:text-white group-focus:text-white transition-colors duration-300">
+                  <span
+                    className={`font-bold text-base md:text-lg transition-colors duration-300 ${
+                      theme === "dark"
+                        ? "group-hover:text-white group-focus:text-white"
+                        : "group-hover:text-slate-900 group-focus:text-slate-900"
+                    }`}
+                  >
                     {item.company}
                   </span>
-                  <div className="italic text-slate-500 dark:text-slate-300 text-base mb-1 group-hover:text-slate-200 transition-colors duration-300">
+                  <div
+                    className={`italic text-slate-500 dark:text-slate-300 text-base mb-1 transition-colors duration-300 ${
+                      theme === "dark"
+                        ? "group-hover:text-slate-200"
+                        : "group-hover:text-slate-700"
+                    }`}
+                  >
                     {item.title}
                   </div>
-                  <ul className="list-disc ml-5 text-slate-500 dark:text-slate-400 group-hover:text-slate-300 transition-colors duration-300">
+                  <ul
+                    className={`list-disc ml-5 text-slate-500 dark:text-slate-400 transition-colors duration-300 ${
+                      theme === "dark"
+                        ? "group-hover:text-slate-300"
+                        : "group-hover:text-slate-700"
+                    }`}
+                  >
                     <li>{item.desc}</li>
                   </ul>
                 </div>
-                <span className="text-md text-slate-400 dark:text-slate-400 ml-4 whitespace-nowrap min-w-[90px] text-right pt-1 group-hover:text-white transition-colors duration-300">
+                <span
+                  className={`text-md text-slate-400 dark:text-slate-400 ml-4 whitespace-nowrap min-w-[90px] text-right pt-1 transition-colors duration-300 ${
+                    theme === "dark"
+                      ? "group-hover:text-white"
+                      : "group-hover:text-slate-700"
+                  }`}
+                >
                   {item.years}
                 </span>
               </div>
@@ -235,11 +259,21 @@ export default function Portfolio() {
                 tabIndex={0}
               >
                 <div className="flex-1 min-w-0">
-                  <span className="font-bold text-base md:text-lg group-hover:text-white group-focus:text-white transition-colors duration-300">
+                  <span
+                    className={`font-bold text-base md:text-lg transition-colors duration-300 ${
+                      theme === "dark"
+                        ? "group-hover:text-white group-focus:text-white"
+                        : "group-hover:text-slate-900 group-focus:text-slate-900"
+                    }`}
+                  >
                     {project.title}
                   </span>
                   <div
-                    className={`mt-1 text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-2xl group-hover:text-slate-200 transition-colors duration-300`}
+                    className={`mt-1 text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-2xl transition-colors duration-300 ${
+                      theme === "dark"
+                        ? "group-hover:text-slate-200"
+                        : "group-hover:text-slate-700"
+                    }`}
                   >
                     {project.description}
                   </div>
@@ -331,7 +365,11 @@ export default function Portfolio() {
                     {footerShowCopy && (
                       <div
                         ref={footerCopyRef}
-                        className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 rounded-xl shadow-lg px-2 py-1 text-xs font-medium transition-all duration-200 bg-black text-white border border-slate-700`}
+                        className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 rounded-xl shadow-lg px-2 py-1 text-xs font-medium transition-all duration-200 ${
+                          theme === "dark"
+                            ? "bg-black text-white border border-slate-700"
+                            : "bg-white text-black border border-slate-300"
+                        }`}
                       >
                         {footerCopied ? (
                           <span className="text-green-400">Copied!</span>
