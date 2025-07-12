@@ -121,70 +121,52 @@ export default function Portfolio() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section id="home" className="max-w-4xl mx-auto px-8 py-20">
-        <div className="space-y-8 animate-fade-in">
-          <div className="space-y-4">
-            <h1 className="text-5xl md:text-7xl font-light tracking-tight transition-transform duration-500 cursor-default">
-              Alan Tom
-            </h1>
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
+      {/* Profile Section (Avatar + Name + About Me) */}
       <section id="about" className="max-w-4xl mx-auto px-8 py-12">
         <Card
           className={`p-8 transition-all duration-500 backdrop-blur-sm ${
             theme === "dark"
-              ? "bg-slate-900/30 border-slate-800/50 hover:bg-slate-900/50"
-              : "bg-slate-50/80 border-slate-200/50 hover:bg-slate-100/80"
+              ? "bg-[#0a1628]/90 border-[#1e293b]/60"
+              : "bg-[#eaf1fb]/80 border-[#b6d0ee]/60"
           }`}
         >
-          <div className="space-y-6">
-            <h2 className="text-3xl font-light mb-6 cursor-default">
-              About Me
-            </h2>
-            <div
-              className={`space-y-4 leading-relaxed ${
-                theme === "dark" ? "text-slate-300" : "text-slate-600"
-              }`}
-            >
-              <p
-                className={`transition-colors duration-300 ${
-                  theme === "dark"
-                    ? "hover:text-slate-200"
-                    : "hover:text-slate-800"
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+            {/* Avatar */}
+            <img
+              src="/images/buttercup.jpg"
+              alt="Profile avatar"
+              className="w-28 h-28 rounded-full object-cover border-4 border-slate-200 dark:border-slate-800 shadow-md"
+            />
+            <div className="flex-1 space-y-4">
+              <h1 className="text-4xl md:text-5xl font-light tracking-tight cursor-default">
+                Alan Tom
+              </h1>
+              <div
+                className={`space-y-4 leading-relaxed ${
+                  theme === "dark" ? "text-slate-300" : "text-slate-600"
                 }`}
               >
-                I'm a computer science junior at Syracuse University. In my free
-                time, I lead CuseHacks, a student-run hackathon, and try to
-                travel as much as possible.
-              </p>
-              <p
-                className={`transition-colors duration-300 ${
-                  theme === "dark"
-                    ? "hover:text-slate-200"
-                    : "hover:text-slate-800"
-                }`}
-              >
-                Currently learning full-stack development and always looking for
-                opportunities to collaborate on interesting projects.
-              </p>
-            </div>
-
-            <div className="pt-6">
-              <h3
-                className={`text-xl font-medium mb-4 hover:scale-105 transition-transform duration-300 cursor-default ${
-                  theme === "dark" ? "text-white" : "text-black"
-                }`}
-              >
-                Tech Stack
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {skills.map((skill, index) => (
-                  <SkillBadge key={skill} skill={skill} delay={index * 100} />
-                ))}
+                <p
+                  className={`transition-colors duration-300 ${
+                    theme === "dark"
+                      ? "hover:text-slate-200"
+                      : "hover:text-slate-800"
+                  }`}
+                >
+                  I'm a computer science junior at Syracuse University. In my
+                  free time, I lead CuseHacks, a student-run hackathon, and try
+                  to travel as much as possible.
+                </p>
+                <p
+                  className={`transition-colors duration-300 ${
+                    theme === "dark"
+                      ? "hover:text-slate-200"
+                      : "hover:text-slate-800"
+                  }`}
+                >
+                  Currently learning full-stack development and always looking
+                  for opportunities to collaborate on interesting projects.
+                </p>
               </div>
             </div>
           </div>
@@ -331,8 +313,8 @@ export default function Portfolio() {
         <Card
           className={`p-8 transition-all duration-500 backdrop-blur-sm ${
             theme === "dark"
-              ? "bg-slate-900/30 border-slate-800/50 hover:bg-slate-900/50"
-              : "bg-slate-50/80 border-slate-200/50 hover:bg-slate-100/80"
+              ? "bg-[#0a1628]/90 border-[#1e293b]/60"
+              : "bg-[#eaf1fb]/80 border-[#b6d0ee]/60"
           }`}
         >
           <div className="space-y-6">
