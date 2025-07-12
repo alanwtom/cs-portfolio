@@ -86,21 +86,13 @@ export default function Portfolio() {
   }, [footerShowCopy]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+    <div
       className={`min-h-screen overflow-x-hidden transition-colors duration-300 ${
         theme === "dark" ? "bg-black text-white" : "bg-white text-black"
       }`}
     >
       {/* Add a simple header with Japan emoji and theme toggle at the top */}
-      <motion.div
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-        className="max-w-4xl mx-auto px-8 py-6 flex items-center justify-between"
-      >
+      <div className="max-w-3xl mx-auto px-6 py-6 flex items-center justify-between">
         {/* Japan emoji on the left */}
         <div className="flex items-center">
           <span
@@ -115,18 +107,12 @@ export default function Portfolio() {
         <div className="flex items-center">
           <ThemeToggle />
         </div>
-      </motion.div>
+      </div>
 
       {/* Profile Section (Avatar + Name + About Me) */}
-      <motion.section
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-        id="about"
-        className="max-w-4xl mx-auto px-8 py-12"
-      >
+      <section id="about" className="max-w-3xl mx-auto px-6 py-10">
         <Card
-          className={`p-8 transition-all duration-500 backdrop-blur-sm ${
+          className={`p-6 transition-all duration-500 backdrop-blur-sm ${
             theme === "dark"
               ? "bg-[#0a1628]/90 border-[#1e293b]/60"
               : "bg-[#eaf1fb]/80 border-[#b6d0ee]/60"
@@ -134,27 +120,16 @@ export default function Portfolio() {
         >
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
             {/* Avatar */}
-            <motion.img
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+            <img
               src="/images/buttercup.jpg"
               alt="Profile avatar"
               className="w-28 h-28 rounded-full object-cover border-4 border-slate-200 dark:border-slate-800 shadow-md"
             />
             <div className="flex-1 space-y-4">
-              <motion.h1
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
-                className="text-4xl md:text-5xl font-light tracking-tight cursor-default"
-              >
+              <h1 className="text-4xl md:text-5xl font-light tracking-tight cursor-default">
                 Alan Tom
-              </motion.h1>
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
+              </h1>
+              <div
                 className={`space-y-4 leading-relaxed ${
                   theme === "dark" ? "text-slate-300" : "text-slate-600"
                 }`}
@@ -170,28 +145,15 @@ export default function Portfolio() {
                   free time, I lead CuseHacks, a student-run hackathon, and try
                   to travel as much as possible.
                 </p>
-              </motion.div>
+              </div>
             </div>
           </div>
         </Card>
-      </motion.section>
+      </section>
 
       {/* Experience Timeline Section */}
-      <motion.section
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-        id="experience"
-        className="max-w-4xl mx-auto px-8 py-12"
-      >
-        <motion.h2
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
-          className="text-3xl font-light mb-10 cursor-default"
-        >
-          Timeline
-        </motion.h2>
+      <section id="experience" className="max-w-3xl mx-auto px-6 py-10">
+        <h2 className="text-3xl font-light mb-10 cursor-default">Experience</h2>
         <div className="relative pl-8">
           {/* Vertical line */}
           <div
@@ -229,176 +191,64 @@ export default function Portfolio() {
               desc: "compared LLM memory with human memory",
             },
           ].map((item, idx) => (
-            <motion.div
+            <div
               key={item.company + item.title}
-              initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              whileHover={{
-                scale: 1.025,
-                boxShadow:
-                  theme === "dark"
-                    ? "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
-                    : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 10px 25px -5px rgba(0, 0, 0, 0.04)",
-                transition: { duration: 0.15, ease: "easeOut" },
-              }}
-              whileFocus={{
-                scale: 1.025,
-                boxShadow:
-                  theme === "dark"
-                    ? "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
-                    : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 10px 25px -5px rgba(0, 0, 0, 0.04)",
-                transition: { duration: 0.15, ease: "easeOut" },
-              }}
-              transition={{
-                duration: 0.6,
-                delay: 0.9 + idx * 0.2,
-                ease: "easeOut",
-                scale: { duration: 0.25, ease: [0.4, 0, 0.2, 1] },
-                boxShadow: {
-                  duration: theme === "dark" ? 0.3 : 0.25,
-                  ease: [0.4, 0, 0.2, 1],
-                },
-              }}
-              className="flex items-start mb-12 last:mb-0 relative group cursor-pointer"
+              className="flex items-start mb-10 last:mb-0 relative group cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.015] hover:shadow-xl focus-within:scale-[1.015] focus-within:shadow-xl"
               style={{ zIndex: 1 }}
               tabIndex={0}
             >
               {/* Dot with glow on hover */}
               <span
-                className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 ${item.color} transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:shadow-[0_0_0_6px_rgba(59,130,246,0.15)] group-hover:brightness-125 group-focus:shadow-[0_0_0_6px_rgba(59,130,246,0.18)]`}
+                className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 ${item.color} transition-all duration-300 group-hover:shadow-[0_0_0_6px_rgba(59,130,246,0.15)] group-hover:brightness-125 group-focus:shadow-[0_0_0_6px_rgba(59,130,246,0.18)]`}
                 style={{ zIndex: 2 }}
               />
               <div className="ml-8 flex-1 flex flex-row justify-between items-start">
                 <div>
-                  <span
-                    className={`font-bold text-base md:text-lg transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-                      theme === "dark"
-                        ? "group-hover:text-white group-focus:text-white"
-                        : "group-hover:text-slate-900 group-focus:text-slate-900"
-                    }`}
-                  >
+                  <span className="font-bold text-base md:text-lg group-hover:text-white group-focus:text-white transition-colors duration-300">
                     {item.company}
                   </span>
-                  <div
-                    className={`italic text-base mb-1 transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-                      theme === "dark"
-                        ? "text-slate-300 group-hover:text-slate-200"
-                        : "text-slate-700 group-hover:text-slate-800"
-                    }`}
-                  >
+                  <div className="italic text-slate-500 dark:text-slate-300 text-base mb-1 group-hover:text-slate-200 transition-colors duration-300">
                     {item.title}
                   </div>
-                  <ul
-                    className={`list-disc ml-5 transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-                      theme === "dark"
-                        ? "text-slate-400 group-hover:text-slate-300"
-                        : "text-slate-600 group-hover:text-slate-700"
-                    }`}
-                  >
+                  <ul className="list-disc ml-5 text-slate-500 dark:text-slate-400 group-hover:text-slate-300 transition-colors duration-300">
                     <li>{item.desc}</li>
                   </ul>
                 </div>
-                <span
-                  className={`text-md ml-4 whitespace-nowrap min-w-[90px] text-right pt-1 transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-                    theme === "dark"
-                      ? "text-slate-400 group-hover:text-white"
-                      : "text-slate-600 group-hover:text-slate-900"
-                  }`}
-                >
+                <span className="text-md text-slate-400 dark:text-slate-400 ml-4 whitespace-nowrap min-w-[90px] text-right pt-1 group-hover:text-white transition-colors duration-300">
                   {item.years}
                 </span>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
-      </motion.section>
+      </section>
 
       {/* Projects Section */}
-      <motion.section
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
-        id="projects"
-        className="max-w-4xl mx-auto px-8 py-12"
-      >
-        <div className="space-y-6">
-          <motion.h2
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 1.1, ease: "easeOut" }}
-            className="text-3xl font-light cursor-default"
-          >
-            Projects
-          </motion.h2>
-          <div className="flex flex-col gap-6">
+      <section id="projects" className="max-w-3xl mx-auto px-6 py-10">
+        <div className="space-y-5">
+          <h2 className="text-3xl font-light cursor-default">Projects</h2>
+          <div className="flex flex-col gap-5">
             {projects.map((project, index) => (
-              <motion.div
+              <div
                 key={project.title}
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                whileHover={{
-                  scale: 1.025,
-                  boxShadow:
-                    theme === "dark"
-                      ? "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
-                      : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 10px 25px -5px rgba(0, 0, 0, 0.04)",
-                  transition: { duration: 0.15, ease: "easeOut" },
-                }}
-                whileFocus={{
-                  scale: 1.025,
-                  boxShadow:
-                    theme === "dark"
-                      ? "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
-                      : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 10px 25px -5px rgba(0, 0, 0, 0.04)",
-                  transition: { duration: 0.15, ease: "easeOut" },
-                }}
-                transition={{
-                  duration: 0.6,
-                  delay: 1.3 + index * 0.2,
-                  ease: "easeOut",
-                  scale: { duration: 0.25, ease: [0.4, 0, 0.2, 1] },
-                  boxShadow: {
-                    duration: theme === "dark" ? 0.3 : 0.25,
-                    ease: [0.4, 0, 0.2, 1],
-                  },
-                }}
-                className="flex flex-row justify-between items-start w-full group cursor-pointer"
+                className="flex flex-row justify-between items-start w-full group cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.015] hover:shadow-xl focus-within:scale-[1.015] focus-within:shadow-xl"
                 tabIndex={0}
               >
                 <div className="flex-1 min-w-0">
-                  <span
-                    className={`font-bold text-base md:text-lg transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-                      theme === "dark"
-                        ? "group-hover:text-white group-focus:text-white"
-                        : "group-hover:text-slate-900 group-focus:text-slate-900"
-                    }`}
-                  >
+                  <span className="font-bold text-base md:text-lg group-hover:text-white group-focus:text-white transition-colors duration-300">
                     {project.title}
                   </span>
                   <div
-                    className={`mt-1 text-sm md:text-base max-w-2xl transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
-                      theme === "dark"
-                        ? "text-slate-400 group-hover:text-slate-200"
-                        : "text-slate-600 group-hover:text-slate-700"
-                    }`}
+                    className={`mt-1 text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-2xl group-hover:text-slate-200 transition-colors duration-300`}
                   >
                     {project.description}
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2 ml-6 mt-1 justify-end min-w-[120px]">
                   {project.tech.map((tech, i) => (
-                    <motion.span
+                    <span
                       key={tech}
-                      whileHover={{
-                        scale: 1.05,
-                        filter: "brightness(1.1)",
-                        transition: { duration: 0.1, ease: "easeOut" },
-                      }}
-                      transition={{
-                        scale: { duration: 0.18, ease: [0.4, 0, 0.2, 1] },
-                        filter: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
-                      }}
-                      className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap shadow cursor-pointer ${
+                      className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap shadow transition-all duration-300 group-hover:scale-[1.03] group-hover:brightness-105 group-focus:scale-[1.03] group-focus:brightness-105 ${
                         tech.toLowerCase() === "gcp"
                           ? "bg-blue-600 text-white"
                           : tech.toLowerCase() === "python"
@@ -433,92 +283,65 @@ export default function Portfolio() {
                       }`}
                     >
                       {tech}
-                    </motion.span>
+                    </span>
                   ))}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* Footer with contact icons and copyright */}
-      <motion.footer
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1.3, ease: "easeOut" }}
-        className={`mt-12 py-8 px-8 transition-colors duration-300 text-center backdrop-blur-sm ${
+      <footer
+        className={`mt-10 py-6 transition-colors duration-300 text-center backdrop-blur-sm ${
           theme === "dark"
             ? "bg-black border-t border-[#222]"
             : "bg-[#eaf1fb]/80 border-t border-[#b6d0ee]/60"
         }`}
       >
-        <div className="flex justify-center space-x-4 mb-4">
-          {/* Contact icons */}
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild={false}
-            className={`transition-all duration-300 hover:scale-110 ${
-              theme === "dark"
-                ? "text-slate-400 hover:text-white"
-                : "text-slate-700 hover:text-slate-900"
-            }`}
-            onClick={() => {
-              if (!footerEmailRevealed) {
-                setFooterEmailRevealed(true);
-              } else if (!footerShowCopy) {
-                setFooterShowCopy(true);
-              }
-            }}
-          >
-            <span className="flex items-center relative">
-              <Mail className="w-4 h-4 mr-2" />
-              {footerEmailRevealed ? (
-                <>
-                  <span className="underline decoration-dotted decoration-2 underline-offset-4 cursor-pointer">
-                    alanwtom@outlook.com
-                  </span>
-                  {/* Copy popover */}
-                  {footerShowCopy && (
-                    <div
-                      ref={footerCopyRef}
-                      className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 rounded-xl shadow-lg px-2 py-1 text-xs font-medium transition-all duration-200 ${
-                        theme === "dark"
-                          ? "bg-black text-white border border-slate-700"
-                          : "bg-white text-black border border-slate-300"
-                      }`}
-                    >
-                      {footerCopied ? (
-                        <span
-                          className={`${
-                            theme === "dark"
-                              ? "text-green-400"
-                              : "text-green-600"
-                          }`}
-                        >
-                          Copied!
-                        </span>
-                      ) : (
-                        <div
-                          role="button"
-                          tabIndex={0}
-                          className="inline-block px-1 py-0.5 hover:underline focus:outline-none cursor-pointer select-none font-normal transition-colors duration-150"
-                          onClick={async (e) => {
-                            e.stopPropagation();
-                            await navigator.clipboard.writeText(
-                              "alanwtom@outlook.com"
-                            );
-                            setFooterCopied(true);
-                            setTimeout(() => {
-                              setFooterShowCopy(false);
-                              setFooterEmailRevealed(false);
-                              setFooterCopied(false);
-                            }, 1200);
-                          }}
-                          onKeyDown={async (e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="flex justify-center space-x-4 mb-4">
+            {/* Contact icons */}
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild={false}
+              className={`transition-all duration-300 hover:scale-110 ${
+                theme === "dark"
+                  ? "text-slate-400 hover:text-white"
+                  : "text-slate-600 hover:text-black"
+              }`}
+              onClick={() => {
+                if (!footerEmailRevealed) {
+                  setFooterEmailRevealed(true);
+                } else if (!footerShowCopy) {
+                  setFooterShowCopy(true);
+                }
+              }}
+            >
+              <span className="flex items-center relative">
+                <Mail className="w-4 h-4 mr-2" />
+                {footerEmailRevealed ? (
+                  <>
+                    <span className="underline decoration-dotted decoration-2 underline-offset-4 cursor-pointer">
+                      alanwtom@outlook.com
+                    </span>
+                    {/* Copy popover */}
+                    {footerShowCopy && (
+                      <div
+                        ref={footerCopyRef}
+                        className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 rounded-xl shadow-lg px-2 py-1 text-xs font-medium transition-all duration-200 bg-black text-white border border-slate-700`}
+                      >
+                        {footerCopied ? (
+                          <span className="text-green-400">Copied!</span>
+                        ) : (
+                          <div
+                            role="button"
+                            tabIndex={0}
+                            className="inline-block px-1 py-0.5 hover:underline focus:outline-none cursor-pointer select-none font-normal transition-colors duration-150"
+                            onClick={async (e) => {
+                              e.stopPropagation();
                               await navigator.clipboard.writeText(
                                 "alanwtom@outlook.com"
                               );
@@ -528,61 +351,78 @@ export default function Portfolio() {
                                 setFooterEmailRevealed(false);
                                 setFooterCopied(false);
                               }, 1200);
-                            }
-                          }}
-                        >
-                          Copy Email
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <>Email</>
-              )}
-            </span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className={`transition-all duration-300 hover:scale-110 ${
+                            }}
+                            onKeyDown={async (e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                await navigator.clipboard.writeText(
+                                  "alanwtom@outlook.com"
+                                );
+                                setFooterCopied(true);
+                                setTimeout(() => {
+                                  setFooterShowCopy(false);
+                                  setFooterEmailRevealed(false);
+                                  setFooterCopied(false);
+                                }, 1200);
+                              }
+                            }}
+                          >
+                            Copy Email
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>Email</>
+                )}
+              </span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className={`transition-all duration-300 hover:scale-110 ${
+                theme === "dark"
+                  ? "text-slate-400 hover:text-white"
+                  : "text-slate-600 hover:text-black"
+              }`}
+            >
+              <Link href="https://github.com/alantomw" target="_blank">
+                <Github className="w-4 h-4 mr-2" />
+                GitHub
+              </Link>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className={`transition-all duration-300 hover:scale-110 ${
+                theme === "dark"
+                  ? "text-slate-400 hover:text-white"
+                  : "text-slate-600 hover:text-black"
+              }`}
+            >
+              <Link
+                href="https://www.linkedin.com/in/alan-tom/"
+                target="_blank"
+              >
+                <Linkedin className="w-4 h-4 mr-2" />
+                LinkedIn
+              </Link>
+            </Button>
+          </div>
+          <p
+            className={`text-xs mt-2 transition-colors duration-300 ${
               theme === "dark"
-                ? "text-slate-400 hover:text-white"
-                : "text-slate-700 hover:text-slate-900"
+                ? "text-slate-500 hover:text-slate-400"
+                : "text-slate-500 hover:text-slate-600"
             }`}
           >
-            <Link href="https://github.com/alantomw" target="_blank">
-              <Github className="w-4 h-4 mr-2" />
-              GitHub
-            </Link>
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className={`transition-all duration-300 hover:scale-110 ${
-              theme === "dark"
-                ? "text-slate-400 hover:text-white"
-                : "text-slate-700 hover:text-slate-900"
-            }`}
-          >
-            <Link href="https://www.linkedin.com/in/alan-tom/" target="_blank">
-              <Linkedin className="w-4 h-4 mr-2" />
-              LinkedIn
-            </Link>
-          </Button>
+            © 2025 Alan Tom. All rights reserved.
+          </p>
         </div>
-        <p
-          className={`text-xs mt-2 transition-colors duration-300 ${
-            theme === "dark"
-              ? "text-slate-500 hover:text-slate-400"
-              : "text-slate-600 hover:text-slate-700"
-          }`}
-        >
-          © 2025 Alan Tom. All rights reserved.
-        </p>
-      </motion.footer>
-    </motion.div>
+      </footer>
+    </div>
   );
 }
