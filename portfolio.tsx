@@ -86,13 +86,21 @@ export default function Portfolio() {
   }, [footerShowCopy]);
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
       className={`min-h-screen overflow-x-hidden transition-colors duration-300 ${
         theme === "dark" ? "bg-black text-white" : "bg-white text-black"
       }`}
     >
       {/* Add a simple header with Japan emoji and theme toggle at the top */}
-      <div className="max-w-4xl mx-auto px-8 py-6 flex items-center justify-between">
+      <motion.div
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+        className="max-w-4xl mx-auto px-8 py-6 flex items-center justify-between"
+      >
         {/* Japan emoji on the left */}
         <div className="flex items-center">
           <span
@@ -107,10 +115,16 @@ export default function Portfolio() {
         <div className="flex items-center">
           <ThemeToggle />
         </div>
-      </div>
+      </motion.div>
 
       {/* Profile Section (Avatar + Name + About Me) */}
-      <section id="about" className="max-w-4xl mx-auto px-8 py-12">
+      <motion.section
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+        id="about"
+        className="max-w-4xl mx-auto px-8 py-12"
+      >
         <Card
           className={`p-8 transition-all duration-500 backdrop-blur-sm ${
             theme === "dark"
@@ -120,16 +134,27 @@ export default function Portfolio() {
         >
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
             {/* Avatar */}
-            <img
+            <motion.img
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
               src="/images/buttercup.jpg"
               alt="Profile avatar"
               className="w-28 h-28 rounded-full object-cover border-4 border-slate-200 dark:border-slate-800 shadow-md"
             />
             <div className="flex-1 space-y-4">
-              <h1 className="text-4xl md:text-5xl font-light tracking-tight cursor-default">
+              <motion.h1
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
+                className="text-4xl md:text-5xl font-light tracking-tight cursor-default"
+              >
                 Alan Tom
-              </h1>
-              <div
+              </motion.h1>
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
                 className={`space-y-4 leading-relaxed ${
                   theme === "dark" ? "text-slate-300" : "text-slate-600"
                 }`}
@@ -145,15 +170,28 @@ export default function Portfolio() {
                   free time, I lead CuseHacks, a student-run hackathon, and try
                   to travel as much as possible.
                 </p>
-              </div>
+              </motion.div>
             </div>
           </div>
         </Card>
-      </section>
+      </motion.section>
 
       {/* Experience Timeline Section */}
-      <section id="experience" className="max-w-4xl mx-auto px-8 py-12">
-        <h2 className="text-3xl font-light mb-10 cursor-default">Timeline</h2>
+      <motion.section
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
+        id="experience"
+        className="max-w-4xl mx-auto px-8 py-12"
+      >
+        <motion.h2
+          initial={{ y: 30, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.7, ease: "easeOut" }}
+          className="text-3xl font-light mb-10 cursor-default"
+        >
+          Timeline
+        </motion.h2>
         <div className="relative pl-8">
           {/* Vertical line */}
           <div
@@ -191,21 +229,40 @@ export default function Portfolio() {
               desc: "compared LLM memory with human memory",
             },
           ].map((item, idx) => (
-            <div
+            <motion.div
               key={item.company + item.title}
-              className="flex items-start mb-12 last:mb-0 relative group cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.025] hover:shadow-2xl focus-within:scale-[1.025] focus-within:shadow-2xl"
+              initial={{ x: -50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              whileHover={{
+                scale: 1.025,
+                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+                transition: { duration: 0.15, ease: "easeOut" },
+              }}
+              whileFocus={{
+                scale: 1.025,
+                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+                transition: { duration: 0.15, ease: "easeOut" },
+              }}
+              transition={{
+                duration: 0.6,
+                delay: 0.9 + idx * 0.2,
+                ease: "easeOut",
+                scale: { duration: 0.25, ease: [0.4, 0, 0.2, 1] },
+                boxShadow: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+              }}
+              className="flex items-start mb-12 last:mb-0 relative group cursor-pointer"
               style={{ zIndex: 1 }}
               tabIndex={0}
             >
               {/* Dot with glow on hover */}
               <span
-                className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 ${item.color} transition-all duration-300 group-hover:shadow-[0_0_0_6px_rgba(59,130,246,0.15)] group-hover:brightness-125 group-focus:shadow-[0_0_0_6px_rgba(59,130,246,0.18)]`}
+                className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 ${item.color} transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:shadow-[0_0_0_6px_rgba(59,130,246,0.15)] group-hover:brightness-125 group-focus:shadow-[0_0_0_6px_rgba(59,130,246,0.18)]`}
                 style={{ zIndex: 2 }}
               />
               <div className="ml-8 flex-1 flex flex-row justify-between items-start">
                 <div>
                   <span
-                    className={`font-bold text-base md:text-lg transition-colors duration-300 ${
+                    className={`font-bold text-base md:text-lg transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
                       theme === "dark"
                         ? "group-hover:text-white group-focus:text-white"
                         : "group-hover:text-slate-900 group-focus:text-slate-900"
@@ -214,7 +271,7 @@ export default function Portfolio() {
                     {item.company}
                   </span>
                   <div
-                    className={`italic text-base mb-1 transition-colors duration-300 ${
+                    className={`italic text-base mb-1 transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
                       theme === "dark"
                         ? "text-slate-300 group-hover:text-slate-200"
                         : "text-slate-700 group-hover:text-slate-800"
@@ -223,7 +280,7 @@ export default function Portfolio() {
                     {item.title}
                   </div>
                   <ul
-                    className={`list-disc ml-5 transition-colors duration-300 ${
+                    className={`list-disc ml-5 transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
                       theme === "dark"
                         ? "text-slate-400 group-hover:text-slate-300"
                         : "text-slate-600 group-hover:text-slate-700"
@@ -233,7 +290,7 @@ export default function Portfolio() {
                   </ul>
                 </div>
                 <span
-                  className={`text-md ml-4 whitespace-nowrap min-w-[90px] text-right pt-1 transition-colors duration-300 ${
+                  className={`text-md ml-4 whitespace-nowrap min-w-[90px] text-right pt-1 transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
                     theme === "dark"
                       ? "text-slate-400 group-hover:text-white"
                       : "text-slate-600 group-hover:text-slate-900"
@@ -242,25 +299,57 @@ export default function Portfolio() {
                   {item.years}
                 </span>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* Projects Section */}
-      <section id="projects" className="max-w-4xl mx-auto px-8 py-12">
+      <motion.section
+        initial={{ y: 50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.9, ease: "easeOut" }}
+        id="projects"
+        className="max-w-4xl mx-auto px-8 py-12"
+      >
         <div className="space-y-6">
-          <h2 className="text-3xl font-light cursor-default">Projects</h2>
+          <motion.h2
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1.1, ease: "easeOut" }}
+            className="text-3xl font-light cursor-default"
+          >
+            Projects
+          </motion.h2>
           <div className="flex flex-col gap-6">
             {projects.map((project, index) => (
-              <div
+              <motion.div
                 key={project.title}
-                className="flex flex-row justify-between items-start w-full group cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.025] hover:shadow-2xl focus-within:scale-[1.025] focus-within:shadow-2xl"
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                whileHover={{
+                  scale: 1.025,
+                  boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+                  transition: { duration: 0.15, ease: "easeOut" },
+                }}
+                whileFocus={{
+                  scale: 1.025,
+                  boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+                  transition: { duration: 0.15, ease: "easeOut" },
+                }}
+                transition={{
+                  duration: 0.6,
+                  delay: 1.3 + index * 0.2,
+                  ease: "easeOut",
+                  scale: { duration: 0.25, ease: [0.4, 0, 0.2, 1] },
+                  boxShadow: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+                }}
+                className="flex flex-row justify-between items-start w-full group cursor-pointer"
                 tabIndex={0}
               >
                 <div className="flex-1 min-w-0">
                   <span
-                    className={`font-bold text-base md:text-lg transition-colors duration-300 ${
+                    className={`font-bold text-base md:text-lg transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
                       theme === "dark"
                         ? "group-hover:text-white group-focus:text-white"
                         : "group-hover:text-slate-900 group-focus:text-slate-900"
@@ -269,7 +358,7 @@ export default function Portfolio() {
                     {project.title}
                   </span>
                   <div
-                    className={`mt-1 text-sm md:text-base max-w-2xl transition-colors duration-300 ${
+                    className={`mt-1 text-sm md:text-base max-w-2xl transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] ${
                       theme === "dark"
                         ? "text-slate-400 group-hover:text-slate-200"
                         : "text-slate-600 group-hover:text-slate-700"
@@ -280,9 +369,18 @@ export default function Portfolio() {
                 </div>
                 <div className="flex flex-wrap gap-2 ml-6 mt-1 justify-end min-w-[120px]">
                   {project.tech.map((tech, i) => (
-                    <span
+                    <motion.span
                       key={tech}
-                      className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap shadow transition-all duration-300 group-hover:scale-105 group-hover:brightness-110 group-focus:scale-105 group-focus:brightness-110 ${
+                      whileHover={{
+                        scale: 1.05,
+                        filter: "brightness(1.1)",
+                        transition: { duration: 0.1, ease: "easeOut" },
+                      }}
+                      transition={{
+                        scale: { duration: 0.18, ease: [0.4, 0, 0.2, 1] },
+                        filter: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
+                      }}
+                      className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap shadow cursor-pointer ${
                         tech.toLowerCase() === "gcp"
                           ? "bg-blue-600 text-white"
                           : tech.toLowerCase() === "python"
@@ -317,17 +415,20 @@ export default function Portfolio() {
                       }`}
                     >
                       {tech}
-                    </span>
+                    </motion.span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Footer with contact icons and copyright */}
-      <footer
+      <motion.footer
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, delay: 1.3, ease: "easeOut" }}
         className={`mt-12 py-8 px-8 transition-colors duration-300 text-center backdrop-blur-sm ${
           theme === "dark"
             ? "bg-black border-t border-[#222]"
@@ -364,10 +465,22 @@ export default function Portfolio() {
                   {footerShowCopy && (
                     <div
                       ref={footerCopyRef}
-                      className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 rounded-xl shadow-lg px-2 py-1 text-xs font-medium transition-all duration-200 bg-black text-white border border-slate-700`}
+                      className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 rounded-xl shadow-lg px-2 py-1 text-xs font-medium transition-all duration-200 ${
+                        theme === "dark"
+                          ? "bg-black text-white border border-slate-700"
+                          : "bg-white text-black border border-slate-300"
+                      }`}
                     >
                       {footerCopied ? (
-                        <span className="text-green-400">Copied!</span>
+                        <span
+                          className={`${
+                            theme === "dark"
+                              ? "text-green-400"
+                              : "text-green-600"
+                          }`}
+                        >
+                          Copied!
+                        </span>
                       ) : (
                         <div
                           role="button"
@@ -451,7 +564,7 @@ export default function Portfolio() {
         >
           © 2025 Alan Tom. All rights reserved.
         </p>
-      </footer>
-    </div>
+      </motion.footer>
+    </motion.div>
   );
 }
