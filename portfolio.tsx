@@ -12,7 +12,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 
 export default function Portfolio() {
-  const { theme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [emailRevealed, setEmailRevealed] = useState(false);
   const emailHoldTimeout = useRef<NodeJS.Timeout | null>(null);
   const [showCopyBubble, setShowCopyBubble] = useState(false);
@@ -85,6 +85,18 @@ export default function Portfolio() {
     return () => window.removeEventListener("mousedown", handleClick);
   }, [footerShowCopy]);
 
+  // Keyboard shortcut for theme toggle
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "l") {
+        e.preventDefault();
+        setTheme(theme === "dark" ? "light" : "dark");
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [theme, setTheme]);
+
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${
@@ -104,8 +116,17 @@ export default function Portfolio() {
           </span>
         </div>
         {/* Theme toggle on the right */}
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           <ThemeToggle />
+          <span
+            className={`text-xs px-2 py-1 rounded-md font-mono transition-colors duration-300 ${
+              theme === "dark"
+                ? "bg-slate-800 text-slate-400 border border-slate-700"
+                : "bg-slate-100 text-slate-600 border border-slate-300"
+            }`}
+          >
+            ⌘ L
+          </span>
         </div>
       </div>
 
