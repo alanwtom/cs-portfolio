@@ -249,7 +249,15 @@ export default function Portfolio() {
                     <span
                       key={tech}
                       className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap shadow transition-all duration-300 group-hover:scale-105 group-hover:brightness-110 group-focus:scale-105 group-focus:brightness-110 ${
-                        tech.toLowerCase().includes("react")
+                        tech.toLowerCase() === "gcp"
+                          ? "bg-blue-600 text-white"
+                          : tech.toLowerCase() === "python"
+                          ? "bg-yellow-300 text-black"
+                          : tech.toLowerCase() === "html"
+                          ? "bg-orange-500 text-white"
+                          : tech.toLowerCase() === "css"
+                          ? "bg-purple-600 text-white"
+                          : tech.toLowerCase().includes("react")
                           ? "bg-blue-500 text-white"
                           : tech.toLowerCase().includes("typescript")
                           ? "bg-blue-400 text-white"
@@ -263,8 +271,6 @@ export default function Portfolio() {
                           ? "bg-gray-800 text-white"
                           : tech.toLowerCase().includes("supabase")
                           ? "bg-green-700 text-white"
-                          : tech.toLowerCase().includes("gcp")
-                          ? "bg-yellow-600 text-white"
                           : tech.toLowerCase().includes("discord")
                           ? "bg-indigo-500 text-white"
                           : tech.toLowerCase().includes("stripe")
