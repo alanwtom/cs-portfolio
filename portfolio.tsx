@@ -18,6 +18,10 @@ export default function Portfolio() {
   const [showCopyBubble, setShowCopyBubble] = useState(false);
   const [copied, setCopied] = useState(false);
   const copyBubbleRef = useRef<HTMLDivElement | null>(null);
+  const [footerEmailRevealed, setFooterEmailRevealed] = useState(false);
+  const [footerShowCopy, setFooterShowCopy] = useState(false);
+  const [footerCopied, setFooterCopied] = useState(false);
+  const footerCopyRef = useRef<HTMLDivElement | null>(null);
 
   const skills = [
     "Python",
@@ -64,6 +68,22 @@ export default function Portfolio() {
     window.addEventListener("mousedown", handleClick);
     return () => window.removeEventListener("mousedown", handleClick);
   }, [showCopyBubble]);
+
+  useEffect(() => {
+    if (!footerShowCopy) return;
+    function handleClick(e: MouseEvent) {
+      if (
+        footerCopyRef.current &&
+        e.target instanceof Node &&
+        !footerCopyRef.current.contains(e.target as Node)
+      ) {
+        setFooterShowCopy(false);
+        setFooterEmailRevealed(false);
+      }
+    }
+    window.addEventListener("mousedown", handleClick);
+    return () => window.removeEventListener("mousedown", handleClick);
+  }, [footerShowCopy]);
 
   return (
     <div
@@ -156,16 +176,6 @@ export default function Portfolio() {
                   I'm a computer science junior at Syracuse University. In my
                   free time, I lead CuseHacks, a student-run hackathon, and try
                   to travel as much as possible.
-                </p>
-                <p
-                  className={`transition-colors duration-300 ${
-                    theme === "dark"
-                      ? "hover:text-slate-200"
-                      : "hover:text-slate-800"
-                  }`}
-                >
-                  Currently learning full-stack development and always looking
-                  for opportunities to collaborate on interesting projects.
                 </p>
               </div>
             </div>
@@ -308,193 +318,131 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="max-w-4xl mx-auto px-8 py-12">
-        <Card
-          className={`p-8 transition-all duration-500 backdrop-blur-sm ${
-            theme === "dark"
-              ? "bg-[#0a1628]/90 border-[#1e293b]/60"
-              : "bg-[#eaf1fb]/80 border-[#b6d0ee]/60"
-          }`}
-        >
-          <div className="space-y-6">
-            <h2 className="text-3xl font-light cursor-default">
-              Let's Connect
-            </h2>
-            <p
-              className={`text-lg max-w-md mx-auto ${
-                theme === "dark" ? "text-slate-400" : "text-slate-600"
-              }`}
-            >
-              Always interested in new opportunities and collaborations. Let's
-              build something amazing together.
-            </p>
-            <div className="flex justify-center space-x-4 pt-4">
-              {/* Email Button: Press and Hold to Reveal */}
-              <Button
-                variant="ghost"
-                size="sm"
-                asChild={false}
-                className={`transition-all duration-300 hover:scale-110 ${
-                  theme === "dark"
-                    ? "text-slate-400 hover:text-white"
-                    : "text-slate-600 hover:text-black"
-                }`}
-                onMouseDown={() => {
-                  if (!emailRevealed) {
-                    emailHoldTimeout.current = setTimeout(() => {
-                      setEmailRevealed(true);
-                    }, 700);
-                  }
-                }}
-                onMouseUp={() => {
-                  if (emailHoldTimeout.current) {
-                    clearTimeout(emailHoldTimeout.current);
-                  }
-                }}
-                onMouseLeave={() => {
-                  if (emailHoldTimeout.current) {
-                    clearTimeout(emailHoldTimeout.current);
-                  }
-                }}
-                onTouchStart={() => {
-                  if (!emailRevealed) {
-                    emailHoldTimeout.current = setTimeout(() => {
-                      setEmailRevealed(true);
-                    }, 700);
-                  }
-                }}
-                onTouchEnd={() => {
-                  if (emailHoldTimeout.current) {
-                    clearTimeout(emailHoldTimeout.current);
-                  }
-                }}
-              >
-                {emailRevealed ? (
-                  <span className="flex items-center relative">
-                    <Mail className="w-4 h-4 mr-2" />
-                    <span
-                      className="cursor-pointer underline decoration-dotted decoration-2 underline-offset-4"
-                      onClick={() => {
-                        setShowCopyBubble((prev) => !prev);
-                        setCopied(false);
-                      }}
+      {/* Footer with contact icons and copyright */}
+      <footer
+        className={`mt-12 py-8 px-8 transition-colors duration-300 text-center backdrop-blur-sm ${
+          theme === "dark"
+            ? "bg-black border-t border-[#222]"
+            : "bg-[#eaf1fb]/80 border-t border-[#b6d0ee]/60"
+        }`}
+      >
+        <div className="flex justify-center space-x-4 mb-4">
+          {/* Contact icons */}
+          <Button
+            variant="ghost"
+            size="sm"
+            asChild={false}
+            className={`transition-all duration-300 hover:scale-110 ${
+              theme === "dark"
+                ? "text-slate-400 hover:text-white"
+                : "text-slate-600 hover:text-black"
+            }`}
+            onClick={() => {
+              if (!footerEmailRevealed) {
+                setFooterEmailRevealed(true);
+              } else if (!footerShowCopy) {
+                setFooterShowCopy(true);
+              }
+            }}
+          >
+            <span className="flex items-center relative">
+              <Mail className="w-4 h-4 mr-2" />
+              {footerEmailRevealed ? (
+                <>
+                  <span className="underline decoration-dotted decoration-2 underline-offset-4 cursor-pointer">
+                    alanwtom@outlook.com
+                  </span>
+                  {/* Copy popover */}
+                  {footerShowCopy && (
+                    <div
+                      ref={footerCopyRef}
+                      className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 rounded-xl shadow-lg px-2 py-1 text-xs font-medium transition-all duration-200 bg-black text-white border border-slate-700`}
                     >
-                      alanwtom@outlook.com
-                    </span>
-                    {/* Copy Bubble */}
-                    {showCopyBubble && (
-                      <div
-                        ref={copyBubbleRef}
-                        className={`inline-block absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 rounded-xl shadow-lg px-1 py-1 text-sm font-medium transition-all duration-200 ${
-                          theme === "dark"
-                            ? "bg-slate-800 text-white border border-slate-700"
-                            : "bg-white text-black border border-slate-200"
-                        }`}
-                        style={{ boxShadow: "0 8px 32px 0 rgba(0,0,0,0.18)" }}
-                      >
-                        {copied ? (
-                          <span className="text-green-500 text-[10px]">
-                            Copied!
-                          </span>
-                        ) : (
-                          <div
-                            role="button"
-                            tabIndex={0}
-                            className={`inline-block text-[10px] text-left px-0.5 py-0 bg-transparent hover:underline focus:outline-none cursor-pointer select-none font-normal transition-colors duration-150 shadow-none border-none m-0 ${
-                              theme === "dark"
-                                ? "hover:text-green-400"
-                                : "hover:text-green-600"
-                            }`}
-                            onClick={async (e) => {
-                              e.stopPropagation();
+                      {footerCopied ? (
+                        <span className="text-green-400">Copied!</span>
+                      ) : (
+                        <div
+                          role="button"
+                          tabIndex={0}
+                          className="inline-block px-1 py-0.5 hover:underline focus:outline-none cursor-pointer select-none font-normal transition-colors duration-150"
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            await navigator.clipboard.writeText(
+                              "alanwtom@outlook.com"
+                            );
+                            setFooterCopied(true);
+                            setTimeout(() => {
+                              setFooterShowCopy(false);
+                              setFooterEmailRevealed(false);
+                              setFooterCopied(false);
+                            }, 1200);
+                          }}
+                          onKeyDown={async (e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
                               await navigator.clipboard.writeText(
                                 "alanwtom@outlook.com"
                               );
-                              setCopied(true);
+                              setFooterCopied(true);
                               setTimeout(() => {
-                                setShowCopyBubble(false);
+                                setFooterShowCopy(false);
+                                setFooterEmailRevealed(false);
+                                setFooterCopied(false);
                               }, 1200);
-                            }}
-                            onKeyDown={async (e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
-                                await navigator.clipboard.writeText(
-                                  "alanwtom@outlook.com"
-                                );
-                                setCopied(true);
-                                setTimeout(() => {
-                                  setShowCopyBubble(false);
-                                }, 1200);
-                              }
-                            }}
-                          >
-                            Copy Email
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </span>
-                ) : (
-                  <span className="flex items-center">
-                    <Mail className="w-4 h-4 mr-2" />
-                    Press & Hold for Email
-                  </span>
-                )}
-              </Button>
-              {/* Other contact icons */}
-              {[
-                {
-                  icon: Github,
-                  href: "https://github.com/alantomw",
-                  label: "GitHub",
-                },
-                {
-                  icon: Linkedin,
-                  href: "https://www.linkedin.com/in/alan-tom/",
-                  label: "LinkedIn",
-                },
-              ].map(({ icon: Icon, href, label }, index) => (
-                <Button
-                  key={label}
-                  variant="ghost"
-                  size="sm"
-                  asChild
-                  className={`transition-all duration-300 hover:scale-110 ${
-                    theme === "dark"
-                      ? "text-slate-400 hover:text-white"
-                      : "text-slate-600 hover:text-black"
-                  }`}
-                  style={{ animationDelay: `${(index + 1) * 150}ms` }}
-                >
-                  <Link href={href} target="_blank">
-                    <Icon className="w-4 h-4 mr-2" />
-                    {label}
-                  </Link>
-                </Button>
-              ))}
-            </div>
-          </div>
-        </Card>
-      </section>
-
-      {/* Footer */}
-      <footer
-        className={`border-t mt-20 py-8 backdrop-blur-sm transition-colors duration-300 ${
-          theme === "dark" ? "border-slate-800/50" : "border-slate-200/50"
-        }`}
-      >
-        <div className="max-w-4xl mx-auto px-8 text-center">
-          <p
-            className={`text-xs mt-2 transition-colors duration-300 ${
+                            }
+                          }}
+                        >
+                          Copy Email
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>Email</>
+              )}
+            </span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            asChild
+            className={`transition-all duration-300 hover:scale-110 ${
               theme === "dark"
-                ? "text-slate-500 hover:text-slate-400"
-                : "text-slate-500 hover:text-slate-600"
+                ? "text-slate-400 hover:text-white"
+                : "text-slate-600 hover:text-black"
             }`}
           >
-            © 2025 Alan Tom. All rights reserved.
-          </p>
+            <Link href="https://github.com/alantomw" target="_blank">
+              <Github className="w-4 h-4 mr-2" />
+              GitHub
+            </Link>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            asChild
+            className={`transition-all duration-300 hover:scale-110 ${
+              theme === "dark"
+                ? "text-slate-400 hover:text-white"
+                : "text-slate-600 hover:text-black"
+            }`}
+          >
+            <Link href="https://www.linkedin.com/in/alan-tom/" target="_blank">
+              <Linkedin className="w-4 h-4 mr-2" />
+              LinkedIn
+            </Link>
+          </Button>
         </div>
+        <p
+          className={`text-xs mt-2 transition-colors duration-300 ${
+            theme === "dark"
+              ? "text-slate-500 hover:text-slate-400"
+              : "text-slate-500 hover:text-slate-600"
+          }`}
+        >
+          © 2025 Alan Tom. All rights reserved.
+        </p>
       </footer>
     </div>
   );
