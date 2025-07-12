@@ -235,12 +235,18 @@ export default function Portfolio() {
               animate={{ x: 0, opacity: 1 }}
               whileHover={{
                 scale: 1.025,
-                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+                boxShadow:
+                  theme === "dark"
+                    ? "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+                    : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 10px 25px -5px rgba(0, 0, 0, 0.04)",
                 transition: { duration: 0.15, ease: "easeOut" },
               }}
               whileFocus={{
                 scale: 1.025,
-                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+                boxShadow:
+                  theme === "dark"
+                    ? "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+                    : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 10px 25px -5px rgba(0, 0, 0, 0.04)",
                 transition: { duration: 0.15, ease: "easeOut" },
               }}
               transition={{
@@ -248,7 +254,10 @@ export default function Portfolio() {
                 delay: 0.9 + idx * 0.2,
                 ease: "easeOut",
                 scale: { duration: 0.25, ease: [0.4, 0, 0.2, 1] },
-                boxShadow: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+                boxShadow: {
+                  duration: theme === "dark" ? 0.3 : 0.25,
+                  ease: [0.4, 0, 0.2, 1],
+                },
               }}
               className="flex items-start mb-12 last:mb-0 relative group cursor-pointer"
               style={{ zIndex: 1 }}
@@ -329,12 +338,18 @@ export default function Portfolio() {
                 animate={{ y: 0, opacity: 1 }}
                 whileHover={{
                   scale: 1.025,
-                  boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+                  boxShadow:
+                    theme === "dark"
+                      ? "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+                      : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 10px 25px -5px rgba(0, 0, 0, 0.04)",
                   transition: { duration: 0.15, ease: "easeOut" },
                 }}
                 whileFocus={{
                   scale: 1.025,
-                  boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+                  boxShadow:
+                    theme === "dark"
+                      ? "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+                      : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 10px 25px -5px rgba(0, 0, 0, 0.04)",
                   transition: { duration: 0.15, ease: "easeOut" },
                 }}
                 transition={{
@@ -342,7 +357,10 @@ export default function Portfolio() {
                   delay: 1.3 + index * 0.2,
                   ease: "easeOut",
                   scale: { duration: 0.25, ease: [0.4, 0, 0.2, 1] },
-                  boxShadow: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+                  boxShadow: {
+                    duration: theme === "dark" ? 0.3 : 0.25,
+                    ease: [0.4, 0, 0.2, 1],
+                  },
                 }}
                 className="flex flex-row justify-between items-start w-full group cursor-pointer"
                 tabIndex={0}
