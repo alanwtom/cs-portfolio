@@ -5,11 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Mail, Github, Linkedin, ArrowRight } from "lucide-react";
 import { ThemeToggle } from "./components/theme-toggle";
-import { ProjectCard } from "./components/project-card";
-import { SkillBadge } from "./components/skill-badge";
 import { useTheme } from "./components/theme-provider";
 import React, { useRef, useState, useEffect } from "react";
-import { motion, useAnimation, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Portfolio() {
   const { theme, setTheme } = useTheme();

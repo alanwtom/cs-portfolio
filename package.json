@@ -1,5 +1,5 @@
 {
-  "name": "my-v0-project",
+  "name": "alan-tom-portfolio",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,7 +7,6 @@
     "dev": "next dev",
     "lint": "next lint",
     "start": "next start",
-    "setup": "./scripts/dev-setup.sh",
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "format-check": "prettier --check ."
