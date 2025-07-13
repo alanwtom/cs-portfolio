@@ -24,21 +24,9 @@ export default function Portfolio() {
   const footerCopyRef = useRef<HTMLDivElement | null>(null);
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
 
-  const skills = [
-    "Python",
-    "TypeScript",
-    "JavaScript",
-    "Java",
-    "React",
-    "Next.js",
-    "Vercel",
-    "Git",
-    "Linux",
-  ];
-
   const projects = [
     {
-      title: "Discord Bot",
+      title: "Bug Bot",
       description:
         "discord bot for career development with resume resources, real time job and event tracking, and learning material recommendations",
       tech: ["Python", "Discord.py", "GCP", "Nox"],
@@ -148,16 +136,38 @@ export default function Portfolio() {
       }`}
     >
       {/* Add a simple header with Japan emoji and theme toggle at the top */}
-      <div className="max-w-3xl mx-auto px-6 py-6 flex items-center justify-between">
+      <motion.div
+        className="max-w-3xl mx-auto px-6 py-6 flex items-center justify-between"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+      >
         {/* Japan emoji on the left */}
         <div className="flex items-center">
-          <span
-            className="text-2xl align-middle hover:scale-110 transition-transform duration-300"
+          <motion.span
+            className="text-2xl align-middle cursor-pointer"
             role="img"
             aria-label="Map of Japan"
+            whileHover={{
+              scale: 1.15,
+              rotate: 15,
+              transition: {
+                duration: 0.08,
+                ease: "easeOut",
+              },
+            }}
+            whileTap={{
+              scale: 0.9,
+              rotate: -5,
+              transition: {
+                type: "spring",
+                stiffness: 600,
+                damping: 15,
+              },
+            }}
           >
             🗾
-          </span>
+          </motion.span>
         </div>
         {/* Theme toggle on the right */}
         <div className="flex items-center gap-2">
@@ -172,10 +182,16 @@ export default function Portfolio() {
             ⌘ L
           </span>
         </div>
-      </div>
+      </motion.div>
 
       {/* Profile Section (Avatar + Name + About Me) */}
-      <section id="about" className="max-w-3xl mx-auto px-6 py-10">
+      <motion.section
+        id="about"
+        className="max-w-3xl mx-auto px-6 py-10"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
         <Card
           className={`p-6 transition-all duration-500 backdrop-blur-sm ${
             theme === "dark"
@@ -185,19 +201,46 @@ export default function Portfolio() {
         >
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
             {/* Avatar */}
-            <img
+            <motion.img
               src="/images/buttercup.jpg"
               alt="Profile avatar"
-              className="w-28 h-28 rounded-full object-cover border-4 border-slate-200 dark:border-slate-800 shadow-md"
+              className="w-28 h-28 rounded-full object-cover border-4 border-slate-200 dark:border-slate-800 shadow-md cursor-pointer"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              whileHover={{
+                scale: 1.08,
+                y: -4,
+                transition: {
+                  duration: 0.08,
+                  ease: "easeOut",
+                },
+              }}
+              whileTap={{
+                scale: 0.98,
+                transition: {
+                  type: "spring",
+                  stiffness: 500,
+                  damping: 20,
+                },
+              }}
             />
             <div className="flex-1 space-y-4">
-              <h1 className="text-4xl md:text-5xl font-light tracking-tight cursor-default">
+              <motion.h1
+                className="text-4xl md:text-5xl font-light tracking-tight cursor-default"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
                 Alan Tom
-              </h1>
-              <div
+              </motion.h1>
+              <motion.div
                 className={`space-y-4 leading-relaxed ${
                   theme === "dark" ? "text-slate-300" : "text-slate-600"
                 }`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
               >
                 <p
                   className={`transition-colors duration-300 ${
@@ -210,20 +253,36 @@ export default function Portfolio() {
                   free time, I lead CuseHacks, a student-run hackathon, and try
                   to travel as much as possible.
                 </p>
-              </div>
+              </motion.div>
             </div>
           </div>
         </Card>
-      </section>
+      </motion.section>
 
       {/* Experience Timeline Section */}
-      <section id="experience" className="max-w-3xl mx-auto px-6 py-10">
-        <h2 className="text-3xl font-light mb-10 cursor-default">Experience</h2>
+      <motion.section
+        id="experience"
+        className="max-w-3xl mx-auto px-6 py-10"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.8 }}
+      >
+        <motion.h2
+          className="text-3xl font-light mb-10 cursor-default"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.9 }}
+        >
+          Experience
+        </motion.h2>
         <div className="relative pl-8">
           {/* Vertical line */}
-          <div
+          <motion.div
             className="absolute left-3 top-0 h-full w-0.5 bg-slate-300 dark:bg-slate-700"
             style={{ zIndex: 0 }}
+            initial={{ scaleY: 0, transformOrigin: "top" }}
+            animate={{ scaleY: 1 }}
+            transition={{ duration: 1.0, delay: 1.0 }}
           />
           {/* Timeline items */}
           {[
@@ -256,16 +315,56 @@ export default function Portfolio() {
               desc: "compared LLM memory with human memory",
             },
           ].map((item, idx) => (
-            <div
+            <motion.div
               key={item.company + item.title}
-              className="flex items-start mb-10 last:mb-0 relative group cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.015] hover:shadow-xl focus-within:scale-[1.015] focus-within:shadow-xl"
+              className="flex items-start mb-10 last:mb-0 relative group cursor-pointer"
               style={{ zIndex: 1 }}
               tabIndex={0}
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                duration: 0.6,
+                delay: 1.1 + idx * 0.1,
+                layout: { duration: 0.15, ease: "easeOut" },
+                default: { duration: 0.15, ease: "easeOut" },
+              }}
+              whileHover={{
+                scale: 1.03,
+                y: -8,
+                backgroundColor:
+                  theme === "dark"
+                    ? "rgba(15, 23, 42, 0.6)"
+                    : "rgba(248, 250, 252, 0.6)",
+                borderRadius: "8px",
+                boxShadow:
+                  theme === "dark"
+                    ? "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 25px 25px -10px rgba(0, 0, 0, 0.15)"
+                    : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 25px 25px -10px rgba(0, 0, 0, 0.04)",
+                transition: {
+                  duration: 0.15,
+                  ease: "easeOut",
+                },
+              }}
+              whileTap={{
+                scale: 0.98,
+              }}
             >
               {/* Dot with glow on hover */}
-              <span
-                className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 ${item.color} transition-all duration-300 group-hover:shadow-[0_0_0_6px_rgba(59,130,246,0.15)] group-hover:brightness-125 group-focus:shadow-[0_0_0_6px_rgba(59,130,246,0.18)]`}
+              <motion.span
+                className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 ${item.color}`}
                 style={{ zIndex: 2 }}
+                whileHover={{
+                  scale: 1.25,
+                  boxShadow: "0 0 0 8px rgba(59, 130, 246, 0.2)",
+                  transition: {
+                    duration: 0.15,
+                    ease: "easeOut",
+                  },
+                }}
+                transition={{
+                  duration: 0.15,
+                  ease: "easeOut",
+                }}
               />
               <div className="ml-8 flex-1 flex flex-row justify-between items-start">
                 <div>
@@ -307,24 +406,65 @@ export default function Portfolio() {
                   {item.years}
                 </span>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* Projects Section */}
-      <section id="projects" className="max-w-3xl mx-auto px-6 py-10">
+      <motion.section
+        id="projects"
+        className="max-w-3xl mx-auto px-6 py-10"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 1.6 }}
+      >
         <div className="space-y-5">
-          <h2 className="text-3xl font-light cursor-default">Projects</h2>
+          <motion.h2
+            className="text-3xl font-light cursor-default"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 1.7 }}
+          >
+            Projects
+          </motion.h2>
           <div className="flex flex-col gap-5">
             {projects.map((project, index) => (
-              <div
+              <motion.div
                 key={project.title}
-                className="flex flex-row justify-between items-start w-full group cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.015] hover:shadow-xl focus-within:scale-[1.015] focus-within:shadow-xl relative"
+                className="flex flex-row justify-between items-start w-full group cursor-pointer relative"
                 tabIndex={0}
                 onClick={() =>
                   setSelectedProject(selectedProject === index ? null : index)
                 }
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.6,
+                  delay: 1.8 + index * 0.1,
+                  layout: { duration: 0.15, ease: "easeOut" },
+                  default: { duration: 0.15, ease: "easeOut" },
+                }}
+                whileHover={{
+                  scale: 1.03,
+                  y: -8,
+                  backgroundColor:
+                    theme === "dark"
+                      ? "rgba(15, 23, 42, 0.6)"
+                      : "rgba(248, 250, 252, 0.6)",
+                  borderRadius: "8px",
+                  boxShadow:
+                    theme === "dark"
+                      ? "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 25px 25px -10px rgba(0, 0, 0, 0.15)"
+                      : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 25px 25px -10px rgba(0, 0, 0, 0.04)",
+                  transition: {
+                    duration: 0.15,
+                    ease: "easeOut",
+                  },
+                }}
+                whileTap={{
+                  scale: 0.98,
+                }}
               >
                 <div className="flex-1 min-w-0">
                   <span
@@ -348,9 +488,9 @@ export default function Portfolio() {
                 </div>
                 <div className="flex flex-wrap gap-2 ml-6 mt-1 justify-end min-w-[120px]">
                   {project.tech.map((tech, i) => (
-                    <span
+                    <motion.span
                       key={tech}
-                      className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap shadow transition-all duration-300 group-hover:scale-[1.03] group-hover:brightness-105 group-focus:scale-[1.03] group-focus:brightness-105 ${
+                      className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap shadow ${
                         tech.toLowerCase() === "gcp"
                           ? "bg-blue-600 text-white"
                           : tech.toLowerCase() === "python"
@@ -383,16 +523,36 @@ export default function Portfolio() {
                           ? "bg-gray-500 text-white"
                           : "bg-slate-600 text-white"
                       }`}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{
+                        duration: 0.3,
+                        delay: 1.9 + index * 0.1 + i * 0.05,
+                        ease: [0.4, 0, 0.2, 1],
+                        layout: { duration: 0.15, ease: "easeOut" },
+                        default: { duration: 0.15, ease: "easeOut" },
+                      }}
+                      whileHover={{
+                        scale: 1.08,
+                        y: -4,
+                        transition: {
+                          duration: 0.15,
+                          ease: "easeOut",
+                        },
+                      }}
+                      whileTap={{
+                        scale: 0.95,
+                      }}
                     >
                       {tech}
-                    </span>
+                    </motion.span>
                   ))}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Project Details Modal */}
       <AnimatePresence>
@@ -494,12 +654,15 @@ export default function Portfolio() {
       </AnimatePresence>
 
       {/* Footer with contact icons and copyright */}
-      <footer
+      <motion.footer
         className={`mt-10 py-6 transition-colors duration-300 text-center backdrop-blur-sm ${
           theme === "dark"
             ? "bg-black border-t border-[#222]"
             : "bg-[#eaf1fb]/80 border-t border-[#b6d0ee]/60"
         }`}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 2.5 }}
       >
         <div className="max-w-3xl mx-auto px-6">
           <div className="flex justify-center space-x-4 mb-4">
@@ -508,10 +671,10 @@ export default function Portfolio() {
               variant="ghost"
               size="sm"
               asChild={false}
-              className={`transition-all duration-300 hover:scale-110 ${
+              className={`transition-all duration-200 hover:scale-115 hover:-translate-y-0.5 ${
                 theme === "dark"
-                  ? "text-slate-400 hover:text-white"
-                  : "text-slate-600 hover:text-black"
+                  ? "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                  : "text-slate-600 hover:text-black hover:bg-slate-100"
               }`}
               onClick={() => {
                 if (!footerEmailRevealed) {
@@ -587,10 +750,10 @@ export default function Portfolio() {
               variant="ghost"
               size="sm"
               asChild
-              className={`transition-all duration-300 hover:scale-110 ${
+              className={`transition-all duration-200 hover:scale-115 hover:-translate-y-0.5 ${
                 theme === "dark"
-                  ? "text-slate-400 hover:text-white"
-                  : "text-slate-600 hover:text-black"
+                  ? "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                  : "text-slate-600 hover:text-black hover:bg-slate-100"
               }`}
             >
               <Link href="https://github.com/alantomw" target="_blank">
@@ -602,10 +765,10 @@ export default function Portfolio() {
               variant="ghost"
               size="sm"
               asChild
-              className={`transition-all duration-300 hover:scale-110 ${
+              className={`transition-all duration-200 hover:scale-115 hover:-translate-y-0.5 ${
                 theme === "dark"
-                  ? "text-slate-400 hover:text-white"
-                  : "text-slate-600 hover:text-black"
+                  ? "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                  : "text-slate-600 hover:text-black hover:bg-slate-100"
               }`}
             >
               <Link
@@ -627,7 +790,7 @@ export default function Portfolio() {
             © 2025 Alan Tom. All rights reserved.
           </p>
         </div>
-      </footer>
+      </motion.footer>
     </div>
   );
 }
