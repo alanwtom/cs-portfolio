@@ -9,7 +9,7 @@ import { ProjectCard } from "./components/project-card";
 import { SkillBadge } from "./components/skill-badge";
 import { useTheme } from "./components/theme-provider";
 import React, { useRef, useState, useEffect } from "react";
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimation, AnimatePresence } from "framer-motion";
 
 export default function Portfolio() {
   const { theme, setTheme } = useTheme();
@@ -22,6 +22,7 @@ export default function Portfolio() {
   const [footerShowCopy, setFooterShowCopy] = useState(false);
   const [footerCopied, setFooterCopied] = useState(false);
   const footerCopyRef = useRef<HTMLDivElement | null>(null);
+  const [selectedProject, setSelectedProject] = useState<number | null>(null);
 
   const skills = [
     "Python",
@@ -41,8 +42,22 @@ export default function Portfolio() {
       description:
         "discord bot for career development with resume resources, real time job and event tracking, and learning material recommendations",
       tech: ["Python", "Discord.py", "GCP", "Nox"],
-      github: "https://github.com/innovateorange/DiscordBot/issues",
+      github: "https://github.com/innovateorange/DiscordBot",
       demo: "https://discord.gg/cvqbKxPtHE",
+      detailedDescription:
+        "student-focused career development bot with real-time job tracking, resume resources, and personalized learning recommendations",
+      techStack: {
+        Python: "core bot development",
+        "Discord.py": "discord API integration",
+        GCP: "cloud hosting & storage",
+        Nox: "testing & automation",
+      },
+      features: [
+        "real-time job and event tracking",
+        "resume building resources and templates",
+        "personalized learning material recommendations",
+        "career development guidance and tips",
+      ],
     },
     {
       title: "Flow",
@@ -51,6 +66,20 @@ export default function Portfolio() {
       tech: ["JavaScript", "Chrome Extension API", "HTML", "CSS"],
       github: "https://github.com/alantomw/Flow",
       demo: "https://chromewebstore.google.com/detail/flow/odenofhkafaeedoohodgdndpeeadpndg",
+      detailedDescription:
+        "browser extension that helps users maintain focus by intelligently blocking distracting elements while preserving core functionality",
+      techStack: {
+        JavaScript: "core extension logic",
+        "Chrome Extension API": "browser integration",
+        HTML: "popup interface structure",
+        CSS: "styling & user interface",
+      },
+      features: [
+        "intelligent content blocking algorithms",
+        "customizable distraction filters",
+        "minimal performance impact",
+        "seamless user experience",
+      ],
     },
   ];
 
@@ -96,6 +125,17 @@ export default function Portfolio() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [theme, setTheme]);
+
+  // Keyboard shortcut for closing modal
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape" && selectedProject !== null) {
+        setSelectedProject(null);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedProject]);
 
   return (
     <div
@@ -276,8 +316,11 @@ export default function Portfolio() {
             {projects.map((project, index) => (
               <div
                 key={project.title}
-                className="flex flex-row justify-between items-start w-full group cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.015] hover:shadow-xl focus-within:scale-[1.015] focus-within:shadow-xl"
+                className="flex flex-row justify-between items-start w-full group cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.015] hover:shadow-xl focus-within:scale-[1.015] focus-within:shadow-xl relative"
                 tabIndex={0}
+                onClick={() =>
+                  setSelectedProject(selectedProject === index ? null : index)
+                }
               >
                 <div className="flex-1 min-w-0">
                   <span
@@ -346,6 +389,105 @@ export default function Portfolio() {
           </div>
         </div>
       </section>
+
+      {/* Project Details Modal */}
+      <AnimatePresence>
+        {selectedProject !== null && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedProject(null)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {/* Backdrop with blur */}
+            <motion.div
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            />
+
+            {/* Modal Content */}
+            <motion.div
+              className="relative bg-slate-900 border border-blue-900 rounded-lg p-6 shadow-2xl text-white font-mono text-sm max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-semibold text-white">
+                  {projects[selectedProject].title}
+                </h3>
+                <button
+                  onClick={() => setSelectedProject(null)}
+                  className="text-slate-400 hover:text-white text-2xl leading-none"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="mb-6">
+                <p className="text-slate-300 leading-relaxed">
+                  {projects[selectedProject].detailedDescription}
+                </p>
+              </div>
+
+              <div className="mb-6">
+                <h4 className="text-blue-400 font-semibold mb-3">tech stack</h4>
+                <div className="space-y-2">
+                  {Object.entries(projects[selectedProject].techStack).map(
+                    ([tech, description]) => (
+                      <div key={tech} className="flex">
+                        <span className="text-blue-300 min-w-[140px]">
+                          {tech}
+                        </span>
+                        <span className="text-slate-400">/ {description}</span>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <h4 className="text-blue-400 font-semibold mb-3">features</h4>
+                <ul className="space-y-2">
+                  {projects[selectedProject].features.map((feature, i) => (
+                    <li key={i} className="text-slate-300">
+                      • {feature}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="flex space-x-6 text-sm">
+                <a
+                  href={projects[selectedProject].github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:text-blue-300 flex items-center"
+                >
+                  <Github className="w-4 h-4 mr-2" />
+                  src / github
+                </a>
+                <a
+                  href={projects[selectedProject].demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 hover:text-blue-300 flex items-center"
+                >
+                  <ArrowRight className="w-4 h-4 mr-2" />
+                  visit / demo
+                </a>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Footer with contact icons and copyright */}
       <footer
