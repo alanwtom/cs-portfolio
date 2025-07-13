@@ -131,6 +131,10 @@ export default function Portfolio() {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape" && selectedProject !== null) {
         setSelectedProject(null);
+        // Remove focus from any focused element to prevent outline
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur();
+        }
       }
     }
     window.addEventListener("keydown", handleKeyDown);
