@@ -26,9 +26,7 @@ export default function Portfolio() {
   // Detect OS for keyboard shortcut display
   const getKeyboardShortcut = () => {
     if (typeof window !== "undefined") {
-      const isMac =
-        navigator.platform.toUpperCase().indexOf("MAC") >= 0 ||
-        navigator.userAgent.toUpperCase().indexOf("MAC") >= 0;
+      const isMac = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
       return isMac ? "⌘ L" : "Ctrl L";
     }
     return "⌘ L"; // Default for SSR
