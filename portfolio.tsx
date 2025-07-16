@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Mail, Github, Linkedin, ArrowRight } from "lucide-react";
 import { ThemeToggle } from "./components/theme-toggle";
 import { useTheme } from "./components/theme-provider";
+import { TypeWriter } from "./components/TypeWriter";
 import React, { useRef, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -21,6 +22,17 @@ export default function Portfolio() {
   const [footerCopied, setFooterCopied] = useState(false);
   const footerCopyRef = useRef<HTMLDivElement | null>(null);
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
+
+  // Detect OS for keyboard shortcut display
+  const getKeyboardShortcut = () => {
+    if (typeof window !== "undefined") {
+      const isMac =
+        navigator.platform.toUpperCase().indexOf("MAC") >= 0 ||
+        navigator.userAgent.toUpperCase().indexOf("MAC") >= 0;
+      return isMac ? "⌘ L" : "Ctrl L";
+    }
+    return "⌘ L"; // Default for SSR
+  };
 
   const projects = [
     {
@@ -177,7 +189,7 @@ export default function Portfolio() {
                 : "bg-slate-100 text-slate-600 border border-slate-300"
             }`}
           >
-            ⌘ L
+            {getKeyboardShortcut()}
           </span>
         </div>
       </motion.div>
@@ -240,17 +252,14 @@ export default function Portfolio() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
               >
-                <p
-                  className={`transition-colors duration-300 ${
-                    theme === "dark"
-                      ? "hover:text-slate-200"
-                      : "hover:text-slate-800"
-                  }`}
-                >
-                  I'm a computer science junior at Syracuse University. In my
-                  free time, I lead CuseHacks, a student-run hackathon, and try
-                  to travel as much as possible.
-                </p>
+                <TypeWriter
+                  texts={[
+                    "I'm a computer science junior at Syracuse University.",
+                    "I lead CuseHacks, a student-run hackathon, and try to travel as much as possible.",
+                  ]}
+                  speed={25}
+                  pauseDuration={1000}
+                />
               </motion.div>
             </div>
           </div>
