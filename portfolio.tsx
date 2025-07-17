@@ -22,6 +22,7 @@ export default function Portfolio() {
   const [footerCopied, setFooterCopied] = useState(false);
   const footerCopyRef = useRef<HTMLDivElement | null>(null);
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
+  const [showJapanTooltip, setShowJapanTooltip] = useState(false);
 
   // Detect OS for keyboard shortcut display
   const getKeyboardShortcut = () => {
@@ -151,14 +152,15 @@ export default function Portfolio() {
         transition={{ duration: 0.6, delay: 0.1 }}
       >
         {/* Japan emoji on the left */}
-        <div className="flex items-center">
+        <div className="flex items-center relative">
           <motion.span
-            className="text-2xl align-middle cursor-pointer"
+            className="text-2xl align-middle cursor-pointer select-none"
             role="img"
             aria-label="Map of Japan"
+            onMouseEnter={() => setShowJapanTooltip(true)}
+            onMouseLeave={() => setShowJapanTooltip(false)}
             whileHover={{
               scale: 1.15,
-              rotate: 15,
               transition: {
                 duration: 0.08,
                 ease: "easeOut",
@@ -176,6 +178,22 @@ export default function Portfolio() {
           >
             🗾
           </motion.span>
+          {/* Tooltip */}
+          {showJapanTooltip && (
+            <motion.div
+              className={`absolute left-0 top-full mt-2 px-3 py-2 rounded-lg border shadow-sm text-sm whitespace-nowrap z-50 backdrop-blur-sm transition-all duration-500 ${
+                theme === "dark"
+                  ? "bg-[#0a1628]/90 border-[#1e293b]/60 text-slate-300"
+                  : "bg-[#eaf1fb]/80 border-[#b6d0ee]/60 text-slate-600"
+              }`}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              my most recent trip was to Japan! I'd love to go back one day.
+            </motion.div>
+          )}
         </div>
         {/* Theme toggle on the right */}
         <div className="flex items-center gap-2">
