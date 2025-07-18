@@ -271,7 +271,7 @@ export default function Portfolio() {
                 <TypeWriter
                   texts={[
                     "I'm a computer science junior at Syracuse University.",
-                    "I lead CuseHacks, a student-run hackathon, and try to travel as much as possible.",
+                    "I lead CuseHacks, a student-run hackathon, and try to travel as much as possible!",
                   ]}
                   speed={25}
                   pauseDuration={1000}
