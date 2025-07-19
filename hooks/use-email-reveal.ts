@@ -4,7 +4,7 @@ interface EmailRevealState {
   isRevealed: boolean
   showCopyBubble: boolean
   copied: boolean
-  copyBubbleRef: React.RefObject<HTMLDivElement>
+  copyBubbleRef: React.RefObject<HTMLDivElement | null>
 }
 
 interface EmailRevealActions {
