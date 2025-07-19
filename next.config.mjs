@@ -12,10 +12,6 @@ const nextConfig = {
   images: {
     unoptimized: true, // Keep this if you need it for static export
   },
-  // Add performance optimizations
-  experimental: {
-    optimizeCss: true,
-  },
   // Enable strict mode for better development experience
   reactStrictMode: true,
 }
