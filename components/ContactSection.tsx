@@ -54,7 +54,7 @@ export function ContactSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1.2 }}
           >
-            I'm always open to discussing new opportunities, interesting projects, or just having a chat about technology and innovation.
+            I&apos;m always open to discussing new opportunities, interesting projects, or just having a chat about technology and innovation.
           </motion.p>
 
           <motion.div

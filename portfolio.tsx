@@ -1,142 +1,39 @@
 "use client";
 
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Mail, Github, Linkedin, ArrowRight } from "lucide-react";
+import { Mail, Github, Linkedin } from "lucide-react";
 import { ThemeToggle } from "./components/theme-toggle";
 import { useTheme } from "./components/theme-provider";
 import { TypeWriter } from "./components/TypeWriter";
-import React, { useRef, useState, useEffect } from "react";
+import { ProjectCard } from "./components/ProjectCard";
+import { ProjectModal } from "./components/ProjectModal";
+import { ContactSection } from "./components/ContactSection";
+import { useEmailReveal } from "./hooks/use-email-reveal";
+import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
+import { PROJECTS, TYPEWRITER_TEXTS, EMAIL, GITHUB_URL, LINKEDIN_URL } from "./lib/constants";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Portfolio() {
   const { theme, setTheme } = useTheme();
-  const [emailRevealed, setEmailRevealed] = useState(false);
-  const emailHoldTimeout = useRef<NodeJS.Timeout | null>(null);
-  const [showCopyBubble, setShowCopyBubble] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const copyBubbleRef = useRef<HTMLDivElement | null>(null);
-  const [footerEmailRevealed, setFooterEmailRevealed] = useState(false);
-  const [footerShowCopy, setFooterShowCopy] = useState(false);
-  const [footerCopied, setFooterCopied] = useState(false);
-  const footerCopyRef = useRef<HTMLDivElement | null>(null);
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [showJapanTooltip, setShowJapanTooltip] = useState(false);
 
-  // Detect OS for keyboard shortcut display
-  const getKeyboardShortcut = () => {
-    if (typeof window !== "undefined") {
-      const isMac = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent);
-      return isMac ? "⌘ L" : "Ctrl L";
-    }
-    return "⌘ L"; // Default for SSR
-  };
-
-  const projects = [
-    {
-      title: "Bug Bot",
-      description:
-        "discord bot for career development with resume resources, real time job and event tracking, and learning material recommendations",
-      tech: ["Python", "Discord.py", "GCP", "Nox"],
-      github: "https://github.com/innovateorange/DiscordBot",
-      demo: "https://discord.gg/cvqbKxPtHE",
-      detailedDescription:
-        "student-focused career development bot with real-time job tracking, resume resources, and personalized learning recommendations",
-      techStack: {
-        Python: "core bot development",
-        "Discord.py": "discord API integration",
-        GCP: "cloud hosting & storage",
-        Nox: "testing & automation",
-      },
-      features: [
-        "real-time job and event tracking",
-        "resume building resources and templates",
-        "personalized learning material recommendations",
-        "career development guidance and tips",
-      ],
-    },
-    {
-      title: "Flow",
-      description:
-        "sleek browser extension that helps users maintain focus by blocking distracting elements while browsing",
-      tech: ["JavaScript", "Chrome Extension API", "HTML", "CSS"],
-      github: "https://github.com/alantomw/Flow",
-      demo: "https://chromewebstore.google.com/detail/flow/odenofhkafaeedoohodgdndpeeadpndg",
-      detailedDescription:
-        "browser extension that helps users maintain focus by intelligently blocking distracting elements while preserving core functionality",
-      techStack: {
-        JavaScript: "core extension logic",
-        "Chrome Extension API": "browser integration",
-        HTML: "popup interface structure",
-        CSS: "styling & user interface",
-      },
-      features: [
-        "intelligent content blocking algorithms",
-        "customizable distraction filters",
-        "minimal performance impact",
-        "seamless user experience",
-      ],
-    },
-  ];
-
-  useEffect(() => {
-    if (!showCopyBubble) return;
-    function handleClick(e: MouseEvent) {
-      if (
-        copyBubbleRef.current &&
-        e.target instanceof Node &&
-        !copyBubbleRef.current.contains(e.target as Node)
-      ) {
-        setShowCopyBubble(false);
-      }
-    }
-    window.addEventListener("mousedown", handleClick);
-    return () => window.removeEventListener("mousedown", handleClick);
-  }, [showCopyBubble]);
-
-  useEffect(() => {
-    if (!footerShowCopy) return;
-    function handleClick(e: MouseEvent) {
-      if (
-        footerCopyRef.current &&
-        e.target instanceof Node &&
-        !footerCopyRef.current.contains(e.target as Node)
-      ) {
-        setFooterShowCopy(false);
-        setFooterEmailRevealed(false);
-      }
-    }
-    window.addEventListener("mousedown", handleClick);
-    return () => window.removeEventListener("mousedown", handleClick);
-  }, [footerShowCopy]);
-
-  // Keyboard shortcut for theme toggle
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "l") {
-        e.preventDefault();
-        setTheme(theme === "dark" ? "light" : "dark");
-      }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [theme, setTheme]);
-
-  // Keyboard shortcut for closing modal
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape" && selectedProject !== null) {
+  // Use our custom hooks
+  const footerEmail = useEmailReveal();
+  const { getKeyboardShortcut } = useKeyboardShortcuts({
+    onThemeToggle: () => setTheme(theme === "dark" ? "light" : "dark"),
+    onEscapePress: () => {
+      if (selectedProject !== null) {
         setSelectedProject(null);
-        // Remove focus from any focused element to prevent outline
-        if (document.activeElement instanceof HTMLElement) {
-          document.activeElement.blur();
-        }
       }
-    }
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedProject]);
+    },
+    theme,
+  });
+
+
+
 
   return (
     <div
@@ -269,10 +166,7 @@ export default function Portfolio() {
                 transition={{ duration: 0.8, delay: 0.5 }}
               >
                 <TypeWriter
-                  texts={[
-                    "I'm a computer science junior at Syracuse University.",
-                    "I lead CuseHacks, a student-run hackathon, and try to travel as much as possible!",
-                  ]}
+                  texts={TYPEWRITER_TEXTS}
                   speed={25}
                   pauseDuration={1000}
                 />
@@ -452,230 +346,27 @@ export default function Portfolio() {
             Projects
           </motion.h2>
           <div className="flex flex-col gap-5">
-            {projects.map((project, index) => (
-              <motion.div
+            {PROJECTS.map((project, index) => (
+              <ProjectCard
                 key={project.title}
-                className="flex flex-row justify-between items-start w-full group cursor-pointer relative"
-                tabIndex={0}
-                onClick={() =>
-                  setSelectedProject(selectedProject === index ? null : index)
-                }
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.6,
-                  delay: 1.8 + index * 0.1,
-                  layout: { duration: 0.15, ease: "easeOut" },
-                  default: { duration: 0.15, ease: "easeOut" },
-                }}
-                whileHover={{
-                  scale: 1.03,
-                  y: -8,
-                  backgroundColor:
-                    theme === "dark"
-                      ? "rgba(15, 23, 42, 0.6)"
-                      : "rgba(248, 250, 252, 0.6)",
-                  borderRadius: "8px",
-                  boxShadow:
-                    theme === "dark"
-                      ? "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 25px 25px -10px rgba(0, 0, 0, 0.15)"
-                      : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 25px 25px -10px rgba(0, 0, 0, 0.04)",
-                  transition: {
-                    duration: 0.15,
-                    ease: "easeOut",
-                  },
-                }}
-                whileTap={{
-                  scale: 0.98,
-                }}
-              >
-                <div className="flex-1 min-w-0">
-                  <span
-                    className={`font-bold text-base md:text-lg transition-colors duration-300 ${
-                      theme === "dark"
-                        ? "group-hover:text-white group-focus:text-white"
-                        : "group-hover:text-slate-900 group-focus:text-slate-900"
-                    }`}
-                  >
-                    {project.title}
-                  </span>
-                  <div
-                    className={`mt-1 text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-2xl transition-colors duration-300 ${
-                      theme === "dark"
-                        ? "group-hover:text-slate-200"
-                        : "group-hover:text-slate-700"
-                    }`}
-                  >
-                    {project.description}
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2 ml-6 mt-1 justify-end min-w-[120px]">
-                  {project.tech.map((tech, i) => (
-                    <motion.span
-                      key={tech}
-                      className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap shadow ${
-                        tech.toLowerCase() === "gcp"
-                          ? "bg-blue-600 text-white"
-                          : tech.toLowerCase() === "python"
-                          ? "bg-yellow-300 text-black"
-                          : tech.toLowerCase() === "html"
-                          ? "bg-orange-500 text-white"
-                          : tech.toLowerCase() === "css"
-                          ? "bg-purple-600 text-white"
-                          : tech.toLowerCase().includes("react")
-                          ? "bg-blue-500 text-white"
-                          : tech.toLowerCase().includes("typescript")
-                          ? "bg-blue-400 text-white"
-                          : tech.toLowerCase().includes("javascript")
-                          ? "bg-yellow-400 text-black"
-                          : tech.toLowerCase().includes("node")
-                          ? "bg-green-500 text-white"
-                          : tech.toLowerCase().includes("aws")
-                          ? "bg-orange-400 text-white"
-                          : tech.toLowerCase().includes("express")
-                          ? "bg-gray-800 text-white"
-                          : tech.toLowerCase().includes("supabase")
-                          ? "bg-green-700 text-white"
-                          : tech.toLowerCase().includes("discord")
-                          ? "bg-indigo-500 text-white"
-                          : tech.toLowerCase().includes("stripe")
-                          ? "bg-purple-500 text-white"
-                          : tech.toLowerCase().includes("api")
-                          ? "bg-green-400 text-white"
-                          : tech.toLowerCase().includes("nox")
-                          ? "bg-gray-500 text-white"
-                          : "bg-slate-600 text-white"
-                      }`}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{
-                        duration: 0.3,
-                        delay: 1.9 + index * 0.1 + i * 0.05,
-                        ease: [0.4, 0, 0.2, 1],
-                        layout: { duration: 0.15, ease: "easeOut" },
-                        default: { duration: 0.15, ease: "easeOut" },
-                      }}
-                      whileHover={{
-                        scale: 1.08,
-                        y: -4,
-                        transition: {
-                          duration: 0.15,
-                          ease: "easeOut",
-                        },
-                      }}
-                      whileTap={{
-                        scale: 0.95,
-                      }}
-                    >
-                      {tech}
-                    </motion.span>
-                  ))}
-                </div>
-              </motion.div>
+                project={project}
+                index={index}
+                onClick={() => setSelectedProject(selectedProject === index ? null : index)}
+              />
             ))}
           </div>
         </div>
       </motion.section>
 
-      {/* Project Details Modal */}
-      <AnimatePresence>
-        {selectedProject !== null && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            onClick={() => setSelectedProject(null)}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {/* Backdrop with blur */}
-            <motion.div
-              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            />
+      {/* Project Modal */}
+      <ProjectModal
+        project={selectedProject !== null ? PROJECTS[selectedProject] : null}
+        isOpen={selectedProject !== null}
+        onClose={() => setSelectedProject(null)}
+      />
 
-            {/* Modal Content */}
-            <motion.div
-              className="relative bg-slate-900 border border-blue-900 rounded-lg p-6 shadow-2xl text-white font-mono text-sm max-w-2xl w-full max-h-[80vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold text-white">
-                  {projects[selectedProject].title}
-                </h3>
-                <button
-                  onClick={() => setSelectedProject(null)}
-                  className="text-slate-400 hover:text-white text-2xl leading-none"
-                >
-                  ×
-                </button>
-              </div>
-
-              <div className="mb-6">
-                <p className="text-slate-300 leading-relaxed">
-                  {projects[selectedProject].detailedDescription}
-                </p>
-              </div>
-
-              <div className="mb-6">
-                <h4 className="text-blue-400 font-semibold mb-3">tech stack</h4>
-                <div className="space-y-2">
-                  {Object.entries(projects[selectedProject].techStack).map(
-                    ([tech, description]) => (
-                      <div key={tech} className="flex">
-                        <span className="text-blue-300 min-w-[140px]">
-                          {tech}
-                        </span>
-                        <span className="text-slate-400">/ {description}</span>
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <h4 className="text-blue-400 font-semibold mb-3">features</h4>
-                <ul className="space-y-2">
-                  {projects[selectedProject].features.map((feature, i) => (
-                    <li key={i} className="text-slate-300">
-                      • {feature}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="flex space-x-6 text-sm">
-                <a
-                  href={projects[selectedProject].github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 hover:text-blue-300 flex items-center"
-                >
-                  <Github className="w-4 h-4 mr-2" />
-                  src / github
-                </a>
-                <a
-                  href={projects[selectedProject].demo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 hover:text-blue-300 flex items-center"
-                >
-                  <ArrowRight className="w-4 h-4 mr-2" />
-                  visit / demo
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
+      {/* Contact Section */}
+      <ContactSection />
       {/* Footer with contact icons and copyright */}
       <motion.footer
         className={`mt-10 py-6 transition-colors duration-300 text-center backdrop-blur-sm ${
@@ -700,61 +391,46 @@ export default function Portfolio() {
                   : "text-slate-600 hover:text-black hover:bg-slate-100"
               }`}
               onClick={() => {
-                if (!footerEmailRevealed) {
-                  setFooterEmailRevealed(true);
-                } else if (!footerShowCopy) {
-                  setFooterShowCopy(true);
+                if (!footerEmail.isRevealed) {
+                  footerEmail.handleMouseDown();
+                  footerEmail.handleMouseUp();
+                } else if (!footerEmail.showCopyBubble) {
+                  footerEmail.copyToClipboard();
                 }
               }}
             >
               <span className="flex items-center relative">
                 <Mail className="w-4 h-4 mr-2" />
-                {footerEmailRevealed ? (
+                {footerEmail.isRevealed ? (
                   <>
                     <span className="underline decoration-dotted decoration-2 underline-offset-4 cursor-pointer">
-                      alanwtom@outlook.com
+                      {EMAIL}
                     </span>
                     {/* Copy popover */}
-                    {footerShowCopy && (
+                    {footerEmail.showCopyBubble && (
                       <div
-                        ref={footerCopyRef}
+                        ref={footerEmail.copyBubbleRef}
                         className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 rounded-xl shadow-lg px-2 py-1 text-xs font-medium transition-all duration-200 ${
                           theme === "dark"
                             ? "bg-black text-white border border-slate-700"
                             : "bg-white text-black border border-slate-300"
                         }`}
                       >
-                        {footerCopied ? (
+                        {footerEmail.copied ? (
                           <span className="text-green-400">Copied!</span>
                         ) : (
                           <div
                             role="button"
                             tabIndex={0}
                             className="inline-block px-1 py-0.5 hover:underline focus:outline-none cursor-pointer select-none font-normal transition-colors duration-150"
-                            onClick={async (e) => {
+                            onClick={(e) => {
                               e.stopPropagation();
-                              await navigator.clipboard.writeText(
-                                "alanwtom@outlook.com"
-                              );
-                              setFooterCopied(true);
-                              setTimeout(() => {
-                                setFooterShowCopy(false);
-                                setFooterEmailRevealed(false);
-                                setFooterCopied(false);
-                              }, 1200);
+                              footerEmail.copyToClipboard();
                             }}
-                            onKeyDown={async (e) => {
+                            onKeyDown={(e) => {
                               if (e.key === "Enter" || e.key === " ") {
                                 e.preventDefault();
-                                await navigator.clipboard.writeText(
-                                  "alanwtom@outlook.com"
-                                );
-                                setFooterCopied(true);
-                                setTimeout(() => {
-                                  setFooterShowCopy(false);
-                                  setFooterEmailRevealed(false);
-                                  setFooterCopied(false);
-                                }, 1200);
+                                footerEmail.copyToClipboard();
                               }
                             }}
                           >
@@ -779,10 +455,10 @@ export default function Portfolio() {
                   : "text-slate-600 hover:text-black hover:bg-slate-100"
               }`}
             >
-              <Link href="https://github.com/alantomw" target="_blank">
+              <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
                 <Github className="w-4 h-4 mr-2" />
                 GitHub
-              </Link>
+              </a>
             </Button>
             <Button
               variant="ghost"
@@ -794,13 +470,10 @@ export default function Portfolio() {
                   : "text-slate-600 hover:text-black hover:bg-slate-100"
               }`}
             >
-              <Link
-                href="https://www.linkedin.com/in/alan-tom/"
-                target="_blank"
-              >
+              <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
                 <Linkedin className="w-4 h-4 mr-2" />
                 LinkedIn
-              </Link>
+              </a>
             </Button>
           </div>
           <p

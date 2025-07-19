@@ -8,11 +8,10 @@ import type { Project } from "@/lib/constants"
 interface ProjectCardProps {
   project: Project
   index: number
-  isSelected: boolean
   onClick: () => void
 }
 
-export function ProjectCard({ project, index, isSelected, onClick }: ProjectCardProps) {
+export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
   const { theme } = useTheme()
 
   return (
