@@ -3,10 +3,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Alan Tom",
-  description: "my portfolio",
+  description: "jobmaxxing",
   openGraph: {
-    title: "jobmaxxing",
-    description: "Alan Tom's Portfolio",
+    title: "Alan Tom",
+    description: "jobmaxxing",
     url: "https://alantom.dev",
     siteName: "Alan Tom",
     images: [
@@ -15,6 +15,7 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: "Alan Tom's Portfolio",
+
       },
     ],
     locale: "en_US",
@@ -24,6 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "jobmaxxing",
     description: "Alan Tom's Portfolio",
+
     images: ["/images/cockatiel.webp"],
   },
 };
