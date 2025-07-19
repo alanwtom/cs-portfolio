@@ -6,47 +6,69 @@ type Theme = "dark" | "light"
 
 type ThemeProviderProps = {
   children: React.ReactNode
+  defaultTheme?: Theme
+  storageKey?: string
 }
 
 type ThemeProviderState = {
   theme: Theme
   setTheme: (theme: Theme) => void
+  isLoaded: boolean
 }
 
 const initialState: ThemeProviderState = {
   theme: "dark",
   setTheme: () => null,
+  isLoaded: false,
 }
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
 export function ThemeProvider({
   children,
+  defaultTheme = "dark",
+  storageKey = "theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>("dark")
+  const [theme, setTheme] = useState<Theme>(defaultTheme)
+  const [isLoaded, setIsLoaded] = useState(false)
 
+  // Load theme from localStorage on mount (client-side only)
   useEffect(() => {
-    const root = window.document.documentElement
+    try {
+      const savedTheme = localStorage.getItem(storageKey) as Theme
+      if (savedTheme && (savedTheme === "dark" || savedTheme === "light")) {
+        setTheme(savedTheme)
+      }
+    } catch (error) {
+      // localStorage might not be available (SSR, private browsing, etc.)
+      console.warn("Failed to load theme from localStorage:", error)
+    } finally {
+      setIsLoaded(true)
+    }
+  }, [storageKey])
 
+  // Apply theme to document
+  useEffect(() => {
+    if (!isLoaded) return
+
+    const root = window.document.documentElement
     root.classList.remove("light", "dark")
     root.classList.add(theme)
-  }, [theme])
+  }, [theme, isLoaded])
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem("theme", theme)
-      setTheme(theme)
+    isLoaded,
+    setTheme: (newTheme: Theme) => {
+      try {
+        localStorage.setItem(storageKey, newTheme)
+      } catch (error) {
+        console.warn("Failed to save theme to localStorage:", error)
+      }
+      setTheme(newTheme)
     },
   }
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as Theme
-    if (savedTheme) {
-      setTheme(savedTheme)
-    }
-  }, [])
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>

@@ -1,14 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Remove dangerous build ignores - enable proper error checking
   eslint: {
-    ignoreDuringBuilds: true,
+    // Only ignore during builds if you have a specific CI/CD setup
+    // ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    // Only ignore build errors if you have a specific CI/CD setup
+    // ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    unoptimized: true, // Keep this if you need it for static export
   },
+  // Add performance optimizations
+  experimental: {
+    optimizeCss: true,
+  },
+  // Enable strict mode for better development experience
+  reactStrictMode: true,
 }
 
 export default nextConfig
