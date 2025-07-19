@@ -63,4 +63,4 @@ export const TYPEWRITER_TEXTS = [
 
 export const EMAIL = "alantomw@gmail.com"
 export const GITHUB_URL = "https://github.com/alantomw"
-export const LINKEDIN_URL = "https://linkedin.com/in/alantomw"
+export const LINKEDIN_URL = "https://www.linkedin.com/in/alan-tom/"

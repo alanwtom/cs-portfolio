@@ -8,20 +8,23 @@ import { useTheme } from "./components/theme-provider";
 import { TypeWriter } from "./components/TypeWriter";
 import { ProjectCard } from "./components/ProjectCard";
 import { ProjectModal } from "./components/ProjectModal";
-import { ContactSection } from "./components/ContactSection";
-import { useEmailReveal } from "./hooks/use-email-reveal";
+
+
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import { PROJECTS, TYPEWRITER_TEXTS, EMAIL, GITHUB_URL, LINKEDIN_URL } from "./lib/constants";
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function Portfolio() {
   const { theme, setTheme } = useTheme();
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [showJapanTooltip, setShowJapanTooltip] = useState(false);
+  const [footerEmailRevealed, setFooterEmailRevealed] = useState(false);
+  const [footerShowCopy, setFooterShowCopy] = useState(false);
+  const [footerCopied, setFooterCopied] = useState(false);
+  const footerCopyRef = React.useRef<HTMLDivElement | null>(null);
 
   // Use our custom hooks
-  const footerEmail = useEmailReveal();
   const { getKeyboardShortcut } = useKeyboardShortcuts({
     onThemeToggle: () => setTheme(theme === "dark" ? "light" : "dark"),
     onEscapePress: () => {
@@ -31,6 +34,23 @@ export default function Portfolio() {
     },
     theme,
   });
+
+  // Handle footer copy functionality
+  React.useEffect(() => {
+    if (!footerShowCopy) return;
+    function handleClick(e: MouseEvent) {
+      if (
+        footerCopyRef.current &&
+        e.target instanceof Node &&
+        !footerCopyRef.current.contains(e.target as Node)
+      ) {
+        setFooterShowCopy(false);
+        setFooterEmailRevealed(false);
+      }
+    }
+    window.addEventListener("mousedown", handleClick);
+    return () => window.removeEventListener("mousedown", handleClick);
+  }, [footerShowCopy]);
 
 
 
@@ -365,8 +385,7 @@ export default function Portfolio() {
         onClose={() => setSelectedProject(null)}
       />
 
-      {/* Contact Section */}
-      <ContactSection />
+
       {/* Footer with contact icons and copyright */}
       <motion.footer
         className={`mt-10 py-6 transition-colors duration-300 text-center backdrop-blur-sm ${
@@ -391,46 +410,57 @@ export default function Portfolio() {
                   : "text-slate-600 hover:text-black hover:bg-slate-100"
               }`}
               onClick={() => {
-                if (!footerEmail.isRevealed) {
-                  footerEmail.handleMouseDown();
-                  footerEmail.handleMouseUp();
-                } else if (!footerEmail.showCopyBubble) {
-                  footerEmail.copyToClipboard();
+                if (!footerEmailRevealed) {
+                  setFooterEmailRevealed(true);
+                } else if (!footerShowCopy) {
+                  setFooterShowCopy(true);
                 }
               }}
             >
               <span className="flex items-center relative">
                 <Mail className="w-4 h-4 mr-2" />
-                {footerEmail.isRevealed ? (
+                {footerEmailRevealed ? (
                   <>
                     <span className="underline decoration-dotted decoration-2 underline-offset-4 cursor-pointer">
                       {EMAIL}
                     </span>
                     {/* Copy popover */}
-                    {footerEmail.showCopyBubble && (
+                    {footerShowCopy && (
                       <div
-                        ref={footerEmail.copyBubbleRef}
+                        ref={footerCopyRef}
                         className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 rounded-xl shadow-lg px-2 py-1 text-xs font-medium transition-all duration-200 ${
                           theme === "dark"
                             ? "bg-black text-white border border-slate-700"
                             : "bg-white text-black border border-slate-300"
                         }`}
                       >
-                        {footerEmail.copied ? (
+                        {footerCopied ? (
                           <span className="text-green-400">Copied!</span>
                         ) : (
                           <div
                             role="button"
                             tabIndex={0}
                             className="inline-block px-1 py-0.5 hover:underline focus:outline-none cursor-pointer select-none font-normal transition-colors duration-150"
-                            onClick={(e) => {
+                            onClick={async (e) => {
                               e.stopPropagation();
-                              footerEmail.copyToClipboard();
+                              await navigator.clipboard.writeText(EMAIL);
+                              setFooterCopied(true);
+                              setTimeout(() => {
+                                setFooterShowCopy(false);
+                                setFooterEmailRevealed(false);
+                                setFooterCopied(false);
+                              }, 1200);
                             }}
-                            onKeyDown={(e) => {
+                            onKeyDown={async (e) => {
                               if (e.key === "Enter" || e.key === " ") {
                                 e.preventDefault();
-                                footerEmail.copyToClipboard();
+                                await navigator.clipboard.writeText(EMAIL);
+                                setFooterCopied(true);
+                                setTimeout(() => {
+                                  setFooterShowCopy(false);
+                                  setFooterEmailRevealed(false);
+                                  setFooterCopied(false);
+                                }, 1200);
                               }
                             }}
                           >
