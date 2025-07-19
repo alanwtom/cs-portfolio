@@ -9,9 +9,14 @@ import { TypeWriter } from "./components/TypeWriter";
 import { ProjectCard } from "./components/ProjectCard";
 import { ProjectModal } from "./components/ProjectModal";
 
-
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
-import { PROJECTS, TYPEWRITER_TEXTS, EMAIL, GITHUB_URL, LINKEDIN_URL } from "./lib/constants";
+import {
+  PROJECTS,
+  TYPEWRITER_TEXTS,
+  EMAIL,
+  GITHUB_URL,
+  LINKEDIN_URL,
+} from "./lib/constants";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 
@@ -51,9 +56,6 @@ export default function Portfolio() {
     window.addEventListener("mousedown", handleClick);
     return () => window.removeEventListener("mousedown", handleClick);
   }, [footerShowCopy]);
-
-
-
 
   return (
     <div
@@ -371,7 +373,9 @@ export default function Portfolio() {
                 key={project.title}
                 project={project}
                 index={index}
-                onClick={() => setSelectedProject(selectedProject === index ? null : index)}
+                onClick={() =>
+                  setSelectedProject(selectedProject === index ? null : index)
+                }
               />
             ))}
           </div>
@@ -384,7 +388,6 @@ export default function Portfolio() {
         isOpen={selectedProject !== null}
         onClose={() => setSelectedProject(null)}
       />
-
 
       {/* Footer with contact icons and copyright */}
       <motion.footer

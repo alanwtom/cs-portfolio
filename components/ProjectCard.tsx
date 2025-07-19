@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { ArrowRight } from "lucide-react"
-import { useTheme } from "./theme-provider"
-import type { Project } from "@/lib/constants"
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { useTheme } from "./theme-provider";
+import type { Project } from "@/lib/constants";
 
 interface ProjectCardProps {
-  project: Project
-  index: number
-  onClick: () => void
+  project: Project;
+  index: number;
+  onClick: () => void;
 }
 
 export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
-  const { theme } = useTheme()
+  const { theme } = useTheme();
 
   return (
     <motion.div
@@ -21,8 +21,8 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault()
-          onClick()
+          e.preventDefault();
+          onClick();
         }
       }}
       initial={{ opacity: 0, y: 30 }}
@@ -74,7 +74,7 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
           />
         </div>
         <p
-          className={`text-sm leading-relaxed transition-colors duration-200 ${
+          className={`text-base leading-relaxed transition-colors duration-200 ${
             theme === "dark"
               ? "text-slate-400 group-hover:text-slate-300"
               : "text-slate-600 group-hover:text-slate-700"
@@ -98,5 +98,5 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }
