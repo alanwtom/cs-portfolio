@@ -8,6 +8,7 @@ import { useTheme } from "./components/theme-provider";
 import { TypeWriter } from "./components/TypeWriter";
 import { ProjectCard } from "./components/ProjectCard";
 import { ProjectModal } from "./components/ProjectModal";
+import Image from "next/image";
 
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import {
@@ -16,12 +17,16 @@ import {
   EMAIL,
   GITHUB_URL,
   LINKEDIN_URL,
+  ANIMATION_DURATIONS,
+  ANIMATION_DELAYS,
+  COPY_FEEDBACK_DURATION,
+  TYPEWRITER_CONFIG,
 } from "./lib/constants";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 
 export default function Portfolio() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, isLoaded } = useTheme();
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [showJapanTooltip, setShowJapanTooltip] = useState(false);
   const [footerEmailRevealed, setFooterEmailRevealed] = useState(false);
@@ -57,12 +62,28 @@ export default function Portfolio() {
     return () => window.removeEventListener("mousedown", handleClick);
   }, [footerShowCopy]);
 
+  // Show loading state while theme is being loaded
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${
         theme === "dark" ? "bg-black text-white" : "bg-white text-black"
       }`}
     >
+      {/* Skip to main content link for accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-md z-50 transition-all duration-200"
+      >
+        Skip to main content
+      </a>
       {/* Add a simple header with Japan emoji and theme toggle at the top */}
       <motion.div
         className="max-w-3xl mx-auto px-6 py-6 flex items-center justify-between"
@@ -131,7 +152,7 @@ export default function Portfolio() {
 
       {/* Profile Section (Avatar + Name + About Me) */}
       <motion.section
-        id="about"
+        id="main-content"
         className="max-w-3xl mx-auto px-6 py-10"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -146,10 +167,8 @@ export default function Portfolio() {
         >
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
             {/* Avatar */}
-            <motion.img
-              src="/images/buttercup.jpg"
-              alt="Profile avatar"
-              className="w-28 h-28 rounded-full object-cover border-4 border-slate-200 dark:border-slate-800 shadow-md cursor-pointer"
+            <motion.div
+              className="w-28 h-28 rounded-full border-4 border-slate-200 dark:border-slate-800 shadow-md cursor-pointer overflow-hidden"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
@@ -169,7 +188,17 @@ export default function Portfolio() {
                   damping: 20,
                 },
               }}
-            />
+            >
+              <Image
+                src="/images/buttercup.jpg"
+                alt="Alan Tom's profile photo"
+                width={112}
+                height={112}
+                className="w-full h-full object-cover"
+                priority
+                sizes="112px"
+              />
+            </motion.div>
             <div className="flex-1 space-y-4">
               <motion.h1
                 className="text-4xl md:text-5xl font-light tracking-tight cursor-default"
@@ -189,8 +218,8 @@ export default function Portfolio() {
               >
                 <TypeWriter
                   texts={TYPEWRITER_TEXTS}
-                  speed={25}
-                  pauseDuration={1000}
+                  speed={TYPEWRITER_CONFIG.SPEED}
+                  pauseDuration={TYPEWRITER_CONFIG.PAUSE_DURATION}
                 />
               </motion.div>
             </div>
@@ -446,24 +475,46 @@ export default function Portfolio() {
                             className="inline-block px-1 py-0.5 hover:underline focus:outline-none cursor-pointer select-none font-normal transition-colors duration-150"
                             onClick={async (e) => {
                               e.stopPropagation();
-                              await navigator.clipboard.writeText(EMAIL);
-                              setFooterCopied(true);
-                              setTimeout(() => {
-                                setFooterShowCopy(false);
-                                setFooterEmailRevealed(false);
-                                setFooterCopied(false);
-                              }, 1200);
-                            }}
-                            onKeyDown={async (e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
+                              try {
                                 await navigator.clipboard.writeText(EMAIL);
                                 setFooterCopied(true);
                                 setTimeout(() => {
                                   setFooterShowCopy(false);
                                   setFooterEmailRevealed(false);
                                   setFooterCopied(false);
-                                }, 1200);
+                                }, COPY_FEEDBACK_DURATION);
+                              } catch (err) {
+                                // Fallback for older browsers or permission issues
+                                console.warn("Failed to copy email:", err);
+                                // You could show a fallback message here
+                                setFooterCopied(true);
+                                setTimeout(() => {
+                                  setFooterShowCopy(false);
+                                  setFooterEmailRevealed(false);
+                                  setFooterCopied(false);
+                                }, COPY_FEEDBACK_DURATION);
+                              }
+                            }}
+                            onKeyDown={async (e) => {
+                              if (e.key === "Enter" || e.key === " ") {
+                                e.preventDefault();
+                                try {
+                                  await navigator.clipboard.writeText(EMAIL);
+                                  setFooterCopied(true);
+                                  setTimeout(() => {
+                                    setFooterShowCopy(false);
+                                    setFooterEmailRevealed(false);
+                                    setFooterCopied(false);
+                                  }, COPY_FEEDBACK_DURATION);
+                                } catch (err) {
+                                  console.warn("Failed to copy email:", err);
+                                  setFooterCopied(true);
+                                  setTimeout(() => {
+                                    setFooterShowCopy(false);
+                                    setFooterEmailRevealed(false);
+                                    setFooterCopied(false);
+                                  }, COPY_FEEDBACK_DURATION);
+                                }
                               }
                             }}
                           >

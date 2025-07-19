@@ -1,10 +1,13 @@
-import Portfolio from "../portfolio"
-import { ThemeProvider } from "../components/theme-provider"
+import Portfolio from "../portfolio";
+import { ThemeProvider } from "../components/theme-provider";
+import { ErrorBoundary } from "../components/ErrorBoundary";
 
 export default function Page() {
   return (
-    <ThemeProvider>
-      <Portfolio />
-    </ThemeProvider>
-  )
+    <ErrorBoundary>
+      <ThemeProvider>
+        <Portfolio />
+      </ThemeProvider>
+    </ErrorBoundary>
+  );
 }

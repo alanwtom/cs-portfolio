@@ -4,10 +4,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Alan Tom - Computer Science Student & Developer",
-    template: "%s | Alan Tom"
+    default: "Alan Tom",
+    template: "%s | Alan Tom",
   },
-  description: "Computer Science junior at Syracuse University, leading CuseHacks hackathon and building innovative web applications and Discord bots.",
+  description:
+    "Computer Science junior at Syracuse University, leading CuseHacks hackathon and building innovative web applications and Discord bots.",
   keywords: [
     "Alan Tom",
     "Computer Science",
@@ -17,13 +18,14 @@ export const metadata: Metadata = {
     "Discord Bot",
     "React",
     "Next.js",
-    "Python"
+    "Python",
   ],
   authors: [{ name: "Alan Tom", url: "https://alantom.dev" }],
   creator: "Alan Tom",
   openGraph: {
     title: "Alan Tom - Computer Science Student & Developer",
-    description: "Computer Science junior at Syracuse University, leading CuseHacks hackathon and building innovative web applications and Discord bots.",
+    description:
+      "Computer Science junior at Syracuse University, leading CuseHacks hackathon and building innovative web applications and Discord bots.",
     url: "https://alantom.dev",
     siteName: "Alan Tom Portfolio",
     images: [
@@ -40,7 +42,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Alan Tom - Computer Science Student & Developer",
-    description: "Computer Science junior at Syracuse University, leading CuseHacks hackathon and building innovative applications.",
+    description:
+      "Computer Science junior at Syracuse University, leading CuseHacks hackathon and building innovative applications.",
     images: ["/images/cockatiel.webp"],
   },
   robots: {
@@ -49,9 +52,9 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
 };
@@ -60,14 +63,37 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<RootLayoutProps>) {
+export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
     <html lang="en">
       <head>
         <link rel="icon" href="/images/cockatiel.webp" type="image/webp" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Alan Tom",
+              url: "https://alantom.dev",
+              image: "https://alantom.dev/images/buttercup.jpg",
+              sameAs: [
+                "https://github.com/alantomw",
+                "https://linkedin.com/in/alan-tom/",
+              ],
+              jobTitle: "Computer Science Student",
+              worksFor: {
+                "@type": "Organization",
+                name: "Syracuse University",
+              },
+              alumniOf: {
+                "@type": "Organization",
+                name: "Syracuse University",
+              },
+            }),
+          }}
+        />
       </head>
       <body className="antialiased">
         <main role="main" id="main-content">
