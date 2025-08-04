@@ -86,7 +86,7 @@ export function LinkEmbed() {
                   Alan Tom
                 </div>
                 <div className="text-sm text-blue-600 dark:text-blue-400 underline cursor-pointer hover:text-blue-800 dark:hover:text-blue-300">
-                  Alan's Portfolio
+                  Alan&apos;s Portfolio
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">
                   Hello! my name is Alan Tom, welcome to my portfolio
