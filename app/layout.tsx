@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     siteName: "Alan's Portfolio",
     images: [
       {
-        url: "/images/cockatiel.webp",
+        url: "/images/cockatiel.webp?v=2",
         width: 1200,
         height: 630,
         alt: "Alan Tom's Portfolio",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Alan Tom",
     description: "Hello! my name is Alan Tom, welcome to my portfolio",
-    images: ["/images/cockatiel.webp"],
+    images: ["/images/cockatiel.webp?v=2"],
   },
   robots: {
     index: true,
