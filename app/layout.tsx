@@ -23,17 +23,16 @@ export const metadata: Metadata = {
   authors: [{ name: "Alan Tom", url: "https://alantom.dev" }],
   creator: "Alan Tom",
   openGraph: {
-    title: "Alan Tom - Computer Science Student & Developer",
-    description:
-      "Computer Science junior at Syracuse University, leading CuseHacks hackathon and building innovative web applications and Discord bots.",
+    title: "Alan Tom",
+    description: "Hello! my name is Alan Tom, welcome to my portfolio",
     url: "https://alantom.dev",
-    siteName: "Alan Tom Portfolio",
+    siteName: "Alan's Portfolio",
     images: [
       {
         url: "/images/cockatiel.webp",
         width: 1200,
         height: 630,
-        alt: "Alan Tom's Portfolio - Computer Science Student and Developer",
+        alt: "Alan Tom's Portfolio",
       },
     ],
     locale: "en_US",
@@ -41,9 +40,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Alan Tom - Computer Science Student & Developer",
-    description:
-      "Computer Science junior at Syracuse University, leading CuseHacks hackathon and building innovative applications.",
+    title: "Alan Tom",
+    description: "Hello! my name is Alan Tom, welcome to my portfolio",
     images: ["/images/cockatiel.webp"],
   },
   robots: {
