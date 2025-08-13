@@ -7,8 +7,7 @@ export const metadata: Metadata = {
     default: "Alan Tom",
     template: "%s | Alan Tom",
   },
-  description:
-    "CS lead at Syracuse",
+  description: "CS lead at Syracuse",
   keywords: [
     "Alan Tom",
     "Computer Science",
