@@ -16,7 +16,7 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
 
   return (
     <motion.div
-      className="flex flex-row justify-between items-start w-full group cursor-pointer relative"
+      className="flex flex-row justify-between items-start w-full group cursor-pointer relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 rounded-md"
       tabIndex={0}
       onClick={onClick}
       onKeyDown={(e) => {
