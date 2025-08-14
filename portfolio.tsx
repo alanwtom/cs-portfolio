@@ -34,6 +34,36 @@ export default function Portfolio() {
   const [footerCopied, setFooterCopied] = useState(false);
   const footerCopyRef = React.useRef<HTMLDivElement | null>(null);
 
+  // Dynamic hover for Experience items: cursor-follow glow + tilt
+  const handleExperienceMouseMove = React.useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const target = e.currentTarget as HTMLDivElement;
+      const rect = target.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      target.style.setProperty("--x", `${x}px`);
+      target.style.setProperty("--y", `${y}px`);
+      const midX = rect.width / 2;
+      const midY = rect.height / 2;
+      const rotateY = ((x - midX) / midX) * 6;
+      const rotateX = -((y - midY) / midY) * 6;
+      target.style.setProperty("--ry", `${rotateY}deg`);
+      target.style.setProperty("--rx", `${rotateX}deg`);
+      target.style.setProperty("--glow", `0.16`);
+    },
+    []
+  );
+
+  const handleExperienceMouseLeave = React.useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      const target = e.currentTarget as HTMLDivElement;
+      target.style.setProperty("--ry", `0deg`);
+      target.style.setProperty("--rx", `0deg`);
+      target.style.setProperty("--glow", `0`);
+    },
+    []
+  );
+
   // Use our custom hooks
   const { getKeyboardShortcut } = useKeyboardShortcuts({
     onThemeToggle: () => setTheme(theme === "dark" ? "light" : "dark"),
@@ -286,7 +316,12 @@ export default function Portfolio() {
             <motion.div
               key={item.company + item.title}
               className="flex items-start mb-10 last:mb-0 relative group cursor-pointer"
-              style={{ zIndex: 1 }}
+              style={{
+                zIndex: 1,
+                backgroundImage:
+                  "radial-gradient(180px circle at var(--x, 50%) var(--y, 50%), rgba(59, 130, 246, var(--glow, 0)), transparent 60%)",
+                backgroundBlendMode: "plus-lighter",
+              }}
               tabIndex={0}
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -316,6 +351,8 @@ export default function Portfolio() {
               whileTap={{
                 scale: 0.98,
               }}
+              onMouseMove={handleExperienceMouseMove}
+              onMouseLeave={handleExperienceMouseLeave}
             >
               {/* Dot with glow on hover */}
               <motion.span
@@ -334,7 +371,14 @@ export default function Portfolio() {
                   ease: "easeOut",
                 }}
               />
-              <div className="ml-8 flex-1 flex flex-row justify-between items-start">
+              <div
+                className="ml-8 flex-1 flex flex-row justify-between items-start will-change-transform"
+                style={{
+                  transform:
+                    "perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))",
+                  transition: "transform 150ms ease-out",
+                }}
+              >
                 <div>
                   <span
                     className={`font-bold text-base md:text-lg transition-colors duration-300 ${
@@ -417,6 +461,8 @@ export default function Portfolio() {
         isOpen={selectedProject !== null}
         onClose={() => setSelectedProject(null)}
       />
+
+      
 
       {/* Footer with contact icons and copyright */}
       <motion.footer

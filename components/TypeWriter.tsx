@@ -76,12 +76,18 @@ export const TypeWriter: React.FC<TypeWriterProps> = ({
       return;
     }
 
+    // Hide cursor completely when not typing and completed
+    if (isCompleted) {
+      setShowCursor(false);
+      return;
+    }
+
     const cursorTimer = setInterval(() => {
       setShowCursor((prev) => !prev);
     }, 1200);
 
     return () => clearInterval(cursorTimer);
-  }, [isActivelyTyping]);
+  }, [isActivelyTyping, isCompleted]);
 
   return (
     <div className={className}>
@@ -93,8 +99,7 @@ export const TypeWriter: React.FC<TypeWriterProps> = ({
           } ${index > 0 ? "mt-4" : ""}`}
         >
           {text}
-          {(index === currentTextIndex ||
-            (isCompleted && index === displayedTexts.length - 1)) && (
+          {(index === currentTextIndex && !isCompleted) && (
             <span
               className={`inline-block w-0.5 ml-1 ${
                 theme === "dark" ? "bg-white" : "bg-black"

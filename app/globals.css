@@ -15,6 +15,20 @@ body {
   .animate-fade-in {
     animation: fadeIn 1s ease-out forwards;
   }
+
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
 }
 
 @keyframes fadeIn {
@@ -99,18 +113,6 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Respect user's motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -127,4 +129,19 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #475569;
+}
+
+/* Prevent focus outlines and cursor from appearing on click */
+*:focus {
+  outline: none !important;
+}
+
+/* Prevent text cursor on non-text elements */
+button, a, div[role="button"], [tabindex], .cursor-pointer {
+  cursor: default !important;
+}
+
+/* Ensure text inputs still show text cursor */
+input[type="text"], input[type="email"], textarea {
+  cursor: text !important;
 }
