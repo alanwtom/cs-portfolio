@@ -7,24 +7,24 @@ export const metadata: Metadata = {
     default: "Alan Tom",
     template: "%s | Alan Tom",
   },
-  description:
-    "Computer Science junior at Syracuse University, leading CuseHacks hackathon and building innovative web applications and Discord bots.",
+  description: "cs lead at syracuse",
   keywords: [
     "Alan Tom",
     "Computer Science",
     "Syracuse University",
     "CuseHacks",
-    "Web Developer",
-    "Discord Bot",
-    "React",
-    "Next.js",
+    "Developer",
+    "code",
+    "lead",
+    "portfolio",
     "Python",
   ],
   authors: [{ name: "Alan Tom", url: "https://alantom.dev" }],
   creator: "Alan Tom",
+  metadataBase: new URL("https://alantom.dev"),
   openGraph: {
     title: "Alan Tom",
-    description: "Hello! my name is Alan Tom, welcome to my portfolio",
+    description: "cs lead at syracuse",
     url: "https://alantom.dev",
     siteName: "Alan's Portfolio",
     images: [
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Alan Tom",
-    description: "Hello! my name is Alan Tom, welcome to my portfolio",
+    description: "cs lead at syracuse",
     images: ["/images/cockatiel.webp?v=2"],
   },
   robots: {

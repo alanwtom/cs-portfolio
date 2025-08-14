@@ -7,7 +7,7 @@ import { ThemeToggle } from "./components/theme-toggle";
 import { useTheme } from "./components/theme-provider";
 import { TypeWriter } from "./components/TypeWriter";
 import { ProjectCard } from "./components/ProjectCard";
-import { ProjectModal } from "./components/ProjectModal";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
@@ -22,8 +22,15 @@ import {
   COPY_FEEDBACK_DURATION,
   TYPEWRITER_CONFIG,
 } from "./lib/constants";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { useReducedMotion } from "./hooks/use-reduced-motion";
+
+// Lazy-load modal to reduce initial bundle size
+const ProjectModal = dynamic(
+  () => import("./components/ProjectModal").then((m) => m.ProjectModal),
+  { ssr: false }
+);
 
 export default function Portfolio() {
   const { theme, setTheme, isLoaded } = useTheme();
@@ -32,7 +39,9 @@ export default function Portfolio() {
   const [footerEmailRevealed, setFooterEmailRevealed] = useState(false);
   const [footerShowCopy, setFooterShowCopy] = useState(false);
   const [footerCopied, setFooterCopied] = useState(false);
-  const footerCopyRef = React.useRef<HTMLDivElement | null>(null);
+  const footerCopyRef = useRef<HTMLDivElement | null>(null);
+  const lastFocusedRef = useRef<HTMLElement | null>(null);
+  const reducedMotion = useReducedMotion();
 
   // Dynamic hover for Experience items: cursor-follow glow + tilt
   const handleExperienceMouseMove = React.useCallback(
@@ -45,11 +54,11 @@ export default function Portfolio() {
       target.style.setProperty("--y", `${y}px`);
       const midX = rect.width / 2;
       const midY = rect.height / 2;
-      const rotateY = ((x - midX) / midX) * 6;
-      const rotateX = -((y - midY) / midY) * 6;
+      const rotateY = ((x - midX) / midX) * 0.5; // very subtle tilt
+      const rotateX = -((y - midY) / midY) * 0.5; // very subtle tilt
       target.style.setProperty("--ry", `${rotateY}deg`);
       target.style.setProperty("--rx", `${rotateX}deg`);
-      target.style.setProperty("--glow", `0.16`);
+      target.style.setProperty("--glow", `0.08`); // softer glow
     },
     []
   );
@@ -76,7 +85,7 @@ export default function Portfolio() {
   });
 
   // Handle footer copy functionality
-  React.useEffect(() => {
+  useEffect(() => {
     if (!footerShowCopy) return;
     function handleClick(e: MouseEvent) {
       if (
@@ -91,6 +100,16 @@ export default function Portfolio() {
     window.addEventListener("mousedown", handleClick);
     return () => window.removeEventListener("mousedown", handleClick);
   }, [footerShowCopy]);
+
+  // Remember last focused element and restore it when modal closes
+  useEffect(() => {
+    if (selectedProject !== null) {
+      lastFocusedRef.current = (document.activeElement as HTMLElement) ?? null;
+    } else if (lastFocusedRef.current) {
+      lastFocusedRef.current.focus();
+      lastFocusedRef.current = null;
+    }
+  }, [selectedProject]);
 
   // Show loading state while theme is being loaded
   if (!isLoaded) {
@@ -117,9 +136,9 @@ export default function Portfolio() {
       {/* Add a simple header with Japan emoji and theme toggle at the top */}
       <motion.div
         className="max-w-3xl mx-auto px-6 py-6 flex items-center justify-between"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.1 }}
+        initial={reducedMotion ? false : { opacity: 0, y: -20 }}
+        animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+        transition={reducedMotion ? undefined : { duration: 0.6, delay: 0.1 }}
       >
         {/* Japan emoji on the left */}
         <div className="flex items-center relative">
@@ -129,22 +148,30 @@ export default function Portfolio() {
             aria-label="Map of Japan"
             onMouseEnter={() => setShowJapanTooltip(true)}
             onMouseLeave={() => setShowJapanTooltip(false)}
-            whileHover={{
-              scale: 1.15,
-              transition: {
-                duration: 0.08,
-                ease: "easeOut",
-              },
-            }}
-            whileTap={{
-              scale: 0.9,
-              rotate: -5,
-              transition: {
-                type: "spring",
-                stiffness: 600,
-                damping: 15,
-              },
-            }}
+            whileHover={
+              reducedMotion
+                ? undefined
+                : {
+                    scale: 1.15,
+                    transition: {
+                      duration: 0.08,
+                      ease: "easeOut",
+                    },
+                  }
+            }
+            whileTap={
+              reducedMotion
+                ? undefined
+                : {
+                    scale: 0.9,
+                    rotate: -5,
+                    transition: {
+                      type: "spring",
+                      stiffness: 600,
+                      damping: 15,
+                    },
+                  }
+            }
           >
             🗾
           </motion.span>
@@ -156,10 +183,10 @@ export default function Portfolio() {
                   ? "bg-[#0a1628]/90 border-[#1e293b]/60 text-slate-300"
                   : "bg-[#eaf1fb]/80 border-[#b6d0ee]/60 text-slate-600"
               }`}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
+              initial={reducedMotion ? false : { opacity: 0, y: -10 }}
+              animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+              exit={reducedMotion ? undefined : { opacity: 0, y: -10 }}
+              transition={reducedMotion ? undefined : { duration: 0.2 }}
             >
               my most recent trip was to Japan! I'd love to go back one day.
             </motion.div>
@@ -184,9 +211,9 @@ export default function Portfolio() {
       <motion.section
         id="main-content"
         className="max-w-3xl mx-auto px-6 py-10"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.2 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 30 }}
+        animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+        transition={reducedMotion ? undefined : { duration: 0.8, delay: 0.2 }}
       >
         <Card
           className={`p-6 transition-all duration-500 backdrop-blur-sm ${
@@ -199,25 +226,35 @@ export default function Portfolio() {
             {/* Avatar */}
             <motion.div
               className="w-28 h-28 rounded-full border-4 border-slate-200 dark:border-slate-800 shadow-md cursor-pointer overflow-hidden"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              whileHover={{
-                scale: 1.08,
-                y: -4,
-                transition: {
-                  duration: 0.08,
-                  ease: "easeOut",
-                },
-              }}
-              whileTap={{
-                scale: 0.98,
-                transition: {
-                  type: "spring",
-                  stiffness: 500,
-                  damping: 20,
-                },
-              }}
+              initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
+              animate={reducedMotion ? undefined : { opacity: 1, scale: 1 }}
+              transition={
+                reducedMotion ? undefined : { duration: 0.8, delay: 0.3 }
+              }
+              whileHover={
+                reducedMotion
+                  ? undefined
+                  : {
+                      scale: 1.08,
+                      y: -4,
+                      transition: {
+                        duration: 0.08,
+                        ease: "easeOut",
+                      },
+                    }
+              }
+              whileTap={
+                reducedMotion
+                  ? undefined
+                  : {
+                      scale: 0.98,
+                      transition: {
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 20,
+                      },
+                    }
+              }
             >
               <Image
                 src="/images/buttercup.jpg"
@@ -232,9 +269,11 @@ export default function Portfolio() {
             <div className="flex-1 space-y-4">
               <motion.h1
                 className="text-4xl md:text-5xl font-light tracking-tight cursor-default"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
+                initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+                animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={
+                  reducedMotion ? undefined : { duration: 0.8, delay: 0.4 }
+                }
               >
                 Alan Tom
               </motion.h1>
@@ -242,9 +281,11 @@ export default function Portfolio() {
                 className={`space-y-4 leading-relaxed ${
                   theme === "dark" ? "text-slate-300" : "text-slate-600"
                 }`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.5 }}
+                initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+                animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={
+                  reducedMotion ? undefined : { duration: 0.8, delay: 0.5 }
+                }
               >
                 <TypeWriter
                   texts={TYPEWRITER_TEXTS}
@@ -261,15 +302,15 @@ export default function Portfolio() {
       <motion.section
         id="experience"
         className="max-w-3xl mx-auto px-6 py-10"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.8 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 30 }}
+        animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+        transition={reducedMotion ? undefined : { duration: 0.8, delay: 0.8 }}
       >
         <motion.h2
           className="text-3xl font-light mb-10 cursor-default"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.9 }}
+          initial={reducedMotion ? false : { opacity: 0, x: -20 }}
+          animate={reducedMotion ? undefined : { opacity: 1, x: 0 }}
+          transition={reducedMotion ? undefined : { duration: 0.6, delay: 0.9 }}
         >
           Experience
         </motion.h2>
@@ -278,39 +319,43 @@ export default function Portfolio() {
           <motion.div
             className="absolute left-3 top-0 h-full w-0.5 bg-slate-300 dark:bg-slate-700"
             style={{ zIndex: 0 }}
-            initial={{ scaleY: 0, transformOrigin: "top" }}
-            animate={{ scaleY: 1 }}
-            transition={{ duration: 1.0, delay: 1.0 }}
+            initial={
+              reducedMotion ? false : { scaleY: 0, transformOrigin: "top" }
+            }
+            animate={reducedMotion ? undefined : { scaleY: 1 }}
+            transition={
+              reducedMotion ? undefined : { duration: 1.0, delay: 1.0 }
+            }
           />
           {/* Timeline items */}
           {[
             {
               color: "bg-blue-600",
-              company: "iSchool at Syracuse University",
-              title: "NSF REU Researcher",
-              years: "2025 - Now",
-              desc: "using NLP to analyze Trump's social media activities impact on the stock market",
-            },
-            {
-              color: "bg-yellow-400",
               company: "Innovate Orange (CuseHacks)",
               title: "President",
               years: "2024 - Now",
               desc: "leading a team of 20+ students to organize Syracuse University's hackathons and datathons",
             },
             {
+              color: "bg-yellow-400",
+              company: "iSchool at Syracuse University",
+              title: "NSF REU Researcher",
+              years: "2025 - 2025",
+              desc: "using NLP to analyze Trump's social media activities impact on the stock market",
+            },
+            {
               color: "bg-green-600",
               company: "Micron Technology",
               title: "Software Development Engineer Intern",
               years: "2025 - 2025",
-              desc: "developed an interactive UI for an educational semiconductor game",
+              desc: "shipped data-driven UI's and caching systems for a semiconductor simulator",
             },
             {
               color: "bg-red-600",
               company: "Data Lab at Syracuse University",
               title: "Research Assistant",
               years: "2024 - 2025",
-              desc: "compared LLM memory with human memory",
+              desc: "researched the intersection of LLM and human memory",
             },
           ].map((item, idx) => (
             <motion.div
@@ -332,8 +377,8 @@ export default function Portfolio() {
                 default: { duration: 0.15, ease: "easeOut" },
               }}
               whileHover={{
-                scale: 1.03,
-                y: -8,
+                scale: 1.005,
+                y: -2,
                 backgroundColor:
                   theme === "dark"
                     ? "rgba(15, 23, 42, 0.6)"
@@ -359,8 +404,8 @@ export default function Portfolio() {
                 className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 ${item.color}`}
                 style={{ zIndex: 2 }}
                 whileHover={{
-                  scale: 1.25,
-                  boxShadow: "0 0 0 8px rgba(59, 130, 246, 0.2)",
+                  scale: 1.1,
+                  boxShadow: "0 0 0 6px rgba(59, 130, 246, 0.15)",
                   transition: {
                     duration: 0.15,
                     ease: "easeOut",
@@ -372,7 +417,7 @@ export default function Portfolio() {
                 }}
               />
               <div
-                className="ml-8 flex-1 flex flex-row justify-between items-start will-change-transform"
+                className="ml-8 mr-1 md:mr-2 flex-1 flex flex-row justify-between items-start pr-3 md:pr-4 will-change-transform"
                 style={{
                   transform:
                     "perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))",
@@ -427,9 +472,9 @@ export default function Portfolio() {
       <motion.section
         id="projects"
         className="max-w-3xl mx-auto px-6 py-10"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1.6 }}
+        initial={reducedMotion ? false : { opacity: 0, y: 30 }}
+        animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+        transition={reducedMotion ? undefined : { duration: 0.8, delay: 1.6 }}
       >
         <div className="space-y-5">
           <motion.h2
