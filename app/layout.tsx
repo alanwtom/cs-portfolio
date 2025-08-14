@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     siteName: "Alan's Portfolio",
     images: [
       {
-        url: "/images/cockatiel.webp?v=2",
+        url: `/images/cockatiel.webp?v=${Date.now()}`,
         width: 1200,
         height: 630,
         alt: "Alan Tom's Portfolio",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Alan Tom",
     description: "cs lead at syracuse",
-    images: ["/images/cockatiel.webp?v=2"],
+    images: [`/images/cockatiel.webp?v=${Date.now()}`],
   },
   robots: {
     index: true,
@@ -65,7 +65,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/images/cockatiel.webp" type="image/webp" />
+        <link rel="icon" href={`/images/cockatiel.webp?v=${Date.now()}`} type="image/webp" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script
           type="application/ld+json"
@@ -75,9 +75,9 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
               "@type": "Person",
               name: "Alan Tom",
               url: "https://alantom.dev",
-              image: "https://alantom.dev/images/buttercup.jpg",
+              image: `https://alantom.dev/images/buttercup.jpg?v=${Date.now()}`,
               sameAs: [
-                "https://github.com/alantomw",
+                "https://github.com/alanwtom",
                 "https://linkedin.com/in/alan-tom/",
               ],
               jobTitle: "Computer Science Student",

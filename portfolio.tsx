@@ -257,7 +257,7 @@ export default function Portfolio() {
               }
             >
               <Image
-                src="/images/buttercup.jpg"
+                src={`/images/buttercup.jpg?v=${Date.now()}`}
                 alt="Alan Tom's profile photo"
                 width={112}
                 height={112}

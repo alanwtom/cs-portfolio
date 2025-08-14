@@ -14,6 +14,35 @@ const nextConfig = {
   },
   // Enable strict mode for better development experience
   reactStrictMode: true,
+  
+  // Force cache clearing on deployment
+  generateBuildId: async () => {
+    // Generate a unique build ID based on timestamp
+    return `build-${Date.now()}`
+  },
+  
+  // Add cache-busting headers
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate, max-age=0',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache',
+          },
+          {
+            key: 'Expires',
+            value: '0',
+          },
+        ],
+      },
+    ]
+  },
 }
 
 export default nextConfig

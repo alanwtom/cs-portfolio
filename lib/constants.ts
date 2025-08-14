@@ -37,7 +37,7 @@ export const PROJECTS: Project[] = [
     description:
       "sleek browser extension that helps users maintain focus by blocking distracting elements while browsing",
     tech: ["JavaScript", "Chrome Extension API", "HTML", "CSS"],
-    github: "https://github.com/alantomw/Flow",
+    github: "https://github.com/alanwtom/Flow",
     demo: "https://chromewebstore.google.com/detail/flow/odenofhkafaeedoohodgdndpeeadpndg",
     detailedDescription:
       "browser extension that helps users maintain focus by intelligently blocking distracting elements while preserving core functionality",
@@ -62,7 +62,7 @@ export const TYPEWRITER_TEXTS = [
 ]
 
 export const EMAIL = "alanwtom@outlook.com"
-export const GITHUB_URL = "https://github.com/alantomw"
+export const GITHUB_URL = "https://github.com/alanwtom"
 export const LINKEDIN_URL = "https://www.linkedin.com/in/alan-tom/"
 
 // Animation constants
