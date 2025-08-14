@@ -81,7 +81,7 @@ export const ANIMATION_DELAYS = {
 export const COPY_FEEDBACK_DURATION = 2000
 
 export const TYPEWRITER_CONFIG = {
-  SPEED: 50,
-  PAUSE_DURATION: 2000,
+  SPEED: 16,
+  PAUSE_DURATION: 200,
 } as const
  

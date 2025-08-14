@@ -417,7 +417,7 @@ export default function Portfolio() {
                 }}
               />
               <div
-                className="ml-8 mr-1 md:mr-2 flex-1 flex flex-row justify-between items-start pr-3 md:pr-4 will-change-transform"
+                className="ml-8 mr-1 md:mr-2 flex-1 flex flex-row justify-between items-start px-3 md:px-4 will-change-transform"
                 style={{
                   transform:
                     "perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))",

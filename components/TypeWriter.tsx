@@ -10,8 +10,8 @@ interface TypeWriterProps {
 
 export const TypeWriter: React.FC<TypeWriterProps> = ({
   texts,
-  speed = 50,
-  pauseDuration = 1000,
+  speed = 16,
+  pauseDuration = 200,
   className = "",
 }) => {
   const { theme } = useTheme();
@@ -34,8 +34,9 @@ export const TypeWriter: React.FC<TypeWriterProps> = ({
     if (currentCharIndex < currentText.length) {
       setIsActivelyTyping(true);
       const currentChar = currentText[currentCharIndex];
-      const isComma = currentChar === ",";
-      const delay = isComma ? speed + 300 : speed; // Add 300ms pause on commas
+      const punctuationExtraDelayMs = 120; // brief pause on punctuation
+      const isPunctuation = ",.;:!?".includes(currentChar);
+      const delay = isPunctuation ? speed + punctuationExtraDelayMs : speed;
 
       const timer = setTimeout(() => {
         setDisplayedTexts((prev) => {
@@ -58,14 +59,22 @@ export const TypeWriter: React.FC<TypeWriterProps> = ({
 
       return () => clearTimeout(timer);
     } else {
-      // Current text is complete, pause then move to next
-      setIsActivelyTyping(false);
-      const pauseTimer = setTimeout(() => {
+      // Current text is complete
+      if (pauseDuration <= 0) {
+        // Immediately move to the next text for a continuous typing effect
         setCurrentTextIndex((prev) => prev + 1);
         setCurrentCharIndex(0);
-      }, pauseDuration);
+        return;
+      } else {
+        // Pause briefly before moving to the next text
+        setIsActivelyTyping(false);
+        const pauseTimer = setTimeout(() => {
+          setCurrentTextIndex((prev) => prev + 1);
+          setCurrentCharIndex(0);
+        }, pauseDuration);
 
-      return () => clearTimeout(pauseTimer);
+        return () => clearTimeout(pauseTimer);
+      }
     }
   }, [currentTextIndex, currentCharIndex, texts, speed, pauseDuration]);
 
