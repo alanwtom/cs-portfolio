@@ -70,7 +70,7 @@ export function useEmailReveal(): EmailRevealState & EmailRevealActions {
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText("alantomw@gmail.com")
+      await navigator.clipboard.writeText("alanwtom@outlook.com")
       setCopied(true)
       setTimeout(() => setShowCopyBubble(false), 1500)
     } catch (err) {
