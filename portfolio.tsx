@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
+import { useIsMobile } from "./hooks/use-mobile";
 import {
   PROJECTS,
   TYPEWRITER_TEXTS,
@@ -42,6 +43,7 @@ export default function Portfolio() {
   const footerCopyRef = useRef<HTMLDivElement | null>(null);
   const lastFocusedRef = useRef<HTMLElement | null>(null);
   const reducedMotion = useReducedMotion();
+  const isMobile = useIsMobile();
 
   // Dynamic hover for Experience items: cursor-follow glow + tilt
   const handleExperienceMouseMove = React.useCallback(
@@ -195,15 +197,17 @@ export default function Portfolio() {
         {/* Theme toggle on the right */}
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <span
-            className={`text-xs px-2 py-1 rounded-md font-mono transition-colors duration-300 ${
-              theme === "dark"
-                ? "bg-slate-800 text-slate-400 border border-slate-700"
-                : "bg-slate-100 text-slate-600 border border-slate-300"
-            }`}
-          >
-            {getKeyboardShortcut()}
-          </span>
+          {!isMobile && (
+            <span
+              className={`text-xs px-2 py-1 rounded-md font-mono transition-colors duration-300 ${
+                theme === "dark"
+                  ? "bg-slate-800 text-slate-400 border border-slate-700"
+                  : "bg-slate-100 text-slate-600 border border-slate-300"
+              }`}
+            >
+              {getKeyboardShortcut()}
+            </span>
+          )}
         </div>
       </motion.div>
 
