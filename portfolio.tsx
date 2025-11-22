@@ -1,12 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Mail, Github, Linkedin } from "lucide-react";
 import { ThemeToggle } from "./components/theme-toggle";
 import { useTheme } from "./components/theme-provider";
 import { TypeWriter } from "./components/TypeWriter";
 import { ProjectCard } from "./components/ProjectCard";
+import { Navbar } from "./components/Navbar";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 
@@ -18,13 +17,11 @@ import {
   EMAIL,
   GITHUB_URL,
   LINKEDIN_URL,
-  ANIMATION_DURATIONS,
-  ANIMATION_DELAYS,
   COPY_FEEDBACK_DURATION,
   TYPEWRITER_CONFIG,
 } from "./lib/constants";
 import React, { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useReducedMotion } from "./hooks/use-reduced-motion";
 
 // Lazy-load modal to reduce initial bundle size
@@ -35,6 +32,7 @@ const ProjectModal = dynamic(
 
 export default function Portfolio() {
   const { theme, setTheme, isLoaded } = useTheme();
+  const [activeSection, setActiveSection] = useState("home");
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [showJapanTooltip, setShowJapanTooltip] = useState(false);
   const [footerEmailRevealed, setFooterEmailRevealed] = useState(false);
@@ -44,36 +42,6 @@ export default function Portfolio() {
   const lastFocusedRef = useRef<HTMLElement | null>(null);
   const reducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
-
-  // Dynamic hover for Experience items: cursor-follow glow + tilt
-  const handleExperienceMouseMove = React.useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      const target = e.currentTarget as HTMLDivElement;
-      const rect = target.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      target.style.setProperty("--x", `${x}px`);
-      target.style.setProperty("--y", `${y}px`);
-      const midX = rect.width / 2;
-      const midY = rect.height / 2;
-      const rotateY = ((x - midX) / midX) * 0.5; // very subtle tilt
-      const rotateX = -((y - midY) / midY) * 0.5; // very subtle tilt
-      target.style.setProperty("--ry", `${rotateY}deg`);
-      target.style.setProperty("--rx", `${rotateX}deg`);
-      target.style.setProperty("--glow", `0.08`); // softer glow
-    },
-    []
-  );
-
-  const handleExperienceMouseLeave = React.useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      const target = e.currentTarget as HTMLDivElement;
-      target.style.setProperty("--ry", `0deg`);
-      target.style.setProperty("--rx", `0deg`);
-      target.style.setProperty("--glow", `0`);
-    },
-    []
-  );
 
   // Use our custom hooks
   const { getKeyboardShortcut } = useKeyboardShortcuts({
@@ -116,17 +84,15 @@ export default function Portfolio() {
   // Show loading state while theme is being loaded
   if (!isLoaded) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-foreground"></div>
       </div>
     );
   }
 
   return (
     <div
-      className={`min-h-screen transition-colors duration-300 ${
-        theme === "dark" ? "bg-black text-white" : "bg-white text-black"
-      }`}
+      className="min-h-screen transition-colors duration-300 flex flex-col bg-background text-foreground"
     >
       {/* Skip to main content link for accessibility */}
       <a
@@ -135,15 +101,16 @@ export default function Portfolio() {
       >
         Skip to main content
       </a>
-      {/* Add a simple header with Japan emoji and theme toggle at the top */}
+
+      {/* Header */}
       <motion.div
-        className="max-w-3xl mx-auto px-6 py-6 flex items-center justify-between"
+        className="max-w-3xl mx-auto px-6 py-6 w-full flex items-center justify-between"
         initial={reducedMotion ? false : { opacity: 0, y: -20 }}
         animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
         transition={reducedMotion ? undefined : { duration: 0.6, delay: 0.1 }}
       >
         {/* Japan emoji on the left */}
-        <div className="flex items-center relative">
+        <div className="flex items-center relative w-20">
           <motion.span
             className="text-2xl align-middle cursor-pointer select-none"
             role="img"
@@ -194,8 +161,15 @@ export default function Portfolio() {
             </motion.div>
           )}
         </div>
+
+        <Navbar
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+          theme={theme}
+        />
+
         {/* Theme toggle on the right */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-end gap-2 w-20">
           <ThemeToggle />
           {!isMobile && (
             <span
@@ -211,38 +185,34 @@ export default function Portfolio() {
         </div>
       </motion.div>
 
+      <main id="main-content" className="flex-1 w-full max-w-3xl mx-auto px-6">
+        <AnimatePresence mode="wait">
+          {activeSection === "home" && (
+            <motion.div
+              key="home"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
       {/* Profile Section (Avatar + Name + About Me) */}
-      <motion.section
-        id="main-content"
-        className="max-w-3xl mx-auto px-6 py-10"
-        initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-        animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-        transition={reducedMotion ? undefined : { duration: 0.8, delay: 0.2 }}
-      >
-        <Card
-          className={`p-6 transition-all duration-500 backdrop-blur-sm ${
-            theme === "dark"
-              ? "bg-[#0a1628]/90 border-[#1e293b]/60"
-              : "bg-[#eaf1fb]/80 border-[#b6d0ee]/60"
-          }`}
-        >
+              <div className="py-10">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
             {/* Avatar */}
             <motion.div
-              className="w-28 h-28 rounded-full border-4 border-slate-200 dark:border-slate-800 shadow-md cursor-pointer overflow-hidden"
+                    className="w-28 h-28 rounded-full border-2 border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer overflow-hidden"
               initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
               animate={reducedMotion ? undefined : { opacity: 1, scale: 1 }}
               transition={
-                reducedMotion ? undefined : { duration: 0.8, delay: 0.3 }
+                      reducedMotion ? undefined : { duration: 0.8, delay: 0.1 }
               }
               whileHover={
                 reducedMotion
                   ? undefined
                   : {
-                      scale: 1.08,
-                      y: -4,
+                            scale: 1.05,
                       transition: {
-                        duration: 0.08,
+                              duration: 0.2,
                         ease: "easeOut",
                       },
                     }
@@ -251,7 +221,7 @@ export default function Portfolio() {
                 reducedMotion
                   ? undefined
                   : {
-                      scale: 0.98,
+                            scale: 0.95,
                       transition: {
                         type: "spring",
                         stiffness: 500,
@@ -272,23 +242,23 @@ export default function Portfolio() {
             </motion.div>
             <div className="flex-1 space-y-4">
               <motion.h1
-                className="text-4xl md:text-5xl font-light tracking-tight cursor-default"
+                      className="text-4xl md:text-5xl font-bold tracking-tight cursor-default"
                 initial={reducedMotion ? false : { opacity: 0, y: 20 }}
                 animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={
-                  reducedMotion ? undefined : { duration: 0.8, delay: 0.4 }
+                        reducedMotion ? undefined : { duration: 0.8, delay: 0.2 }
                 }
               >
-                Alan Tom
+                      Hi, I'm Alan.
               </motion.h1>
               <motion.div
-                className={`space-y-4 leading-relaxed ${
-                  theme === "dark" ? "text-slate-300" : "text-slate-600"
+                      className={`space-y-4 leading-relaxed text-lg ${
+                        theme === "dark" ? "text-slate-300" : "text-slate-700"
                 }`}
                 initial={reducedMotion ? false : { opacity: 0, y: 20 }}
                 animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={
-                  reducedMotion ? undefined : { duration: 0.8, delay: 0.5 }
+                        reducedMotion ? undefined : { duration: 0.8, delay: 0.3 }
                 }
               >
                 <TypeWriter
@@ -299,196 +269,135 @@ export default function Portfolio() {
               </motion.div>
             </div>
           </div>
-        </Card>
-      </motion.section>
-
-      {/* Experience Timeline Section */}
-      <motion.section
-        id="experience"
-        className="max-w-3xl mx-auto px-6 py-10"
-        initial={reducedMotion ? false : { opacity: 0, y: 30 }}
+                
+                <motion.div
+                  className={`mt-8 space-y-6 leading-relaxed text-lg ${
+                    theme === "dark" ? "text-slate-400" : "text-slate-600"
+                  }`}
+                  initial={reducedMotion ? false : { opacity: 0, y: 20 }}
         animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-        transition={reducedMotion ? undefined : { duration: 0.8, delay: 0.8 }}
+                  transition={
+                    reducedMotion ? undefined : { duration: 0.8, delay: 0.4 }
+                  }
       >
-        <motion.h2
-          className="text-3xl font-light mb-10 cursor-default"
-          initial={reducedMotion ? false : { opacity: 0, x: -20 }}
-          animate={reducedMotion ? undefined : { opacity: 1, x: 0 }}
-          transition={reducedMotion ? undefined : { duration: 0.6, delay: 0.9 }}
-        >
-          Experience
-        </motion.h2>
+                  <div className="w-full h-px bg-slate-200 dark:bg-slate-800 my-8" />
+                  
+                  <p>
+                    I currently serve as the President of <span className={theme === "dark" ? "text-white" : "text-black"}>Innovate Orange</span>, where I lead a team of 20+ students to organize Syracuse University's largest hackathons and datathons.
+                  </p>
+                  
+                  <p>
+                    Previously, I worked as a Software Development Engineer Intern at <span className={theme === "dark" ? "text-white" : "text-black"}>Micron Technology</span>, building data-driven UIs and caching systems for semiconductor simulations. I've also conducted research at Syracuse University's <span className={theme === "dark" ? "text-white" : "text-black"}>iSchool</span> and <span className={theme === "dark" ? "text-white" : "text-black"}>Data Lab</span>, exploring the intersection of LLMs, human memory, and financial market analysis.
+                  </p>
+                  
+                  <p>
+                    Outside of work, I love traveling, photography, and organizing tech communities to help students build cool things.
+                  </p>
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+
+          {activeSection === "experience" && (
+            <motion.div
+              key="experience"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="py-6"
+            >
+              <h2 className="text-3xl font-light mb-10 cursor-default">Experience</h2>
         <div className="relative pl-8">
           {/* Vertical line */}
-          <motion.div
+                <div
             className="absolute left-3 top-0 h-full w-0.5 bg-slate-300 dark:bg-slate-700"
             style={{ zIndex: 0 }}
-            initial={
-              reducedMotion ? false : { scaleY: 0, transformOrigin: "top" }
-            }
-            animate={reducedMotion ? undefined : { scaleY: 1 }}
-            transition={
-              reducedMotion ? undefined : { duration: 1.0, delay: 1.0 }
-            }
           />
           {/* Timeline items */}
           {[
             {
-              color: "bg-blue-600",
-              company: "Innovate Orange (CuseHacks)",
-              title: "President",
-              years: "2024 - Now",
-              desc: "leading a team of 20+ students to organize Syracuse University's hackathons and datathons",
+                    color: "bg-green-600",
+                    company: "Micron Technology",
+                    title: "Software Engineer Intern",
+                    years: "Feb. 2025 - Present",
+                    desc: "developing interactive C#/Unity simulations with 90% query reduction via custom caching and 60% UI overhead cut",
             },
             {
               color: "bg-yellow-400",
               company: "iSchool at Syracuse University",
               title: "NSF REU Researcher",
-              years: "2025 - 2025",
-              desc: "using NLP to analyze Trump's social media activities impact on the stock market",
-            },
-            {
-              color: "bg-green-600",
-              company: "Micron Technology",
-              title: "Software Development Engineer Intern",
-              years: "2025 - 2025",
-              desc: "shipped data-driven UI's and caching systems for a semiconductor simulator",
+                    years: "June 2025 - Aug. 2025",
+                    desc: "engineered financial sentiment pipeline using FinBERT/Llama 3.1, analyzing 5K+ posts to validatemarket volatility correlations",
             },
             {
               color: "bg-red-600",
               company: "Data Lab at Syracuse University",
-              title: "Research Assistant",
-              years: "2024 - 2025",
-              desc: "researched the intersection of LLM and human memory",
+                    title: "Undergraduate Researcher",
+                    years: "Aug. 2024 - Feb. 2025",
+                    desc: "built Python evaluation pipeline for LLM memory interference testing, automating analysis of 300+ associations",
             },
           ].map((item, idx) => (
             <motion.div
               key={item.company + item.title}
               className="flex items-start mb-10 last:mb-0 relative group cursor-pointer"
-              style={{
-                zIndex: 1,
-                backgroundImage:
-                  "radial-gradient(180px circle at var(--x, 50%) var(--y, 50%), rgba(59, 130, 246, var(--glow, 0)), transparent 60%)",
-                backgroundBlendMode: "plus-lighter",
-              }}
               tabIndex={0}
-              initial={{ opacity: 0, x: -30 }}
+                    initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{
-                duration: 0.6,
-                delay: 1.1 + idx * 0.1,
-                layout: { duration: 0.15, ease: "easeOut" },
-                default: { duration: 0.15, ease: "easeOut" },
-              }}
+                    transition={{ delay: idx * 0.1 }}
               whileHover={{
-                scale: 1.005,
-                y: -2,
-                backgroundColor:
-                  theme === "dark"
-                    ? "rgba(15, 23, 42, 0.6)"
-                    : "rgba(248, 250, 252, 0.6)",
-                borderRadius: "8px",
-                boxShadow:
-                  theme === "dark"
-                    ? "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 25px 25px -10px rgba(0, 0, 0, 0.15)"
-                    : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 25px 25px -10px rgba(0, 0, 0, 0.04)",
+                      x: 4,
                 transition: {
-                  duration: 0.15,
+                        duration: 0.2,
                   ease: "easeOut",
                 },
               }}
-              whileTap={{
-                scale: 0.98,
-              }}
-              onMouseMove={handleExperienceMouseMove}
-              onMouseLeave={handleExperienceMouseLeave}
             >
-              {/* Dot with glow on hover */}
+                    {/* Dot */}
               <motion.span
                 className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 ${item.color}`}
                 style={{ zIndex: 2 }}
                 whileHover={{
-                  scale: 1.1,
-                  boxShadow: "0 0 0 6px rgba(59, 130, 246, 0.15)",
-                  transition: {
-                    duration: 0.15,
-                    ease: "easeOut",
-                  },
-                }}
-                transition={{
-                  duration: 0.15,
-                  ease: "easeOut",
+                        scale: 1.2,
+                        transition: { duration: 0.2 },
                 }}
               />
-              <div
-                className="ml-8 mr-1 md:mr-2 flex-1 flex flex-row justify-between items-start px-3 md:px-4 will-change-transform"
-                style={{
-                  transform:
-                    "perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg))",
-                  transition: "transform 150ms ease-out",
-                }}
-              >
+                    <div className="ml-8 mr-1 md:mr-2 flex-1 flex flex-col md:flex-row justify-between items-start px-3 md:px-4">
                 <div>
                   <span
                     className={`font-bold text-base md:text-lg transition-colors duration-300 ${
-                      theme === "dark"
-                        ? "group-hover:text-white group-focus:text-white"
-                        : "group-hover:text-slate-900 group-focus:text-slate-900"
+                            theme === "dark" ? "text-white" : "text-slate-900"
                     }`}
                   >
                     {item.company}
                   </span>
-                  <div
-                    className={`italic text-slate-500 dark:text-slate-300 text-base mb-1 transition-colors duration-300 ${
-                      theme === "dark"
-                        ? "group-hover:text-slate-200"
-                        : "group-hover:text-slate-700"
-                    }`}
-                  >
+                        <div className="italic text-slate-500 dark:text-slate-400 text-base mb-1">
                     {item.title}
                   </div>
-                  <ul
-                    className={`list-disc ml-5 text-slate-500 dark:text-slate-400 transition-colors duration-300 ${
-                      theme === "dark"
-                        ? "group-hover:text-slate-300"
-                        : "group-hover:text-slate-700"
-                    }`}
-                  >
+                        <ul className="list-disc ml-5 text-slate-500 dark:text-slate-400 leading-relaxed">
                     <li>{item.desc}</li>
                   </ul>
                 </div>
-                <span
-                  className={`text-md text-slate-400 dark:text-slate-400 ml-4 whitespace-nowrap min-w-[90px] text-right pt-1 transition-colors duration-300 ${
-                    theme === "dark"
-                      ? "group-hover:text-white"
-                      : "group-hover:text-slate-700"
-                  }`}
-                >
+                      <span className="text-sm text-slate-400 dark:text-slate-500 whitespace-nowrap pt-1 md:text-right">
                   {item.years}
                 </span>
               </div>
             </motion.div>
           ))}
         </div>
-      </motion.section>
+            </motion.div>
+          )}
 
-      {/* Projects Section */}
-      <motion.section
-        id="projects"
-        className="max-w-3xl mx-auto px-6 py-10"
-        initial={reducedMotion ? false : { opacity: 0, y: 30 }}
-        animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-        transition={reducedMotion ? undefined : { duration: 0.8, delay: 1.6 }}
-      >
-        <div className="space-y-5">
-          <motion.h2
-            className="text-3xl font-light cursor-default"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 1.7 }}
-          >
-            Projects
-          </motion.h2>
+          {activeSection === "projects" && (
+            <motion.div
+              key="projects"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="py-6"
+            >
+              <h2 className="text-3xl font-light mb-8 cursor-default">Projects</h2>
           <div className="flex flex-col gap-5">
             {PROJECTS.map((project, index) => (
               <ProjectCard
@@ -496,13 +405,111 @@ export default function Portfolio() {
                 project={project}
                 index={index}
                 onClick={() =>
-                  setSelectedProject(selectedProject === index ? null : index)
+                      setSelectedProject(
+                        selectedProject === index ? null : index
+                      )
                 }
               />
             ))}
+              </div>
+            </motion.div>
+          )}
+
+          {activeSection === "university" && (
+            <motion.div
+              key="university"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="py-6"
+            >
+              <h2 className="text-3xl font-light mb-10 cursor-default">University</h2>
+              
+              <div className="space-y-12">
+                {/* Education Header */}
+                <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                  <div>
+                    <h3 className={`text-xl font-bold ${theme === "dark" ? "text-white" : "text-black"}`}>
+                      Syracuse University
+                    </h3>
+                    <p className={`text-lg ${theme === "dark" ? "text-slate-300" : "text-slate-700"}`}>
+                      Bachelor of Science in Computer Science
+                    </p>
+                  </div>
+                  <div className={`text-right ${theme === "dark" ? "text-slate-400" : "text-slate-600"}`}>
+                    <p>Expected May 2027</p>
+                    <p>GPA: 3.7/4.0</p>
+                    <p className="text-sm mt-1 italic">1870 Scholar (Full Tuition) & 4x Dean’s List</p>
+                  </div>
+                </div>
+
+                {/* Coursework */}
+                <div>
+                  <h4 className={`text-lg font-medium mb-4 ${theme === "dark" ? "text-slate-200" : "text-slate-800"}`}>
+                    Relevant Coursework
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      "Data Structures & Algorithms",
+                      "Computer Architecture",
+                      "Software Implementation",
+                      "Operating Systems",
+                      "Computer Networks",
+                      "Virtual Reality",
+                      "Linear Algebra",
+                      "Probability & Statistics"
+                    ].map((course) => (
+                      <span
+                        key={course}
+                        className={`px-3 py-1 text-sm rounded-full transition-colors duration-200 ${
+                          theme === "dark"
+                            ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                            : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                        }`}
+                      >
+                        {course}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Activities */}
+                <div>
+                  <h4 className={`text-lg font-medium mb-4 ${theme === "dark" ? "text-slate-200" : "text-slate-800"}`}>
+                    Activities & Societies
+                  </h4>
+                  <div className={`space-y-6 ${theme === "dark" ? "text-slate-400" : "text-slate-600"}`}>
+                    <div>
+                      <div className="flex justify-between items-baseline mb-2">
+                        <span className={`font-bold text-lg ${theme === "dark" ? "text-slate-200" : "text-slate-800"}`}>
+                          CuseHacks
+                        </span>
+                        <span className="text-sm italic">Feb. 2024 – Present</span>
+                      </div>
+                      <div className={`mb-1 ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`}>President</div>
+                      <ul className="list-disc ml-5 space-y-1">
+                        <li>Led Syracuse University’s largest student-run hackathon with 200+ participants and a 15+ member organizing team</li>
+                        <li>Grew attendance 40% YoY through local outreach, social media campaigns, and university partnerships</li>
+                        <li>Secured $10,000+ in funding through industry partners and managing efforts across logistics, fundraising, and marketing</li>
+                      </ul>
+                    </div>
+                    
+                    <ul className="list-disc ml-5 space-y-2">
+                      <li>
+                        <span className={`font-medium ${theme === "dark" ? "text-slate-300" : "text-slate-700"}`}>Association for Computing Machinery (ACM)</span> - Member
+                      </li>
+                      <li>
+                        <span className={`font-medium ${theme === "dark" ? "text-slate-300" : "text-slate-700"}`}>Engineering Ambassadors</span> - Mentor
+                      </li>
+                    </ul>
+                  </div>
           </div>
         </div>
-      </motion.section>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
 
       {/* Project Modal */}
       <ProjectModal
@@ -511,30 +518,25 @@ export default function Portfolio() {
         onClose={() => setSelectedProject(null)}
       />
 
-      
+      <div className="max-w-3xl mx-auto px-6 w-full mt-auto">
+        <hr className={`border-t ${theme === "dark" ? "border-slate-800" : "border-slate-200"}`} />
+      </div>
 
       {/* Footer with contact icons and copyright */}
       <motion.footer
-        className={`mt-10 py-6 transition-colors duration-300 text-center backdrop-blur-sm ${
-          theme === "dark"
-            ? "bg-black border-t border-[#222]"
-            : "bg-[#eaf1fb]/80 border-t border-[#b6d0ee]/60"
-        }`}
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 2.5 }}
+        className={`py-10 transition-colors duration-300 text-center`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
       >
         <div className="max-w-3xl mx-auto px-6">
-          <div className="flex justify-center space-x-4 mb-4">
+          <div className="flex justify-center space-x-8 mb-8">
             {/* Contact icons */}
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild={false}
-              className={`transition-all duration-200 hover:scale-115 hover:-translate-y-0.5 ${
+            <div
+              className={`cursor-pointer transition-colors duration-200 flex items-center ${
                 theme === "dark"
-                  ? "text-slate-400 hover:text-white hover:bg-slate-800/50"
-                  : "text-slate-600 hover:text-black hover:bg-slate-100"
+                  ? "text-slate-500 hover:text-slate-300"
+                  : "text-slate-500 hover:text-slate-800"
               }`}
               onClick={() => {
                 if (!footerEmailRevealed) {
@@ -544,55 +546,31 @@ export default function Portfolio() {
                 }
               }}
             >
-              <span className="flex items-center relative">
-                <Mail className="w-4 h-4 mr-2" />
+              <Mail className="w-5 h-5 mr-2" />
                 {footerEmailRevealed ? (
-                  <>
-                    <span className="underline decoration-dotted decoration-2 underline-offset-4 cursor-pointer">
+                <span className="relative">
+                  <span className="underline decoration-dotted underline-offset-4">
                       {EMAIL}
                     </span>
                     {/* Copy popover */}
                     {footerShowCopy && (
                       <div
                         ref={footerCopyRef}
-                        className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 rounded-xl shadow-lg px-2 py-1 text-xs font-medium transition-all duration-200 ${
+                      className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 rounded-lg shadow-sm px-2 py-1 text-xs font-medium transition-all duration-200 whitespace-nowrap ${
                           theme === "dark"
-                            ? "bg-black text-white border border-slate-700"
-                            : "bg-white text-black border border-slate-300"
+                          ? "bg-slate-800 text-white border border-slate-700"
+                          : "bg-white text-black border border-slate-200"
                         }`}
                       >
                         {footerCopied ? (
-                          <span className="text-green-400">Copied!</span>
+                        <span className="text-green-500">Copied!</span>
                         ) : (
                           <div
                             role="button"
                             tabIndex={0}
-                            className="inline-block px-1 py-0.5 hover:underline focus:outline-none cursor-pointer select-none font-normal transition-colors duration-150"
+                          className="cursor-pointer"
                             onClick={async (e) => {
                               e.stopPropagation();
-                              try {
-                                await navigator.clipboard.writeText(EMAIL);
-                                setFooterCopied(true);
-                                setTimeout(() => {
-                                  setFooterShowCopy(false);
-                                  setFooterEmailRevealed(false);
-                                  setFooterCopied(false);
-                                }, COPY_FEEDBACK_DURATION);
-                              } catch (err) {
-                                // Fallback for older browsers or permission issues
-                                console.warn("Failed to copy email:", err);
-                                // You could show a fallback message here
-                                setFooterCopied(true);
-                                setTimeout(() => {
-                                  setFooterShowCopy(false);
-                                  setFooterEmailRevealed(false);
-                                  setFooterCopied(false);
-                                }, COPY_FEEDBACK_DURATION);
-                              }
-                            }}
-                            onKeyDown={async (e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                e.preventDefault();
                                 try {
                                   await navigator.clipboard.writeText(EMAIL);
                                   setFooterCopied(true);
@@ -609,7 +587,6 @@ export default function Portfolio() {
                                     setFooterEmailRevealed(false);
                                     setFooterCopied(false);
                                   }, COPY_FEEDBACK_DURATION);
-                                }
                               }
                             }}
                           >
@@ -618,51 +595,48 @@ export default function Portfolio() {
                         )}
                       </div>
                     )}
-                  </>
+                </span>
                 ) : (
-                  <>Email</>
+                <span>Email</span>
                 )}
-              </span>
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild
-              className={`transition-all duration-200 hover:scale-115 hover:-translate-y-0.5 ${
+            </div>
+
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex items-center transition-colors duration-200 ${
                 theme === "dark"
-                  ? "text-slate-400 hover:text-white hover:bg-slate-800/50"
-                  : "text-slate-600 hover:text-black hover:bg-slate-100"
+                  ? "text-slate-500 hover:text-slate-300"
+                  : "text-slate-500 hover:text-slate-800"
               }`}
             >
-              <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
-                <Github className="w-4 h-4 mr-2" />
+              <Github className="w-5 h-5 mr-2" />
                 GitHub
               </a>
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              asChild
-              className={`transition-all duration-200 hover:scale-115 hover:-translate-y-0.5 ${
+
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex items-center transition-colors duration-200 ${
                 theme === "dark"
-                  ? "text-slate-400 hover:text-white hover:bg-slate-800/50"
-                  : "text-slate-600 hover:text-black hover:bg-slate-100"
+                  ? "text-slate-500 hover:text-slate-300"
+                  : "text-slate-500 hover:text-slate-800"
               }`}
             >
-              <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer">
-                <Linkedin className="w-4 h-4 mr-2" />
+              <Linkedin className="w-5 h-5 mr-2" />
                 LinkedIn
               </a>
-            </Button>
           </div>
           <p
-            className={`text-xs mt-2 transition-colors duration-300 ${
+            className={`text-sm transition-colors duration-300 ${
               theme === "dark"
-                ? "text-slate-500 hover:text-slate-400"
-                : "text-slate-500 hover:text-slate-600"
+                ? "text-slate-600"
+                : "text-slate-400"
             }`}
           >
-            © 2025 Alan Tom. All rights reserved.
+            © 2025 Alan Tom
           </p>
         </div>
       </motion.footer>
