@@ -30,9 +30,12 @@ const ProjectModal = dynamic(
   { ssr: false }
 );
 
+const SECTION_ORDER = ["home", "experience", "projects", "university"];
+
 export default function Portfolio() {
   const { theme, setTheme, isLoaded } = useTheme();
   const [activeSection, setActiveSection] = useState("home");
+  const [direction, setDirection] = useState(0);
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [showJapanTooltip, setShowJapanTooltip] = useState(false);
   const [footerEmailRevealed, setFooterEmailRevealed] = useState(false);
@@ -42,6 +45,13 @@ export default function Portfolio() {
   const lastFocusedRef = useRef<HTMLElement | null>(null);
   const reducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
+
+  const handleSectionChange = (newSection: string) => {
+    const oldIndex = SECTION_ORDER.indexOf(activeSection);
+    const newIndex = SECTION_ORDER.indexOf(newSection);
+    setDirection(newIndex > oldIndex ? 1 : -1);
+    setActiveSection(newSection);
+  };
 
   // Use our custom hooks
   const { getKeyboardShortcut } = useKeyboardShortcuts({
@@ -90,9 +100,24 @@ export default function Portfolio() {
     );
   }
 
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 50 : -50,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: number) => ({
+      x: direction < 0 ? 50 : -50,
+      opacity: 0,
+    }),
+  };
+
   return (
     <div
-      className="min-h-screen transition-colors duration-300 flex flex-col bg-background text-foreground"
+      className="min-h-screen transition-colors duration-300 flex flex-col bg-background text-foreground overflow-x-hidden"
     >
       {/* Skip to main content link for accessibility */}
       <a
@@ -104,72 +129,81 @@ export default function Portfolio() {
 
       {/* Header */}
       <motion.div
-        className="max-w-3xl mx-auto px-6 py-6 w-full flex items-center justify-between"
+        className="max-w-3xl mx-auto px-6 py-6 w-full flex flex-col md:flex-row items-center justify-between gap-4"
         initial={reducedMotion ? false : { opacity: 0, y: -20 }}
         animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
         transition={reducedMotion ? undefined : { duration: 0.6, delay: 0.1 }}
       >
-        {/* Japan emoji on the left */}
-        <div className="flex items-center relative w-20">
-          <motion.span
-            className="text-2xl align-middle cursor-pointer select-none"
-            role="img"
-            aria-label="Map of Japan"
-            onMouseEnter={() => setShowJapanTooltip(true)}
-            onMouseLeave={() => setShowJapanTooltip(false)}
-            whileHover={
-              reducedMotion
-                ? undefined
-                : {
-                    scale: 1.15,
-                    transition: {
-                      duration: 0.08,
-                      ease: "easeOut",
-                    },
-                  }
-            }
-            whileTap={
-              reducedMotion
-                ? undefined
-                : {
-                    scale: 0.9,
-                    rotate: -5,
-                    transition: {
-                      type: "spring",
-                      stiffness: 600,
-                      damping: 15,
-                    },
-                  }
-            }
-          >
-            🗾
-          </motion.span>
-          {/* Tooltip */}
-          {showJapanTooltip && (
-            <motion.div
-              className={`absolute left-0 top-full mt-2 px-3 py-2 rounded-lg border shadow-sm text-sm whitespace-nowrap z-50 backdrop-blur-sm transition-all duration-500 ${
-                theme === "dark"
-                  ? "bg-[#0a1628]/90 border-[#1e293b]/60 text-slate-300"
-                  : "bg-[#eaf1fb]/80 border-[#b6d0ee]/60 text-slate-600"
-              }`}
-              initial={reducedMotion ? false : { opacity: 0, y: -10 }}
-              animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-              exit={reducedMotion ? undefined : { opacity: 0, y: -10 }}
-              transition={reducedMotion ? undefined : { duration: 0.2 }}
+        <div className="flex justify-between w-full md:w-auto md:flex-1">
+          {/* Japan emoji on the left */}
+          <div className="flex items-center relative w-20">
+            <motion.span
+              className="text-2xl align-middle cursor-pointer select-none"
+              role="img"
+              aria-label="Map of Japan"
+              onMouseEnter={() => setShowJapanTooltip(true)}
+              onMouseLeave={() => setShowJapanTooltip(false)}
+              whileHover={
+                reducedMotion
+                  ? undefined
+                  : {
+                      scale: 1.15,
+                      transition: {
+                        duration: 0.08,
+                        ease: "easeOut",
+                      },
+                    }
+              }
+              whileTap={
+                reducedMotion
+                  ? undefined
+                  : {
+                      scale: 0.9,
+                      rotate: -5,
+                      transition: {
+                        type: "spring",
+                        stiffness: 600,
+                        damping: 15,
+                      },
+                    }
+              }
             >
-              my most recent trip was to Japan! I'd love to go back one day.
-            </motion.div>
-          )}
+              🗾
+            </motion.span>
+            {/* Tooltip */}
+            {showJapanTooltip && (
+              <motion.div
+                className={`absolute left-0 top-full mt-2 px-3 py-2 rounded-lg border shadow-sm text-sm whitespace-nowrap z-50 backdrop-blur-sm transition-all duration-500 ${
+                  theme === "dark"
+                    ? "bg-[#0a1628]/90 border-[#1e293b]/60 text-slate-300"
+                    : "bg-[#eaf1fb]/80 border-[#b6d0ee]/60 text-slate-600"
+                }`}
+                initial={reducedMotion ? false : { opacity: 0, y: -10 }}
+                animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+                exit={reducedMotion ? undefined : { opacity: 0, y: -10 }}
+                transition={reducedMotion ? undefined : { duration: 0.2 }}
+              >
+                my most recent trip was to Japan! I'd love to go back one day.
+              </motion.div>
+            )}
+          </div>
+
+          {/* Theme toggle on the right (visible on mobile in this row) */}
+          <div className="flex items-center justify-end gap-2 w-20 md:hidden">
+            <ThemeToggle />
+          </div>
         </div>
 
-        <Navbar
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-          theme={theme}
-        />
+        <div className="w-full md:w-auto flex-grow flex justify-center order-3 md:order-2">
+          <Navbar
+            activeSection={activeSection}
+            setActiveSection={handleSectionChange}
+            theme={theme}
+          />
+        </div>
 
-        {/* Theme toggle on the right */}
-        <div className="flex items-center justify-end gap-2 w-20">
+        {/* Theme toggle on the right (desktop) */}
+        <div className="hidden md:flex items-center justify-end gap-2 w-20 md:flex-1 order-2 md:order-3">
           <ThemeToggle />
           {!isMobile && (
             <span
@@ -185,101 +219,106 @@ export default function Portfolio() {
         </div>
       </motion.div>
 
-      <main id="main-content" className="flex-1 w-full max-w-3xl mx-auto px-6">
-        <AnimatePresence mode="wait">
+      <main id="main-content" className="flex-1 w-full max-w-3xl mx-auto px-6 relative overflow-hidden">
+        <AnimatePresence mode="wait" custom={direction}>
           {activeSection === "home" && (
             <motion.div
               key="home"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 }
+              }}
             >
-      {/* Profile Section (Avatar + Name + About Me) */}
+              {/* Profile Section (Avatar + Name + About Me) */}
               <div className="py-10">
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-            {/* Avatar */}
-            <motion.div
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
+                  {/* Avatar */}
+                  <motion.div
                     className="w-28 h-28 rounded-full border-2 border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer overflow-hidden"
-              initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
-              animate={reducedMotion ? undefined : { opacity: 1, scale: 1 }}
-              transition={
+                    initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
+                    animate={reducedMotion ? undefined : { opacity: 1, scale: 1 }}
+                    transition={
                       reducedMotion ? undefined : { duration: 0.8, delay: 0.1 }
-              }
-              whileHover={
-                reducedMotion
-                  ? undefined
-                  : {
+                    }
+                    whileHover={
+                      reducedMotion
+                        ? undefined
+                        : {
                             scale: 1.05,
-                      transition: {
+                            transition: {
                               duration: 0.2,
-                        ease: "easeOut",
-                      },
+                              ease: "easeOut",
+                            },
+                          }
                     }
-              }
-              whileTap={
-                reducedMotion
-                  ? undefined
-                  : {
+                    whileTap={
+                      reducedMotion
+                        ? undefined
+                        : {
                             scale: 0.95,
-                      transition: {
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 20,
-                      },
+                            transition: {
+                              type: "spring",
+                              stiffness: 500,
+                              damping: 20,
+                            },
+                          }
                     }
-              }
-            >
-              <Image
-                src={`/images/buttercup.jpg?v=${Date.now()}`}
-                alt="Alan Tom's profile photo"
-                width={112}
-                height={112}
-                className="w-full h-full object-cover"
-                priority
-                sizes="112px"
-              />
-            </motion.div>
-            <div className="flex-1 space-y-4">
-              <motion.h1
+                  >
+                    <Image
+                      src={`/images/buttercup.jpg?v=${Date.now()}`}
+                      alt="Alan Tom's profile photo"
+                      width={112}
+                      height={112}
+                      className="w-full h-full object-cover"
+                      priority
+                      sizes="112px"
+                    />
+                  </motion.div>
+                  <div className="flex-1 space-y-4">
+                    <motion.h1
                       className="text-4xl md:text-5xl font-bold tracking-tight cursor-default"
-                initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-                animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-                transition={
+                      initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+                      animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+                      transition={
                         reducedMotion ? undefined : { duration: 0.8, delay: 0.2 }
-                }
-              >
+                      }
+                    >
                       Hi, I'm Alan.
-              </motion.h1>
-              <motion.div
+                    </motion.h1>
+                    <motion.div
                       className={`space-y-4 leading-relaxed text-lg ${
                         theme === "dark" ? "text-slate-300" : "text-slate-700"
-                }`}
-                initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-                animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-                transition={
+                      }`}
+                      initial={reducedMotion ? false : { opacity: 0, y: 20 }}
+                      animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+                      transition={
                         reducedMotion ? undefined : { duration: 0.8, delay: 0.3 }
-                }
-              >
-                <TypeWriter
-                  texts={TYPEWRITER_TEXTS}
-                  speed={TYPEWRITER_CONFIG.SPEED}
-                  pauseDuration={TYPEWRITER_CONFIG.PAUSE_DURATION}
-                />
-              </motion.div>
-            </div>
-          </div>
+                      }
+                    >
+                      <TypeWriter
+                        texts={TYPEWRITER_TEXTS}
+                        speed={TYPEWRITER_CONFIG.SPEED}
+                        pauseDuration={TYPEWRITER_CONFIG.PAUSE_DURATION}
+                      />
+                    </motion.div>
+                  </div>
+                </div>
                 
                 <motion.div
                   className={`mt-8 space-y-6 leading-relaxed text-lg ${
                     theme === "dark" ? "text-slate-400" : "text-slate-600"
                   }`}
                   initial={reducedMotion ? false : { opacity: 0, y: 20 }}
-        animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
+                  animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
                   transition={
                     reducedMotion ? undefined : { duration: 0.8, delay: 0.4 }
                   }
-      >
+                >
                   <div className="w-full h-px bg-slate-200 dark:bg-slate-800 my-8" />
                   
                   <p>
@@ -301,116 +340,126 @@ export default function Portfolio() {
           {activeSection === "experience" && (
             <motion.div
               key="experience"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 }
+              }}
               className="py-6"
             >
               <h2 className="text-3xl font-light mb-10 cursor-default">Experience</h2>
-        <div className="relative pl-8">
-          {/* Vertical line */}
+              <div className="relative pl-8">
+                {/* Vertical line */}
                 <div
-            className="absolute left-3 top-0 h-full w-0.5 bg-slate-300 dark:bg-slate-700"
-            style={{ zIndex: 0 }}
-          />
-          {/* Timeline items */}
-          {[
-            {
+                  className="absolute left-3 top-0 h-full w-0.5 bg-slate-300 dark:bg-slate-700"
+                  style={{ zIndex: 0 }}
+                />
+                {/* Timeline items */}
+                {[
+                  {
                     color: "bg-green-600",
                     company: "Micron Technology",
                     title: "Software Engineer Intern",
                     years: "Feb. 2025 - Present",
                     desc: "developing interactive C#/Unity simulations with 90% query reduction via custom caching and 60% UI overhead cut",
-            },
-            {
-              color: "bg-yellow-400",
-              company: "iSchool at Syracuse University",
-              title: "NSF REU Researcher",
+                  },
+                  {
+                    color: "bg-yellow-400",
+                    company: "iSchool at Syracuse University",
+                    title: "NSF REU Researcher",
                     years: "June 2025 - Aug. 2025",
                     desc: "engineered financial sentiment pipeline using FinBERT/Llama 3.1, analyzing 5K+ posts to validatemarket volatility correlations",
-            },
-            {
-              color: "bg-red-600",
-              company: "Data Lab at Syracuse University",
+                  },
+                  {
+                    color: "bg-red-600",
+                    company: "Data Lab at Syracuse University",
                     title: "Undergraduate Researcher",
                     years: "Aug. 2024 - Feb. 2025",
                     desc: "built Python evaluation pipeline for LLM memory interference testing, automating analysis of 300+ associations",
-            },
-          ].map((item, idx) => (
-            <motion.div
-              key={item.company + item.title}
-              className="flex items-start mb-10 last:mb-0 relative group cursor-pointer"
-              tabIndex={0}
+                  },
+                ].map((item, idx) => (
+                  <motion.div
+                    key={item.company + item.title}
+                    className="flex items-start mb-10 last:mb-0 relative group cursor-pointer"
+                    tabIndex={0}
                     initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+                    animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.1 }}
-              whileHover={{
+                    whileHover={{
                       x: 4,
-                transition: {
+                      transition: {
                         duration: 0.2,
-                  ease: "easeOut",
-                },
-              }}
-            >
+                        ease: "easeOut",
+                      },
+                    }}
+                  >
                     {/* Dot */}
-              <motion.span
-                className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 ${item.color}`}
-                style={{ zIndex: 2 }}
-                whileHover={{
+                    <motion.span
+                      className={`absolute left-0 top-2 w-4 h-4 rounded-full border-2 border-white dark:border-slate-900 ${item.color}`}
+                      style={{ zIndex: 2 }}
+                      whileHover={{
                         scale: 1.2,
                         transition: { duration: 0.2 },
-                }}
-              />
+                      }}
+                    />
                     <div className="ml-8 mr-1 md:mr-2 flex-1 flex flex-col md:flex-row justify-between items-start px-3 md:px-4">
-                <div>
-                  <span
-                    className={`font-bold text-base md:text-lg transition-colors duration-300 ${
+                      <div>
+                        <span
+                          className={`font-bold text-base md:text-lg transition-colors duration-300 ${
                             theme === "dark" ? "text-white" : "text-slate-900"
-                    }`}
-                  >
-                    {item.company}
-                  </span>
+                          }`}
+                        >
+                          {item.company}
+                        </span>
                         <div className="italic text-slate-500 dark:text-slate-400 text-base mb-1">
-                    {item.title}
-                  </div>
+                          {item.title}
+                        </div>
                         <ul className="list-disc ml-5 text-slate-500 dark:text-slate-400 leading-relaxed">
-                    <li>{item.desc}</li>
-                  </ul>
-                </div>
+                          <li>{item.desc}</li>
+                        </ul>
+                      </div>
                       <span className="text-sm text-slate-400 dark:text-slate-500 whitespace-nowrap pt-1 md:text-right">
-                  {item.years}
-                </span>
+                        {item.years}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-            </motion.div>
-          ))}
-        </div>
             </motion.div>
           )}
 
           {activeSection === "projects" && (
             <motion.div
               key="projects"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 }
+              }}
               className="py-6"
             >
               <h2 className="text-3xl font-light mb-8 cursor-default">Projects</h2>
-          <div className="flex flex-col gap-5">
-            {PROJECTS.map((project, index) => (
-              <ProjectCard
-                key={project.title}
-                project={project}
-                index={index}
-                onClick={() =>
+              <div className="flex flex-col gap-5">
+                {PROJECTS.map((project, index) => (
+                  <ProjectCard
+                    key={project.title}
+                    project={project}
+                    index={index}
+                    onClick={() =>
                       setSelectedProject(
                         selectedProject === index ? null : index
                       )
-                }
-              />
-            ))}
+                    }
+                  />
+                ))}
               </div>
             </motion.div>
           )}
@@ -418,10 +467,15 @@ export default function Portfolio() {
           {activeSection === "university" && (
             <motion.div
               key="university"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 }
+              }}
               className="py-6"
             >
               <h2 className="text-3xl font-light mb-10 cursor-default">University</h2>
@@ -504,8 +558,8 @@ export default function Portfolio() {
                       </li>
                     </ul>
                   </div>
-          </div>
-        </div>
+                </div>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -547,58 +601,58 @@ export default function Portfolio() {
               }}
             >
               <Mail className="w-5 h-5 mr-2" />
-                {footerEmailRevealed ? (
+              {footerEmailRevealed ? (
                 <span className="relative">
                   <span className="underline decoration-dotted underline-offset-4">
-                      {EMAIL}
-                    </span>
-                    {/* Copy popover */}
-                    {footerShowCopy && (
-                      <div
-                        ref={footerCopyRef}
+                    {EMAIL}
+                  </span>
+                  {/* Copy popover */}
+                  {footerShowCopy && (
+                    <div
+                      ref={footerCopyRef}
                       className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 z-50 rounded-lg shadow-sm px-2 py-1 text-xs font-medium transition-all duration-200 whitespace-nowrap ${
-                          theme === "dark"
+                        theme === "dark"
                           ? "bg-slate-800 text-white border border-slate-700"
                           : "bg-white text-black border border-slate-200"
-                        }`}
-                      >
-                        {footerCopied ? (
+                      }`}
+                    >
+                      {footerCopied ? (
                         <span className="text-green-500">Copied!</span>
-                        ) : (
-                          <div
-                            role="button"
-                            tabIndex={0}
+                      ) : (
+                        <div
+                          role="button"
+                          tabIndex={0}
                           className="cursor-pointer"
-                            onClick={async (e) => {
-                              e.stopPropagation();
-                                try {
-                                  await navigator.clipboard.writeText(EMAIL);
-                                  setFooterCopied(true);
-                                  setTimeout(() => {
-                                    setFooterShowCopy(false);
-                                    setFooterEmailRevealed(false);
-                                    setFooterCopied(false);
-                                  }, COPY_FEEDBACK_DURATION);
-                                } catch (err) {
-                                  console.warn("Failed to copy email:", err);
-                                  setFooterCopied(true);
-                                  setTimeout(() => {
-                                    setFooterShowCopy(false);
-                                    setFooterEmailRevealed(false);
-                                    setFooterCopied(false);
-                                  }, COPY_FEEDBACK_DURATION);
-                              }
-                            }}
-                          >
-                            Copy Email
-                          </div>
-                        )}
-                      </div>
-                    )}
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            try {
+                              await navigator.clipboard.writeText(EMAIL);
+                              setFooterCopied(true);
+                              setTimeout(() => {
+                                setFooterShowCopy(false);
+                                setFooterEmailRevealed(false);
+                                setFooterCopied(false);
+                              }, COPY_FEEDBACK_DURATION);
+                            } catch (err) {
+                              console.warn("Failed to copy email:", err);
+                              setFooterCopied(true);
+                              setTimeout(() => {
+                                setFooterShowCopy(false);
+                                setFooterEmailRevealed(false);
+                                setFooterCopied(false);
+                              }, COPY_FEEDBACK_DURATION);
+                            }
+                          }}
+                        >
+                          Copy Email
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </span>
-                ) : (
+              ) : (
                 <span>Email</span>
-                )}
+              )}
             </div>
 
             <a
@@ -612,8 +666,8 @@ export default function Portfolio() {
               }`}
             >
               <Github className="w-5 h-5 mr-2" />
-                GitHub
-              </a>
+              GitHub
+            </a>
 
             <a
               href={LINKEDIN_URL}
@@ -626,8 +680,8 @@ export default function Portfolio() {
               }`}
             >
               <Linkedin className="w-5 h-5 mr-2" />
-                LinkedIn
-              </a>
+              LinkedIn
+            </a>
           </div>
           <p
             className={`text-sm transition-colors duration-300 ${

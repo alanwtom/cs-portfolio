@@ -32,13 +32,13 @@ export const TypeWriter: React.FC<TypeWriterProps> = ({
     const currentText = texts[currentTextIndex];
 
     if (currentCharIndex < currentText.length) {
-      setIsActivelyTyping(true);
       const currentChar = currentText[currentCharIndex];
       const punctuationExtraDelayMs = 120; // brief pause on punctuation
       const isPunctuation = ",.;:!?".includes(currentChar);
       const delay = isPunctuation ? speed + punctuationExtraDelayMs : speed;
 
       const timer = setTimeout(() => {
+        setIsActivelyTyping(true);
         setDisplayedTexts((prev) => {
           const newTexts = [...prev];
           if (newTexts[currentTextIndex]) {
@@ -67,8 +67,8 @@ export const TypeWriter: React.FC<TypeWriterProps> = ({
         return;
       } else {
         // Pause briefly before moving to the next text
-        setIsActivelyTyping(false);
         const pauseTimer = setTimeout(() => {
+          setIsActivelyTyping(false); // State update inside timeout is safe
           setCurrentTextIndex((prev) => prev + 1);
           setCurrentCharIndex(0);
         }, pauseDuration);
