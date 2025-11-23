@@ -159,7 +159,7 @@ export default function Portfolio() {
               >
                 {/* Perfect square wordmark - lowercase, Minecraft style, minimal spacing */}
                 <div
-                  className="w-8 h-8 grid grid-cols-2 grid-rows-2 place-items-center"
+                  className="w-6 h-6 grid grid-cols-2 grid-rows-2 place-items-center"
                   style={{ letterSpacing: "-0.08em", gap: 0 }}
                 >
                   <span className="text-[12px] font-normal leading-none lowercase">
