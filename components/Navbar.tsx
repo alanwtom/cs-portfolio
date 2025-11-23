@@ -17,8 +17,16 @@ const NAV_ITEMS = [
   { id: "university", label: "University" },
 ];
 
-export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) {
-  const [pillStyle, setPillStyle] = useState<{ left: number; width: number; opacity: number }>({
+export function Navbar({
+  activeSection,
+  setActiveSection,
+  theme,
+}: NavbarProps) {
+  const [pillStyle, setPillStyle] = useState<{
+    left: number;
+    width: number;
+    opacity: number;
+  }>({
     left: 0,
     width: 0,
     opacity: 0,
@@ -34,7 +42,9 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
   useEffect(() => {
     if (isDragging) return;
 
-    const activeIndex = NAV_ITEMS.findIndex((item) => item.id === activeSection);
+    const activeIndex = NAV_ITEMS.findIndex(
+      (item) => item.id === activeSection
+    );
     const currentItem = itemsRef.current[activeIndex];
     const navContainer = navRef.current;
 
@@ -53,7 +63,9 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
-      const activeIndex = NAV_ITEMS.findIndex((item) => item.id === activeSection);
+      const activeIndex = NAV_ITEMS.findIndex(
+        (item) => item.id === activeSection
+      );
       const currentItem = itemsRef.current[activeIndex];
       const navContainer = navRef.current;
 
@@ -73,7 +85,10 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
   }, [activeSection]);
 
   // Determine active section during drag
-  const handleDrag = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+  const handleDrag = (
+    _event: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo
+  ) => {
     // Use cached rects for better performance during drag
     const dragX = info.point.x;
 
@@ -106,16 +121,11 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
         ref={navRef}
         className={cn(
           "relative flex space-x-1 rounded-full p-1.5 transition-all duration-300 flex-shrink-0",
-          "backdrop-blur-2xl shadow-lg ring-1 ring-white/10",
+          "border",
           theme === "dark"
-            ? "bg-white/10 shadow-[0_0_20px_-5px_rgba(255,255,255,0.15)]"
-            : "bg-black/5 shadow-[0_0_20px_-5px_rgba(0,0,0,0.1)]"
+            ? "bg-slate-800 border-slate-700"
+            : "bg-slate-100 border-slate-300"
         )}
-        style={{
-          background: theme === "dark"
-            ? "linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)"
-            : "linear-gradient(145deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.01) 100%)",
-        }}
       >
         {/* Persistent Pill */}
         <motion.div
@@ -123,12 +133,16 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
             "absolute top-1.5 bottom-1.5 rounded-full shadow-sm cursor-grab active:cursor-grabbing z-0",
             theme === "dark" ? "bg-white" : "bg-black"
           )}
-          animate={!isDragging ? {
-            left: pillStyle.left,
-            width: pillStyle.width,
-            opacity: pillStyle.opacity,
-            x: 0 // Reset x transform when dragging ends
-          } : undefined}
+          animate={
+            !isDragging
+              ? {
+                  left: pillStyle.left,
+                  width: pillStyle.width,
+                  opacity: pillStyle.opacity,
+                  x: 0, // Reset x transform when dragging ends
+                }
+              : undefined
+          }
           drag="x"
           dragConstraints={navRef}
           dragElastic={0}
@@ -136,7 +150,9 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
           onDragStart={() => {
             setIsDragging(true);
             // Cache item rects to avoid layout thrashing during drag
-            itemRectsRef.current = itemsRef.current.map(el => el?.getBoundingClientRect() || null);
+            itemRectsRef.current = itemsRef.current.map(
+              (el) => el?.getBoundingClientRect() || null
+            );
           }}
           onDrag={handleDrag}
           onDragEnd={() => setIsDragging(false)}
@@ -147,9 +163,10 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
             mass: 1,
           }}
           style={{
-            boxShadow: theme === "dark"
-              ? "0 0 15px 2px rgba(255, 255, 255, 0.3)"
-              : "0 0 15px 2px rgba(0, 0, 0, 0.2)",
+            boxShadow:
+              theme === "dark"
+                ? "0 0 15px 2px rgba(255, 255, 255, 0.3)"
+                : "0 0 15px 2px rgba(0, 0, 0, 0.2)",
             left: pillStyle.left,
             width: pillStyle.width,
           }}
@@ -158,7 +175,9 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
         {NAV_ITEMS.map((item, index) => (
           <button
             key={item.id}
-            ref={(el) => { itemsRef.current[index] = el; }}
+            ref={(el) => {
+              itemsRef.current[index] = el;
+            }}
             onClick={() => setActiveSection(item.id)}
             className={cn(
               "relative px-5 py-2 text-sm rounded-full transition-colors duration-300 z-10",

@@ -36,7 +36,6 @@ export default function Portfolio() {
   const [activeSection, setActiveSection] = useState("about");
   const [direction, setDirection] = useState(0);
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
-  const [showJapanTooltip, setShowJapanTooltip] = useState(false);
   const [footerEmailRevealed, setFooterEmailRevealed] = useState(false);
   const [footerShowCopy, setFooterShowCopy] = useState(false);
   const [footerCopied, setFooterCopied] = useState(false);
@@ -132,56 +131,52 @@ export default function Portfolio() {
         transition={reducedMotion ? undefined : { duration: 0.6, delay: 0.1 }}
       >
         <div className="flex justify-between w-full md:w-auto md:flex-1">
-          {/* Japan emoji on the left */}
+          {/* Atom icon on the left */}
           <div className="flex items-center relative w-20">
-            <motion.span
-              className="text-2xl align-middle cursor-pointer select-none"
-              role="img"
-              aria-label="Map of Japan"
-              onClick={() => setShowJapanTooltip((prev) => !prev)}
-              whileHover={
-                reducedMotion
-                  ? undefined
-                  : {
-                      scale: 1.15,
-                      transition: {
-                        duration: 0.08,
-                        ease: "easeOut",
-                      },
-                    }
-              }
+            <motion.button
+              className="group relative cursor-pointer select-none"
+              onClick={() => handleSectionChange("about")}
+              aria-label="Go to home"
               whileTap={
                 reducedMotion
                   ? undefined
                   : {
-                      scale: 0.9,
-                      rotate: -5,
+                      scale: 0.96,
                       transition: {
                         type: "spring",
-                        stiffness: 600,
-                        damping: 15,
+                        stiffness: 500,
+                        damping: 30,
                       },
                     }
               }
             >
-              🗾
-            </motion.span>
-            {/* Tooltip */}
-            {showJapanTooltip && (
-              <motion.div
-                className={`absolute left-0 top-full mt-2 px-3 py-2 rounded-lg border shadow-sm text-sm whitespace-nowrap z-50 backdrop-blur-sm transition-all duration-500 ${
+              <div
+                className={`relative font-mono transition-colors duration-300 ${
                   theme === "dark"
-                    ? "bg-[#0a1628]/90 border-[#1e293b]/60 text-slate-300"
-                    : "bg-[#eaf1fb]/80 border-[#b6d0ee]/60 text-slate-600"
+                    ? "text-slate-200 group-hover:text-white"
+                    : "text-slate-700 group-hover:text-slate-900"
                 }`}
-                initial={reducedMotion ? false : { opacity: 0, y: -10 }}
-                animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
-                exit={reducedMotion ? undefined : { opacity: 0, y: -10 }}
-                transition={reducedMotion ? undefined : { duration: 0.2 }}
               >
-                my most recent trip was to Japan! I'd love to go back one day.
-              </motion.div>
-            )}
+                {/* Perfect square wordmark - lowercase, Minecraft style, minimal spacing */}
+                <div
+                  className="w-8 h-8 grid grid-cols-2 grid-rows-2 place-items-center"
+                  style={{ letterSpacing: "-0.08em", gap: 0 }}
+                >
+                  <span className="text-[12px] font-normal leading-none lowercase">
+                    a
+                  </span>
+                  <span className="text-[12px] font-normal leading-none lowercase">
+                    t
+                  </span>
+                  <span className="text-[12px] font-normal leading-none lowercase">
+                    o
+                  </span>
+                  <span className="text-[12px] font-normal leading-none lowercase">
+                    m
+                  </span>
+                </div>
+              </div>
+            </motion.button>
           </div>
 
           {/* Theme toggle on the right (visible on mobile in this row) */}
@@ -363,7 +358,7 @@ export default function Portfolio() {
                   </p>
 
                   <p>
-                    <MinecraftReveal text="Outside of work, I play video games, travel, and work out." />
+                    <MinecraftReveal text="Outside of work, I play video games, travel, and work out!" />
                   </p>
                 </motion.div>
               </div>
@@ -735,6 +730,22 @@ export default function Portfolio() {
                   setFooterEmailRevealed(true);
                 } else if (!footerShowCopy) {
                   setFooterShowCopy(true);
+                }
+              }}
+              onDoubleClick={async (e) => {
+                e.stopPropagation();
+                try {
+                  await navigator.clipboard.writeText(EMAIL);
+                  setFooterEmailRevealed(true);
+                  setFooterShowCopy(true);
+                  setFooterCopied(true);
+                  setTimeout(() => {
+                    setFooterShowCopy(false);
+                    setFooterEmailRevealed(false);
+                    setFooterCopied(false);
+                  }, COPY_FEEDBACK_DURATION);
+                } catch (err) {
+                  console.warn("Failed to copy email:", err);
                 }
               }}
             >
