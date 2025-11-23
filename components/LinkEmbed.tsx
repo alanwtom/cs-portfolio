@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,10 +28,11 @@ export function LinkEmbed({ className }: LinkEmbedProps) {
   const [showEmbed, setShowEmbed] = useState(false);
   const [embedData, setEmbedData] = useState<EmbedData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const detectLinkType = (url: string): "linkedin" | "discord" | "other" | null => {
     if (!url) return null;
-    
+
     const lowerUrl = url.toLowerCase();
     if (lowerUrl.includes("linkedin.com")) return "linkedin";
     if (lowerUrl.includes("discord.com") || lowerUrl.includes("discord.gg")) return "discord";
@@ -39,7 +41,7 @@ export function LinkEmbed({ className }: LinkEmbedProps) {
 
   const generateEmbedData = (url: string, type: "linkedin" | "discord" | "other"): EmbedData => {
     const urlObj = new URL(url);
-    
+
     switch (type) {
       case "linkedin":
         return {
@@ -82,6 +84,7 @@ export function LinkEmbed({ className }: LinkEmbedProps) {
       const linkType = detectLinkType(pastedText);
       if (linkType) {
         setIsLoading(true);
+        setImageError(false);
         const embed = generateEmbedData(pastedText, linkType);
         setEmbedData(embed);
         setShowEmbed(true);
@@ -97,6 +100,7 @@ export function LinkEmbed({ className }: LinkEmbedProps) {
     setLink("");
     setShowEmbed(false);
     setEmbedData(null);
+    setImageError(false);
   };
 
   const handleCopyLink = async () => {
@@ -171,15 +175,18 @@ export function LinkEmbed({ className }: LinkEmbedProps) {
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
                 <div className="flex items-start gap-3">
-                  {embedData.favicon && (
-                    <img
-                      src={embedData.favicon}
-                      alt={`${embedData.siteName} icon`}
-                      className="w-6 h-6 rounded-sm flex-shrink-0"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
+                  {embedData.favicon && !imageError && (
+                    <div className="w-6 h-6 rounded-sm flex-shrink-0 relative">
+                      <Image
+                        src={embedData.favicon}
+                        alt={`${embedData.siteName} icon`}
+                        width={24}
+                        height={24}
+                        className="rounded-sm"
+                        onError={() => setImageError(true)}
+                        unoptimized
+                      />
+                    </div>
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
