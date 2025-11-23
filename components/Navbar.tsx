@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, PanInfo } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useRef, useState, useEffect } from "react";
 
@@ -24,7 +24,7 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
     opacity: 0,
   });
   const [isDragging, setIsDragging] = useState(false);
-  
+
   // Refs for button elements
   const itemsRef = useRef<(HTMLButtonElement | null)[]>([]);
   const navRef = useRef<HTMLDivElement>(null);
@@ -73,7 +73,7 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
   }, [activeSection]);
 
   // Determine active section during drag
-  const handleDrag = (event: any, info: any) => {
+  const handleDrag = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     // Use cached rects for better performance during drag
     const dragX = info.point.x;
 
@@ -84,7 +84,7 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
       if (rect) {
         const center = rect.left + rect.width / 2;
         const distance = Math.abs(dragX - center);
-        
+
         if (dragX >= rect.left && dragX <= rect.right) {
           closestIndex = index;
           minDistance = 0;
@@ -112,7 +112,7 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
             : "bg-black/5 shadow-[0_0_20px_-5px_rgba(0,0,0,0.1)]"
         )}
         style={{
-          background: theme === "dark" 
+          background: theme === "dark"
             ? "linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)"
             : "linear-gradient(145deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.01) 100%)",
         }}
@@ -130,7 +130,7 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
             x: 0 // Reset x transform when dragging ends
           } : undefined}
           drag="x"
-          dragConstraints={navRef} 
+          dragConstraints={navRef}
           dragElastic={0}
           dragMomentum={false}
           onDragStart={() => {
@@ -144,13 +144,13 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
             type: "spring",
             stiffness: 400,
             damping: 30,
-            mass: 1, 
+            mass: 1,
           }}
           style={{
             boxShadow: theme === "dark"
               ? "0 0 15px 2px rgba(255, 255, 255, 0.3)"
               : "0 0 15px 2px rgba(0, 0, 0, 0.2)",
-            left: pillStyle.left, 
+            left: pillStyle.left,
             width: pillStyle.width,
           }}
         />
@@ -178,7 +178,7 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
             {/* Invisible bold text to reserve space and prevent layout shift */}
             <span className="invisible font-bold">{item.label}</span>
             {/* Visible text centered absolutely */}
-            <span 
+            <span
               className={cn(
                 "absolute inset-0 flex items-center justify-center",
                 activeSection === item.id ? "font-bold" : "font-medium"
