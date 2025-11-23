@@ -3,7 +3,7 @@
 import { Mail, Github, Linkedin } from "lucide-react";
 import { ThemeToggle } from "./components/theme-toggle";
 import { useTheme } from "./components/theme-provider";
-import { TypeWriter } from "./components/TypeWriter";
+import { MinecraftReveal } from "./components/MinecraftReveal";
 import { ProjectCard } from "./components/ProjectCard";
 import { Navbar } from "./components/Navbar";
 import dynamic from "next/dynamic";
@@ -18,7 +18,6 @@ import {
   GITHUB_URL,
   LINKEDIN_URL,
   COPY_FEEDBACK_DURATION,
-  TYPEWRITER_CONFIG,
 } from "./lib/constants";
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -299,15 +298,11 @@ export default function Portfolio() {
                         reducedMotion ? undefined : { duration: 0.8, delay: 0.3 }
                       }
                     >
-                      <TypeWriter
-                        texts={TYPEWRITER_TEXTS}
-                        speed={TYPEWRITER_CONFIG.SPEED}
-                        pauseDuration={TYPEWRITER_CONFIG.PAUSE_DURATION}
-                      />
+                      <p>{TYPEWRITER_TEXTS[0]}</p>
                     </motion.div>
                   </div>
                 </div>
-                
+
                 <motion.div
                   className={`mt-8 space-y-6 leading-relaxed text-lg ${
                     theme === "dark" ? "text-slate-400" : "text-slate-600"
@@ -319,21 +314,37 @@ export default function Portfolio() {
                   }
                 >
                   <div className="w-full h-px bg-slate-200 dark:bg-slate-800 my-8" />
-                  
+
                   <p>
-                    I currently work as a Software Development Engineer Intern at <span className="underline underline-offset-4 decoration-slate-400 dark:decoration-slate-600">Micron Technology</span>, building data-driven UIs and caching systems for semiconductor simulations.
+                    <MinecraftReveal text="I currently work as a Software Development Engineer Intern at " revealSpeed={30} startDelayMs={500} />
+                    <span className="underline underline-offset-4 decoration-slate-400 dark:decoration-slate-600">
+                      <MinecraftReveal text="Micron Technology" revealSpeed={30} startDelayMs={500} />
+                    </span>
+                    <MinecraftReveal text=", building data-driven UIs and caching systems for semiconductor simulations." revealSpeed={30} startDelayMs={500} />
                   </p>
-                  
+
                   <p>
-                    I also serve as the President of <span className="underline underline-offset-4 decoration-slate-400 dark:decoration-slate-600">Innovate Orange</span>, where I lead a team of 20+ students to organize Syracuse University's largest hackathons and datathons.
+                    <MinecraftReveal text="I also serve as the President of " />
+                    <span className="underline underline-offset-4 decoration-slate-400 dark:decoration-slate-600">
+                      <MinecraftReveal text="Innovate Orange" />
+                    </span>
+                    <MinecraftReveal text=", where I lead a team of 20+ students to organize Syracuse University's largest hackathons and datathons." />
                   </p>
-                  
+
                   <p>
-                    Previously, I conducted research at Syracuse University's <span className="underline underline-offset-4 decoration-slate-400 dark:decoration-slate-600">iSchool</span> and <span className="underline underline-offset-4 decoration-slate-400 dark:decoration-slate-600">Data Lab</span>, exploring the intersection of LLMs, human memory, and financial market analysis.
+                    <MinecraftReveal text="Previously, I conducted research at Syracuse University's " />
+                    <span className="underline underline-offset-4 decoration-slate-400 dark:decoration-slate-600">
+                      <MinecraftReveal text="iSchool" />
+                    </span>
+                    <MinecraftReveal text=" and " />
+                    <span className="underline underline-offset-4 decoration-slate-400 dark:decoration-slate-600">
+                      <MinecraftReveal text="Data Lab" />
+                    </span>
+                    <MinecraftReveal text=", exploring the intersection of LLMs, human memory, and financial market analysis." />
                   </p>
-                  
+
                   <p>
-                    Outside of work, I play video games, travel, and work out.
+                    <MinecraftReveal text="Outside of work, I play video games, travel, and work out." />
                   </p>
                 </motion.div>
               </div>
@@ -482,7 +493,7 @@ export default function Portfolio() {
               className="py-6"
             >
               <h2 className="text-3xl font-light mb-10 cursor-default">University</h2>
-              
+
               <div className="space-y-12">
                 {/* Education Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start gap-4">
@@ -551,7 +562,7 @@ export default function Portfolio() {
                         <li>Secured $10,000+ in funding through industry partners and managing efforts across logistics, fundraising, and marketing</li>
                       </ul>
                     </div>
-                    
+
                     <ul className="list-disc ml-5 space-y-2">
                       <li>
                         <span className={`font-medium ${theme === "dark" ? "text-slate-300" : "text-slate-700"}`}>Association for Computing Machinery (ACM)</span> - Member
