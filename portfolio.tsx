@@ -115,9 +115,7 @@ export default function Portfolio() {
   };
 
   return (
-    <div
-      className="min-h-screen transition-colors duration-300 flex flex-col bg-background text-foreground overflow-x-hidden"
-    >
+    <div className="min-h-screen transition-colors duration-300 flex flex-col bg-background text-foreground overflow-x-hidden">
       {/* Skip to main content link for accessibility */}
       <a
         href="#main-content"
@@ -217,7 +215,10 @@ export default function Portfolio() {
         </div>
       </motion.div>
 
-      <main id="main-content" className="flex-1 w-full max-w-3xl mx-auto px-6 relative overflow-hidden">
+      <main
+        id="main-content"
+        className="flex-1 w-full max-w-3xl mx-auto px-6 relative overflow-hidden"
+      >
         <AnimatePresence mode="wait" custom={direction}>
           {activeSection === "about" && (
             <motion.div
@@ -229,7 +230,7 @@ export default function Portfolio() {
               exit="exit"
               transition={{
                 x: { type: "spring", stiffness: 300, damping: 30 },
-                opacity: { duration: 0.2 }
+                opacity: { duration: 0.2 },
               }}
             >
               {/* Profile Section (Avatar + Name + About Me) */}
@@ -239,7 +240,9 @@ export default function Portfolio() {
                   <motion.div
                     className="w-28 h-28 rounded-full border-2 border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer overflow-hidden"
                     initial={reducedMotion ? false : { opacity: 0, scale: 0.8 }}
-                    animate={reducedMotion ? undefined : { opacity: 1, scale: 1 }}
+                    animate={
+                      reducedMotion ? undefined : { opacity: 1, scale: 1 }
+                    }
                     transition={
                       reducedMotion ? undefined : { duration: 0.8, delay: 0.1 }
                     }
@@ -283,7 +286,9 @@ export default function Portfolio() {
                       initial={reducedMotion ? false : { opacity: 0, y: 20 }}
                       animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
                       transition={
-                        reducedMotion ? undefined : { duration: 0.8, delay: 0.2 }
+                        reducedMotion
+                          ? undefined
+                          : { duration: 0.8, delay: 0.2 }
                       }
                     >
                       Hi, I'm Alan.
@@ -295,7 +300,9 @@ export default function Portfolio() {
                       initial={reducedMotion ? false : { opacity: 0, y: 20 }}
                       animate={reducedMotion ? undefined : { opacity: 1, y: 0 }}
                       transition={
-                        reducedMotion ? undefined : { duration: 0.8, delay: 0.3 }
+                        reducedMotion
+                          ? undefined
+                          : { duration: 0.8, delay: 0.3 }
                       }
                     >
                       <p>{TYPEWRITER_TEXTS[0]}</p>
@@ -316,11 +323,23 @@ export default function Portfolio() {
                   <div className="w-full h-px bg-slate-200 dark:bg-slate-800 my-8" />
 
                   <p>
-                    <MinecraftReveal text="I currently work as a Software Development Engineer Intern at " revealSpeed={30} startDelayMs={500} />
+                    <MinecraftReveal
+                      text="I currently work as a Software Development Engineer Intern at "
+                      revealSpeed={30}
+                      startDelayMs={500}
+                    />
                     <span className="underline underline-offset-4 decoration-slate-400 dark:decoration-slate-600">
-                      <MinecraftReveal text="Micron Technology" revealSpeed={30} startDelayMs={500} />
+                      <MinecraftReveal
+                        text="Micron Technology"
+                        revealSpeed={30}
+                        startDelayMs={500}
+                      />
                     </span>
-                    <MinecraftReveal text=", building data-driven UIs and caching systems for semiconductor simulations." revealSpeed={30} startDelayMs={500} />
+                    <MinecraftReveal
+                      text=", building data-driven UIs and caching systems for semiconductor simulations."
+                      revealSpeed={30}
+                      startDelayMs={500}
+                    />
                   </p>
 
                   <p>
@@ -361,11 +380,13 @@ export default function Portfolio() {
               exit="exit"
               transition={{
                 x: { type: "spring", stiffness: 300, damping: 30 },
-                opacity: { duration: 0.2 }
+                opacity: { duration: 0.2 },
               }}
               className="py-6"
             >
-              <h2 className="text-3xl font-light mb-10 cursor-default">Experience</h2>
+              <h2 className="text-3xl font-light mb-10 cursor-default">
+                Experience
+              </h2>
               <div className="relative pl-8">
                 {/* Vertical line */}
                 <div
@@ -456,11 +477,13 @@ export default function Portfolio() {
               exit="exit"
               transition={{
                 x: { type: "spring", stiffness: 300, damping: 30 },
-                opacity: { duration: 0.2 }
+                opacity: { duration: 0.2 },
               }}
               className="py-6"
             >
-              <h2 className="text-3xl font-light mb-8 cursor-default">Projects</h2>
+              <h2 className="text-3xl font-light mb-8 cursor-default">
+                Projects
+              </h2>
               <div className="flex flex-col gap-5">
                 {PROJECTS.map((project, index) => (
                   <ProjectCard
@@ -488,33 +511,53 @@ export default function Portfolio() {
               exit="exit"
               transition={{
                 x: { type: "spring", stiffness: 300, damping: 30 },
-                opacity: { duration: 0.2 }
+                opacity: { duration: 0.2 },
               }}
               className="py-6"
             >
-              <h2 className="text-3xl font-light mb-10 cursor-default">University</h2>
+              <h2 className="text-3xl font-light mb-10 cursor-default">
+                University
+              </h2>
 
               <div className="space-y-12">
                 {/* Education Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start gap-4">
                   <div>
-                    <h3 className={`text-xl font-bold ${theme === "dark" ? "text-white" : "text-black"}`}>
+                    <h3
+                      className={`text-xl font-bold ${
+                        theme === "dark" ? "text-white" : "text-black"
+                      }`}
+                    >
                       Syracuse University
                     </h3>
-                    <p className={`text-lg ${theme === "dark" ? "text-slate-300" : "text-slate-700"}`}>
+                    <p
+                      className={`text-lg ${
+                        theme === "dark" ? "text-slate-300" : "text-slate-700"
+                      }`}
+                    >
                       Bachelor of Science in Computer Science
                     </p>
                   </div>
-                  <div className={`text-right ${theme === "dark" ? "text-slate-400" : "text-slate-600"}`}>
+                  <div
+                    className={`text-right ${
+                      theme === "dark" ? "text-slate-400" : "text-slate-600"
+                    }`}
+                  >
                     <p>Expected May 2027</p>
                     <p>GPA: 3.7/4.0</p>
-                    <p className="text-sm mt-1 italic">1870 Scholar (Full Tuition) & 4x Dean’s List</p>
+                    <p className="text-sm mt-1 italic">
+                      1870 Scholar (Full Tuition) & 4x Dean’s List
+                    </p>
                   </div>
                 </div>
 
                 {/* Coursework */}
                 <div>
-                  <h4 className={`text-lg font-medium mb-4 ${theme === "dark" ? "text-slate-200" : "text-slate-800"}`}>
+                  <h4
+                    className={`text-lg font-medium mb-4 ${
+                      theme === "dark" ? "text-slate-200" : "text-slate-800"
+                    }`}
+                  >
                     Relevant Coursework
                   </h4>
                   <div className="flex flex-wrap gap-2">
@@ -526,7 +569,7 @@ export default function Portfolio() {
                       "Computer Networks",
                       "Virtual Reality",
                       "Linear Algebra",
-                      "Probability & Statistics"
+                      "Probability & Statistics",
                     ].map((course) => (
                       <span
                         key={course}
@@ -544,31 +587,82 @@ export default function Portfolio() {
 
                 {/* Activities */}
                 <div>
-                  <h4 className={`text-lg font-medium mb-4 ${theme === "dark" ? "text-slate-200" : "text-slate-800"}`}>
+                  <h4
+                    className={`text-lg font-medium mb-4 ${
+                      theme === "dark" ? "text-slate-200" : "text-slate-800"
+                    }`}
+                  >
                     Activities & Societies
                   </h4>
-                  <div className={`space-y-6 ${theme === "dark" ? "text-slate-400" : "text-slate-600"}`}>
+                  <div
+                    className={`space-y-6 ${
+                      theme === "dark" ? "text-slate-400" : "text-slate-600"
+                    }`}
+                  >
                     <div>
                       <div className="flex justify-between items-baseline mb-2">
-                        <span className={`font-bold text-lg ${theme === "dark" ? "text-slate-200" : "text-slate-800"}`}>
+                        <span
+                          className={`font-bold text-lg ${
+                            theme === "dark"
+                              ? "text-slate-200"
+                              : "text-slate-800"
+                          }`}
+                        >
                           CuseHacks
                         </span>
-                        <span className="text-sm italic">Feb. 2024 – Present</span>
+                        <span className="text-sm italic">
+                          Feb. 2024 – Present
+                        </span>
                       </div>
-                      <div className={`mb-1 ${theme === "dark" ? "text-blue-400" : "text-blue-600"}`}>President</div>
+                      <div
+                        className={`mb-1 ${
+                          theme === "dark" ? "text-blue-400" : "text-blue-600"
+                        }`}
+                      >
+                        President
+                      </div>
                       <ul className="list-disc ml-5 space-y-1">
-                        <li>Led Syracuse University’s largest student-run hackathon with 200+ participants and a 15+ member organizing team</li>
-                        <li>Grew attendance 40% YoY through local outreach, social media campaigns, and university partnerships</li>
-                        <li>Secured $10,000+ in funding through industry partners and managing efforts across logistics, fundraising, and marketing</li>
+                        <li>
+                          Led Syracuse University’s largest student-run
+                          hackathon with 200+ participants and a 15+ member
+                          organizing team
+                        </li>
+                        <li>
+                          Grew attendance 40% YoY through local outreach, social
+                          media campaigns, and university partnerships
+                        </li>
+                        <li>
+                          Secured $10,000+ in funding through industry partners
+                          and managing efforts across logistics, fundraising,
+                          and marketing
+                        </li>
                       </ul>
                     </div>
 
                     <ul className="list-disc ml-5 space-y-2">
                       <li>
-                        <span className={`font-medium ${theme === "dark" ? "text-slate-300" : "text-slate-700"}`}>Association for Computing Machinery (ACM)</span> - Member
+                        <span
+                          className={`font-medium ${
+                            theme === "dark"
+                              ? "text-slate-300"
+                              : "text-slate-700"
+                          }`}
+                        >
+                          Association for Computing Machinery (ACM)
+                        </span>{" "}
+                        - Member
                       </li>
                       <li>
-                        <span className={`font-medium ${theme === "dark" ? "text-slate-300" : "text-slate-700"}`}>Engineering Ambassadors</span> - Mentor
+                        <span
+                          className={`font-medium ${
+                            theme === "dark"
+                              ? "text-slate-300"
+                              : "text-slate-700"
+                          }`}
+                        >
+                          Engineering Ambassadors
+                        </span>{" "}
+                        - Mentor
                       </li>
                     </ul>
                   </div>
@@ -587,7 +681,11 @@ export default function Portfolio() {
       />
 
       <div className="max-w-3xl mx-auto px-6 w-full mt-auto">
-        <hr className={`border-t ${theme === "dark" ? "border-slate-800" : "border-slate-200"}`} />
+        <hr
+          className={`border-t ${
+            theme === "dark" ? "border-slate-800" : "border-slate-200"
+          }`}
+        />
       </div>
 
       {/* Footer with contact icons and copyright */}
@@ -600,6 +698,32 @@ export default function Portfolio() {
         <div className="max-w-3xl mx-auto px-6">
           <div className="flex justify-center space-x-8 mb-8">
             {/* Contact icons */}
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`transition-colors duration-200 ${
+                theme === "dark"
+                  ? "text-slate-500 hover:text-slate-300"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              <Linkedin className="w-5 h-5" />
+            </a>
+
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`transition-colors duration-200 ${
+                theme === "dark"
+                  ? "text-slate-500 hover:text-slate-300"
+                  : "text-slate-500 hover:text-slate-800"
+              }`}
+            >
+              <Github className="w-5 h-5" />
+            </a>
+
             <div
               className={`cursor-pointer transition-colors duration-200 flex items-center ${
                 theme === "dark"
@@ -614,9 +738,9 @@ export default function Portfolio() {
                 }
               }}
             >
-              <Mail className="w-5 h-5 mr-2" />
-              {footerEmailRevealed ? (
-                <span className="relative">
+              <Mail className="w-5 h-5" />
+              {footerEmailRevealed && (
+                <span className="relative ml-2">
                   <span className="underline decoration-dotted underline-offset-4">
                     {EMAIL}
                   </span>
@@ -664,44 +788,12 @@ export default function Portfolio() {
                     </div>
                   )}
                 </span>
-              ) : (
-                <span>Email</span>
               )}
             </div>
-
-            <a
-              href={GITHUB_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex items-center transition-colors duration-200 ${
-                theme === "dark"
-                  ? "text-slate-500 hover:text-slate-300"
-                  : "text-slate-500 hover:text-slate-800"
-              }`}
-            >
-              <Github className="w-5 h-5 mr-2" />
-              GitHub
-            </a>
-
-            <a
-              href={LINKEDIN_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex items-center transition-colors duration-200 ${
-                theme === "dark"
-                  ? "text-slate-500 hover:text-slate-300"
-                  : "text-slate-500 hover:text-slate-800"
-              }`}
-            >
-              <Linkedin className="w-5 h-5 mr-2" />
-              LinkedIn
-            </a>
           </div>
           <p
             className={`text-sm transition-colors duration-300 ${
-              theme === "dark"
-                ? "text-slate-600"
-                : "text-slate-400"
+              theme === "dark" ? "text-slate-600" : "text-slate-400"
             }`}
           >
             © 2025 Alan Tom
