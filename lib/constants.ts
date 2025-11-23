@@ -57,9 +57,7 @@ export const PROJECTS: Project[] = [
 ]
 
 export const TYPEWRITER_TEXTS = [
-  "I'm a computer science junior at Syracuse University.",
-  "I lead CuseHacks, a student-run hackathon, and try to travel as much as possible!",
-]
+  "I'm a computer science junior at Syracuse University."]
 
 export const EMAIL = "alanwtom@outlook.com"
 export const GITHUB_URL = "https://github.com/alanwtom"

@@ -30,11 +30,11 @@ const ProjectModal = dynamic(
   { ssr: false }
 );
 
-const SECTION_ORDER = ["home", "experience", "projects", "university"];
+const SECTION_ORDER = ["about", "experience", "projects", "university"];
 
 export default function Portfolio() {
   const { theme, setTheme, isLoaded } = useTheme();
-  const [activeSection, setActiveSection] = useState("home");
+  const [activeSection, setActiveSection] = useState("about");
   const [direction, setDirection] = useState(0);
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [showJapanTooltip, setShowJapanTooltip] = useState(false);
@@ -141,8 +141,7 @@ export default function Portfolio() {
               className="text-2xl align-middle cursor-pointer select-none"
               role="img"
               aria-label="Map of Japan"
-              onMouseEnter={() => setShowJapanTooltip(true)}
-              onMouseLeave={() => setShowJapanTooltip(false)}
+              onClick={() => setShowJapanTooltip((prev) => !prev)}
               whileHover={
                 reducedMotion
                   ? undefined
@@ -221,9 +220,9 @@ export default function Portfolio() {
 
       <main id="main-content" className="flex-1 w-full max-w-3xl mx-auto px-6 relative overflow-hidden">
         <AnimatePresence mode="wait" custom={direction}>
-          {activeSection === "home" && (
+          {activeSection === "about" && (
             <motion.div
-              key="home"
+              key="about"
               custom={direction}
               variants={slideVariants}
               initial="enter"
@@ -322,15 +321,19 @@ export default function Portfolio() {
                   <div className="w-full h-px bg-slate-200 dark:bg-slate-800 my-8" />
                   
                   <p>
-                    I currently serve as the President of <span className={theme === "dark" ? "text-white" : "text-black"}>Innovate Orange</span>, where I lead a team of 20+ students to organize Syracuse University's largest hackathons and datathons.
+                    I currently work as a Software Development Engineer Intern at <span className="underline underline-offset-4 decoration-slate-400 dark:decoration-slate-600">Micron Technology</span>, building data-driven UIs and caching systems for semiconductor simulations.
                   </p>
                   
                   <p>
-                    Previously, I worked as a Software Development Engineer Intern at <span className={theme === "dark" ? "text-white" : "text-black"}>Micron Technology</span>, building data-driven UIs and caching systems for semiconductor simulations. I've also conducted research at Syracuse University's <span className={theme === "dark" ? "text-white" : "text-black"}>iSchool</span> and <span className={theme === "dark" ? "text-white" : "text-black"}>Data Lab</span>, exploring the intersection of LLMs, human memory, and financial market analysis.
+                    I also serve as the President of <span className="underline underline-offset-4 decoration-slate-400 dark:decoration-slate-600">Innovate Orange</span>, where I lead a team of 20+ students to organize Syracuse University's largest hackathons and datathons.
                   </p>
                   
                   <p>
-                    Outside of work, I love traveling, photography, and organizing tech communities to help students build cool things.
+                    Previously, I conducted research at Syracuse University's <span className="underline underline-offset-4 decoration-slate-400 dark:decoration-slate-600">iSchool</span> and <span className="underline underline-offset-4 decoration-slate-400 dark:decoration-slate-600">Data Lab</span>, exploring the intersection of LLMs, human memory, and financial market analysis.
+                  </p>
+                  
+                  <p>
+                    Outside of work, I play video games, travel, and work out.
                   </p>
                 </motion.div>
               </div>

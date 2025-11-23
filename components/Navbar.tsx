@@ -11,7 +11,7 @@ interface NavbarProps {
 }
 
 const NAV_ITEMS = [
-  { id: "home", label: "Home" },
+  { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
   { id: "projects", label: "Projects" },
   { id: "university", label: "University" },
@@ -28,6 +28,7 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
   // Refs for button elements
   const itemsRef = useRef<(HTMLButtonElement | null)[]>([]);
   const navRef = useRef<HTMLDivElement>(null);
+  const itemRectsRef = useRef<(DOMRect | null)[]>([]);
 
   // Update pill position when activeSection changes (and not dragging)
   useEffect(() => {
@@ -73,26 +74,17 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
 
   // Determine active section during drag
   const handleDrag = (event: any, info: any) => {
-    const navContainer = navRef.current;
-    if (!navContainer) return;
-
-    const navRect = navContainer.getBoundingClientRect();
-    // Calculate the center of the dragged pill relative to the viewport
-    // info.point.x is the cursor position.
-    // We can use that as a proxy for the pill center.
+    // Use cached rects for better performance during drag
     const dragX = info.point.x;
 
-    // Find which item contains this point (or is closest)
     let closestIndex = -1;
     let minDistance = Infinity;
 
-    itemsRef.current.forEach((item, index) => {
-      if (item) {
-        const rect = item.getBoundingClientRect();
+    itemRectsRef.current.forEach((rect, index) => {
+      if (rect) {
         const center = rect.left + rect.width / 2;
         const distance = Math.abs(dragX - center);
         
-        // Check if cursor is within the item's horizontal bounds with some buffer
         if (dragX >= rect.left && dragX <= rect.right) {
           closestIndex = index;
           minDistance = 0;
@@ -131,27 +123,23 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
             "absolute top-1.5 bottom-1.5 rounded-full shadow-sm cursor-grab active:cursor-grabbing z-0",
             theme === "dark" ? "bg-white" : "bg-black"
           )}
-          // When not dragging, animate to the calculated position
           animate={!isDragging ? {
             left: pillStyle.left,
             width: pillStyle.width,
             opacity: pillStyle.opacity,
             x: 0 // Reset x transform when dragging ends
           } : undefined}
-          // While dragging, we let the drag gesture control the x-transform. 
-          // However, we want the "base" to be the current position. 
-          // This is tricky. Simpler approach: 
-          // Make the pill draggable but locked to the x-axis.
-          // We use layout animations for the "snap" and drag for interaction.
           drag="x"
           dragConstraints={navRef} 
-          // Restrict dragging strictly within the navbar container
           dragElastic={0}
           dragMomentum={false}
-          onDragStart={() => setIsDragging(true)}
+          onDragStart={() => {
+            setIsDragging(true);
+            // Cache item rects to avoid layout thrashing during drag
+            itemRectsRef.current = itemsRef.current.map(el => el?.getBoundingClientRect() || null);
+          }}
           onDrag={handleDrag}
           onDragEnd={() => setIsDragging(false)}
-          // Removed onHoverStart
           transition={{
             type: "spring",
             stiffness: 400,
@@ -162,7 +150,6 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
             boxShadow: theme === "dark"
               ? "0 0 15px 2px rgba(255, 255, 255, 0.3)"
               : "0 0 15px 2px rgba(0, 0, 0, 0.2)",
-            // Ensure we start from the correct visual position
             left: pillStyle.left, 
             width: pillStyle.width,
           }}
@@ -174,21 +161,31 @@ export function Navbar({ activeSection, setActiveSection, theme }: NavbarProps) 
             ref={(el) => { itemsRef.current[index] = el; }}
             onClick={() => setActiveSection(item.id)}
             className={cn(
-              "relative px-5 py-2 text-sm font-medium rounded-full transition-colors duration-300 z-10",
-              "hover:text-opacity-80 select-none cursor-pointer", // Added cursor-pointer
+              "relative px-5 py-2 text-sm rounded-full transition-colors duration-300 z-10",
+              "hover:text-opacity-80 select-none cursor-pointer",
               activeSection === item.id
                 ? theme === "dark"
-                  ? "text-black font-bold pointer-events-none" // Disable pointer events on active button to allow dragging the pill underneath
-                  : "text-white font-bold pointer-events-none"
+                  ? "text-black pointer-events-none"
+                  : "text-white pointer-events-none"
                 : theme === "dark"
-                ? "text-slate-200"
-                : "text-slate-600"
+                ? "text-slate-200 font-medium"
+                : "text-slate-600 font-medium"
             )}
             style={{
               WebkitTapHighlightColor: "transparent",
             }}
           >
-            {item.label}
+            {/* Invisible bold text to reserve space and prevent layout shift */}
+            <span className="invisible font-bold">{item.label}</span>
+            {/* Visible text centered absolutely */}
+            <span 
+              className={cn(
+                "absolute inset-0 flex items-center justify-center",
+                activeSection === item.id ? "font-bold" : "font-medium"
+              )}
+            >
+              {item.label}
+            </span>
           </button>
         ))}
       </div>
