@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,36 +27,45 @@ export function LinkEmbed({ className }: LinkEmbedProps) {
   const [showEmbed, setShowEmbed] = useState(false);
   const [embedData, setEmbedData] = useState<EmbedData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [imageError, setImageError] = useState(false);
 
-  const detectLinkType = (url: string): "linkedin" | "discord" | "other" | null => {
+  const detectLinkType = (
+    url: string
+  ): "linkedin" | "discord" | "other" | null => {
     if (!url) return null;
 
     const lowerUrl = url.toLowerCase();
     if (lowerUrl.includes("linkedin.com")) return "linkedin";
-    if (lowerUrl.includes("discord.com") || lowerUrl.includes("discord.gg")) return "discord";
+    if (lowerUrl.includes("discord.com") || lowerUrl.includes("discord.gg"))
+      return "discord";
     return "other";
   };
 
-  const generateEmbedData = (url: string, type: "linkedin" | "discord" | "other"): EmbedData => {
+  const generateEmbedData = (
+    url: string,
+    type: "linkedin" | "discord" | "other"
+  ): EmbedData => {
     const urlObj = new URL(url);
 
     switch (type) {
       case "linkedin":
         return {
           title: "Alan Tom",
-          description: "Computer Science junior at Syracuse University, leading CuseHacks hackathon and building innovative web applications and Discord bots.",
+          description:
+            "Computer Science junior at Syracuse University, leading CuseHacks hackathon and building innovative web applications and Discord bots.",
           url: url,
           siteName: "LinkedIn",
-          favicon: "https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg"
+          favicon:
+            "https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Bug.svg.original.svg",
         };
       case "discord":
         return {
           title: "Alan Tom's Discord",
-          description: "Connect with me on Discord for collaboration, project discussions, and tech conversations.",
+          description:
+            "Connect with me on Discord for collaboration, project discussions, and tech conversations.",
           url: url,
           siteName: "Discord",
-          favicon: "https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_white_RGB.png"
+          favicon:
+            "https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_white_RGB.png",
         };
       default:
         return {
@@ -65,7 +73,7 @@ export function LinkEmbed({ className }: LinkEmbedProps) {
           description: "Click to visit this external resource.",
           url: url,
           siteName: urlObj.hostname,
-          favicon: `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=32`
+          favicon: `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=32`,
         };
     }
   };
@@ -84,7 +92,6 @@ export function LinkEmbed({ className }: LinkEmbedProps) {
       const linkType = detectLinkType(pastedText);
       if (linkType) {
         setIsLoading(true);
-        setImageError(false);
         const embed = generateEmbedData(pastedText, linkType);
         setEmbedData(embed);
         setShowEmbed(true);
@@ -100,7 +107,6 @@ export function LinkEmbed({ className }: LinkEmbedProps) {
     setLink("");
     setShowEmbed(false);
     setEmbedData(null);
-    setImageError(false);
   };
 
   const handleCopyLink = async () => {
@@ -122,11 +128,13 @@ export function LinkEmbed({ className }: LinkEmbedProps) {
 
   return (
     <div className={`max-w-md mx-auto space-y-4 ${className}`}>
-      <Card className={`p-6 transition-all duration-500 backdrop-blur-sm ${
-        theme === "dark"
-          ? "bg-[#0a1628]/90 border-[#1e293b]/60"
-          : "bg-[#eaf1fb]/80 border-[#b6d0ee]/60"
-      }`}>
+      <Card
+        className={`p-6 transition-all duration-500 backdrop-blur-sm ${
+          theme === "dark"
+            ? "bg-[#0a1628]/90 border-[#1e293b]/60"
+            : "bg-[#eaf1fb]/80 border-[#b6d0ee]/60"
+        }`}
+      >
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <Link className="w-5 h-5" />
@@ -175,18 +183,15 @@ export function LinkEmbed({ className }: LinkEmbedProps) {
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
                 <div className="flex items-start gap-3">
-                  {embedData.favicon && !imageError && (
-                    <div className="w-6 h-6 rounded-sm flex-shrink-0 relative">
-                      <Image
-                        src={embedData.favicon}
-                        alt={`${embedData.siteName} icon`}
-                        width={24}
-                        height={24}
-                        className="rounded-sm"
-                        onError={() => setImageError(true)}
-                        unoptimized
-                      />
-                    </div>
+                  {embedData.favicon && (
+                    <img
+                      src={embedData.favicon}
+                      alt={`${embedData.siteName} icon`}
+                      className="w-6 h-6 rounded-sm flex-shrink-0"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
+                    />
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
