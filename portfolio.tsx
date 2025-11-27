@@ -514,153 +514,60 @@ export default function Portfolio() {
                 University
               </h2>
 
-              <div className="space-y-12">
-                {/* Education Header */}
-                <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-                  <div>
-                    <h3
-                      className={`text-xl font-bold ${
-                        theme === "dark" ? "text-white" : "text-black"
-                      }`}
-                    >
-                      Syracuse University
-                    </h3>
-                    <p
-                      className={`text-lg ${
-                        theme === "dark" ? "text-slate-300" : "text-slate-700"
-                      }`}
-                    >
-                      Bachelor of Science in Computer Science
-                    </p>
-                  </div>
-                  <div
-                    className={`text-right ${
-                      theme === "dark" ? "text-slate-400" : "text-slate-600"
-                    }`}
-                  >
-                    <p>Expected May 2027</p>
-                    <p>GPA: 3.7/4.0</p>
-                    <p className="text-sm mt-1 italic">
-                      1870 Scholar (Full Tuition) & 4x Dean’s List
-                    </p>
-                  </div>
-                </div>
-
-                {/* Coursework */}
-                <div>
-                  <h4
-                    className={`text-lg font-medium mb-4 ${
-                      theme === "dark" ? "text-slate-200" : "text-slate-800"
-                    }`}
-                  >
-                    Relevant Coursework
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      "Data Structures & Algorithms",
-                      "Computer Architecture",
-                      "Software Implementation",
-                      "Operating Systems",
-                      "Computer Networks",
-                      "Virtual Reality",
-                      "Linear Algebra",
-                      "Probability & Statistics",
-                    ].map((course) => (
-                      <span
-                        key={course}
-                        className={`px-3 py-1 text-sm rounded-full transition-colors duration-200 ${
-                          theme === "dark"
-                            ? "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                            : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                        }`}
-                      >
-                        {course}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Activities */}
-                <div>
-                  <h4
-                    className={`text-lg font-medium mb-4 ${
-                      theme === "dark" ? "text-slate-200" : "text-slate-800"
-                    }`}
-                  >
-                    Activities & Societies
-                  </h4>
-                  <div
-                    className={`space-y-6 ${
-                      theme === "dark" ? "text-slate-400" : "text-slate-600"
-                    }`}
-                  >
+              <div className="space-y-8">
+                <div className="border border-border/60 rounded-2xl p-6 bg-background/80 backdrop-blur">
+                  <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div>
-                      <div className="flex justify-between items-baseline mb-2">
-                        <span
-                          className={`font-bold text-lg ${
-                            theme === "dark"
-                              ? "text-slate-200"
-                              : "text-slate-800"
-                          }`}
-                        >
-                          CuseHacks
-                        </span>
-                        <span className="text-sm italic">
-                          Feb. 2024 – Present
-                        </span>
-                      </div>
-                      <div
-                        className={`mb-1 ${
-                          theme === "dark" ? "text-blue-400" : "text-blue-600"
+                      <h3
+                        className={`text-xl font-bold ${
+                          theme === "dark" ? "text-white" : "text-black"
                         }`}
                       >
-                        President
-                      </div>
-                      <ul className="list-disc ml-5 space-y-1">
-                        <li>
-                          Led Syracuse University’s largest student-run
-                          hackathon with 200+ participants and a 15+ member
-                          organizing team
-                        </li>
-                        <li>
-                          Grew attendance 40% YoY through local outreach, social
-                          media campaigns, and university partnerships
-                        </li>
-                        <li>
-                          Secured $10,000+ in funding through industry partners
-                          and managing efforts across logistics, fundraising,
-                          and marketing
-                        </li>
-                      </ul>
+                        CuseHacks
+                      </h3>
+                      <p
+                        className={`text-lg ${
+                          theme === "dark" ? "text-slate-300" : "text-slate-700"
+                        }`}
+                      >
+                        President, Syracuse University’s largest student-run
+                        hackathon
+                      </p>
                     </div>
-
-                    <ul className="list-disc ml-5 space-y-2">
-                      <li>
-                        <span
-                          className={`font-medium ${
-                            theme === "dark"
-                              ? "text-slate-300"
-                              : "text-slate-700"
-                          }`}
-                        >
-                          Association for Computing Machinery (ACM)
-                        </span>{" "}
-                        - Member
-                      </li>
-                      <li>
-                        <span
-                          className={`font-medium ${
-                            theme === "dark"
-                              ? "text-slate-300"
-                              : "text-slate-700"
-                          }`}
-                        >
-                          Engineering Ambassadors
-                        </span>{" "}
-                        - Mentor
-                      </li>
-                    </ul>
+                    <div
+                      className={`text-right ${
+                        theme === "dark" ? "text-slate-400" : "text-slate-600"
+                      }`}
+                    >
+                      <p>Feb. 2024 – Present</p>
+                      <p className="text-sm italic">200+ participants annually</p>
+                    </div>
                   </div>
+
+                  <p
+                    className={`mt-4 ${
+                      theme === "dark" ? "text-slate-400" : "text-slate-600"
+                    }`}
+                  >
+                    Lead the entire event lifecycle—team building, finance,
+                    logistics, and outreach—to deliver a flagship experience for
+                    Syracuse University creatives and engineers.
+                  </p>
+
+                  <ul className="list-disc ml-5 mt-4 space-y-2 text-sm">
+                    <li>
+                      Orchestrated a 40% YoY growth in attendance through
+                      targeted outreach and partnerships.
+                    </li>
+                    <li>
+                      Secured $10,000+ in industry sponsorships while managing
+                      a 15+ member leadership council.
+                    </li>
+                    <li>
+                      Balanced operations across logistics, fundraising, and
+                      marketing to keep the hackathon on-brand and sustainable.
+                    </li>
+                  </ul>
                 </div>
               </div>
             </motion.div>
