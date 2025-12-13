@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// We'll use this mapping as a fallback or if we want to use system fonts for symbols
-// But the user wants the ACTUAL Minecraft font symbols which are pixelated.
-// So we will try to rely on the font-family 'SGA' if we can load it.
-// If we can't load it, we fall back to these Unicode characters which look like SGA but are smooth.
 const SGA_MAPPING: Record<string, string> = {
   a: "ᔑ",
   b: "ʖ",
