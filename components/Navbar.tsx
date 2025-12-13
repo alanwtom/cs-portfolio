@@ -45,17 +45,11 @@ export function Navbar({
   const navRef = useRef<HTMLDivElement>(null);
   const itemRectsRef = useRef<(DOMRect | null)[]>([]);
 
-  // --- PHYSICS ENGINE FOR LIQUID FEEL ---
   const x = useMotionValue(0);
-  // Track how fast we are dragging
   const xVelocity = useVelocity(x);
-  // Transform velocity into a skew (distortion) value
-  // The faster you drag, the more it warps (max 25 degrees)
   const skewXRaw = useTransform(xVelocity, [-1000, 1000], [25, -25]);
-  // Smooth out the skew so it doesn't jitter
   const skewX = useSpring(skewXRaw, { mass: 0.1, stiffness: 200, damping: 20 });
 
-  // Calculate width distortion based on velocity (stretch when fast)
   const widthScaleRaw = useTransform(
     xVelocity,
     [-1000, 0, 1000],
@@ -67,7 +61,6 @@ export function Navbar({
     damping: 20,
   });
 
-  // Update pill position when activeSection changes (if not dragging)
   useEffect(() => {
     if (isDragging) return;
 
@@ -125,10 +118,9 @@ export function Navbar({
           "border backdrop-blur-[40px]", // Increased blur for deeper glass look
           theme === "dark"
             ? "bg-black/40 border-white/5 shadow-[0_0_0_1px_rgba(0,0,0,1),inset_0_0_30px_rgba(0,0,0,0.8)]"
-            : "bg-white/60 border-white/60 shadow-[inset_0_0_20px_rgba(255,255,255,0.5)]"
+            : "bg-white/80 border-black/5 shadow-[0_0_20px_rgba(0,0,0,0.05)]"
         )}
       >
-        {/* The Liquid Pill */}
         <motion.div
           className={cn(
             "absolute top-1.5 bottom-1.5 rounded-full z-0 cursor-grab active:cursor-grabbing overflow-hidden group",
@@ -150,14 +142,14 @@ export function Navbar({
                   width: pillStyle.width,
                   opacity: pillStyle.opacity,
                   x: 0,
-                  skewX: 0, // Reset skew when stopped
+                  skewX: 0,
                   scaleX: 1,
                 }
               : undefined
           }
           drag="x"
           dragConstraints={navRef}
-          dragElastic={0.05} // Slight elasticity for "surface tension" feel
+          dragElastic={0.05}
           dragMomentum={false}
           onDragStart={() => {
             setIsDragging(true);
@@ -173,13 +165,11 @@ export function Navbar({
             mass: 0.8,
           }}
         >
-          {/* Dynamic "Caustic" Shine - Moves opposite to drag direction for parallax */}
           <motion.div
             className="absolute -top-1/2 left-0 right-0 h-[200%] w-full bg-gradient-to-b from-white/30 via-transparent to-transparent blur-md"
-            style={{ x: useTransform(x, (val) => val * -0.5) }} // Parallax effect
+            style={{ x: useTransform(x, (val) => val * -0.5) }}
           />
 
-          {/* Bottom Rim Light (Glass thickness) */}
           <div className="absolute bottom-0 left-2 right-2 h-[1px] bg-white/40 blur-[1px]" />
         </motion.div>
 
@@ -196,14 +186,10 @@ export function Navbar({
               className={cn(
                 "relative px-6 py-2 text-sm rounded-full transition-all duration-300 z-10",
                 "select-none cursor-pointer group",
-                // Pointer events only blocked on active to allow drag
                 isActive ? "pointer-events-none" : ""
               )}
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              {/* Morphing Text Animation:
-                 We use a span to handle the scale/blur transition separately from the button layout
-               */}
               <motion.span
                 className={cn(
                   "block relative z-20",
@@ -213,11 +199,9 @@ export function Navbar({
                       : "text-black font-bold"
                     : theme === "dark"
                     ? "text-zinc-500 font-medium"
-                    : "text-zinc-500 font-medium"
+                    : "text-zinc-800 font-medium"
                 )}
                 animate={{
-                  // "Warp" effect: Active text is sharp and slightly larger.
-                  // Inactive text is slightly blurred and smaller.
                   scale: isActive ? 1.05 : 1,
                   filter: isActive ? "blur(0px)" : "blur(0.5px)",
                   opacity: isActive ? 1 : 0.7,
@@ -231,7 +215,6 @@ export function Navbar({
                 {item.label}
               </motion.span>
 
-              {/* Hover "Ghost" effect for inactive items */}
               {!isActive && (
                 <span className="absolute inset-0 rounded-full bg-white/5 opacity-0 scale-90 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100" />
               )}
