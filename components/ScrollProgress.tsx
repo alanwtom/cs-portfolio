@@ -79,7 +79,7 @@ export function ScrollProgress({ sections }: ScrollProgressProps) {
             />
             <span
               className={cn(
-                "font-mono text-[10px] uppercase tracking-[0.18em] transition-all duration-300",
+                "text-[10px] uppercase tracking-[0.18em] transition-all duration-300",
                 isActive
                   ? "text-foreground opacity-100"
                   : "text-foreground/40 opacity-0 group-hover:opacity-100"

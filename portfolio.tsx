@@ -133,7 +133,7 @@ export default function Portfolio() {
         <div className="mx-auto flex w-full max-w-2xl items-center justify-between px-6 py-4">
           <a
             href="#hero"
-            className="font-mono text-sm font-medium tracking-tight text-foreground transition-colors hover:text-muted-foreground"
+            className="text-sm font-medium tracking-tight text-foreground transition-colors hover:text-muted-foreground"
           >
             alan tom
           </a>
@@ -142,7 +142,7 @@ export default function Portfolio() {
               href={GITHUB_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-mono text-xs text-muted-foreground transition-colors hover:text-foreground"
+              className="text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
               github
             </a>
@@ -150,12 +150,12 @@ export default function Portfolio() {
               href={LINKEDIN_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden font-mono text-xs text-muted-foreground transition-colors hover:text-foreground sm:inline"
+              className="hidden text-xs text-muted-foreground transition-colors hover:text-foreground sm:inline"
             >
               linkedin
             </a>
             <kbd
-              className="hidden shrink-0 select-none rounded border border-border bg-secondary/40 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:inline-block"
+              className="hidden shrink-0 select-none rounded border border-border bg-secondary/40 px-1.5 py-0.5 text-[10px] text-muted-foreground sm:inline-block"
               title={`Press ${getKeyboardShortcut()} to toggle theme`}
             >
               {getKeyboardShortcut()}
@@ -264,7 +264,7 @@ export default function Portfolio() {
                     {item.description}
                   </p>
                 </div>
-                <span className="shrink-0 font-mono text-xs text-muted-foreground/70 md:text-right">
+                <span className="shrink-0 text-xs text-muted-foreground/70 md:text-right">
                   {item.years}
                 </span>
               </motion.div>
@@ -309,7 +309,7 @@ export default function Portfolio() {
                   hackathon
                 </p>
               </div>
-              <div className="shrink-0 text-left font-mono text-xs text-muted-foreground/70 md:text-right">
+              <div className="shrink-0 text-left text-xs text-muted-foreground/70 md:text-right">
                 <p>Feb. 2024 – Present</p>
                 <p className="italic">200+ participants annually</p>
               </div>
@@ -404,7 +404,7 @@ export default function Portfolio() {
               )}
             </div>
           </div>
-          <p className="text-center font-mono text-xs text-muted-foreground/60">
+          <p className="text-center text-xs text-muted-foreground/60">
             © 2025 Alan Tom
           </p>
         </div>
