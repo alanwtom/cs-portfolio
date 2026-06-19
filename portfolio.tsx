@@ -46,7 +46,7 @@ export default function Portfolio() {
   const lastFocusedRef = useRef<HTMLElement | null>(null);
   const reduced = useReducedMotion();
 
-  useKeyboardShortcuts({
+  const { getKeyboardShortcut } = useKeyboardShortcuts({
     onThemeToggle: () => setTheme(theme === "dark" ? "light" : "dark"),
     onEscapePress: () => {
       if (selectedProject !== null) setSelectedProject(null);
@@ -137,7 +137,7 @@ export default function Portfolio() {
           >
             alan tom
           </a>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <a
               href={GITHUB_URL}
               target="_blank"
@@ -154,6 +154,12 @@ export default function Portfolio() {
             >
               linkedin
             </a>
+            <kbd
+              className="hidden shrink-0 select-none rounded border border-border bg-secondary/40 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground sm:inline-block"
+              title={`Press ${getKeyboardShortcut()} to toggle theme`}
+            >
+              {getKeyboardShortcut()}
+            </kbd>
             <ThemeToggle />
           </div>
         </div>
