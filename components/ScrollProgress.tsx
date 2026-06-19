@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useScroll, useSpring } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export interface ScrollSection {
@@ -14,25 +13,13 @@ interface ScrollProgressProps {
 }
 
 /**
- * The "thin sleek section-break progress line".
+ * Vertical section rail (fixed, left edge, desktop only): one tick mark per
+ * section. The tick for the section currently in view expands/fills, and
+ * clicking a tick smooth-scrolls to that section.
  *
- * Two complementary pieces:
- *  - A 2px horizontal progress bar pinned to the very top of the viewport that
- *    fills as you scroll the whole page.
- *  - A vertical section rail (fixed, left edge, desktop only) of tick marks —
- *    one per section. The tick for the section currently in view expands/fills,
- *    and clicking a tick smooth-scrolls to that section.
- *
- * Respects prefers-reduced-motion: bar + ticks render statically (no spring).
+ * Respects prefers-reduced-motion.
  */
 export function ScrollProgress({ sections }: ScrollProgressProps) {
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 30,
-    mass: 0.3,
-  });
-
   const [activeId, setActiveId] = useState<string>(sections[0]?.id ?? "");
   const reduced = usePrefersReducedMotion();
 
@@ -68,52 +55,42 @@ export function ScrollProgress({ sections }: ScrollProgressProps) {
   };
 
   return (
-    <>
-      {/* Top progress bar */}
-      <motion.div
-        className="fixed left-0 right-0 top-0 z-50 h-[2px] origin-left bg-foreground/70"
-        style={reduced ? { scaleX: scrollYProgress } : { scaleX }}
-        aria-hidden="true"
-      />
-
-      {/* Vertical section rail (desktop only) */}
-      <nav
-        aria-label="Sections"
-        className="fixed left-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-4 lg:flex"
-      >
-        {sections.map(({ id, label }) => {
-          const isActive = activeId === id;
-          return (
-            <button
-              key={id}
-              onClick={() => handleJump(id)}
-              className="group flex items-center gap-3"
-              aria-label={`Jump to ${label}`}
-              aria-current={isActive ? "true" : undefined}
+    <nav
+      aria-label="Sections"
+      className="fixed left-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-4 lg:flex"
+    >
+      {sections.map(({ id, label }) => {
+        const isActive = activeId === id;
+        return (
+          <button
+            key={id}
+            onClick={() => handleJump(id)}
+            className="group flex items-center gap-3"
+            aria-label={`Jump to ${label}`}
+            aria-current={isActive ? "true" : undefined}
+          >
+            <span
+              className={cn(
+                "block h-px transition-all duration-300",
+                isActive
+                  ? "w-8 bg-foreground"
+                  : "w-4 bg-foreground/25 group-hover:w-6 group-hover:bg-foreground/50"
+              )}
+            />
+            <span
+              className={cn(
+                "font-mono text-[10px] uppercase tracking-[0.18em] transition-all duration-300",
+                isActive
+                  ? "text-foreground opacity-100"
+                  : "text-foreground/40 opacity-0 group-hover:opacity-100"
+              )}
             >
-              <span
-                className={cn(
-                  "block h-px transition-all duration-300",
-                  isActive
-                    ? "w-8 bg-foreground"
-                    : "w-4 bg-foreground/25 group-hover:w-6 group-hover:bg-foreground/50"
-                )}
-              />
-              <span
-                className={cn(
-                  "font-mono text-[10px] uppercase tracking-[0.18em] transition-all duration-300",
-                  isActive
-                    ? "text-foreground opacity-100"
-                    : "text-foreground/40 opacity-0 group-hover:opacity-100"
-                )}
-              >
-                {label}
-              </span>
-            </button>
-          );
-        })}
-      </nav>
-    </>
+              {label}
+            </span>
+          </button>
+        );
+      })}
+    </nav>
   );
 }
 
