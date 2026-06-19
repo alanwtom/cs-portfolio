@@ -60,6 +60,37 @@ export const TYPEWRITER_TEXTS = [
   "I'm a Computer Science junior at Syracuse University.",
 ];
 
+export interface Experience {
+  company: string;
+  role: string;
+  years: string;
+  description: string;
+}
+
+export const EXPERIENCES: Experience[] = [
+  {
+    company: "Micron Technology",
+    role: "Software Engineer Intern",
+    years: "Feb. 2025 – Present",
+    description:
+      "developing interactive C#/Unity simulations with 90% query reduction via custom caching and 60% UI overhead cut",
+  },
+  {
+    company: "iSchool at Syracuse University",
+    role: "NSF REU Researcher",
+    years: "June 2025 – Aug. 2025",
+    description:
+      "engineered financial sentiment pipeline using FinBERT/Llama 3.1, analyzing 5K+ posts to validate market volatility correlations",
+  },
+  {
+    company: "Data Lab at Syracuse University",
+    role: "Undergraduate Researcher",
+    years: "Aug. 2024 – Feb. 2025",
+    description:
+      "built Python evaluation pipeline for LLM memory interference testing, automating analysis of 300+ associations",
+  },
+];
+
 export const EMAIL = "alanwtom@outlook.com";
 export const GITHUB_URL = "https://github.com/alanwtom";
 export const LINKEDIN_URL = "https://www.linkedin.com/in/alan-tom/";
