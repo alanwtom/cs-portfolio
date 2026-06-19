@@ -26,7 +26,7 @@ export function SectionHeading({ index, title }: SectionHeadingProps) {
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       {index && (
-        <span className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
           {index}
         </span>
       )}

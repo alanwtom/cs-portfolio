@@ -57,7 +57,7 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
         {project.tech.map((tech) => (
           <span
             key={tech}
-            className="rounded-md border border-border bg-secondary/40 px-2 py-0.5 font-mono text-xs text-muted-foreground"
+            className="rounded-md border border-border bg-secondary/40 px-2 py-0.5 text-xs text-muted-foreground"
           >
             {tech}
           </span>
