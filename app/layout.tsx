@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     siteName: "Alan's Portfolio",
     images: [
       {
-        url: `/images/buttercup_1.webp?v=${Date.now()}`,
+        url: `/images/buttercup_og.png?v=${Date.now()}`,
         width: 1200,
         height: 630,
         alt: "Alan Tom's Portfolio",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Alan Tom",
     description: "CS @ SU, building FWRD",
-    images: [`/images/buttercup_1.webp?v=${Date.now()}`],
+    images: [`/images/buttercup_og.png?v=${Date.now()}`],
   },
   robots: {
     index: true,
@@ -76,7 +76,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
               "@type": "Person",
               name: "Alan Tom",
               url: "https://alantom.dev",
-              image: `https://alantom.dev/images/buttercup_1.webp?v=${Date.now()}`,
+              image: `https://alantom.dev/images/buttercup_og.png?v=${Date.now()}`,
               sameAs: [
                 "https://github.com/alanwtom",
                 "https://linkedin.com/in/alan-tom/",
