@@ -107,7 +107,7 @@ export default function Portfolio() {
                 Alan Tom
               </h1>
               <p className="text-lg leading-relaxed text-muted-foreground">
-                Computer Science senior at Syracuse University
+                CS @ SU, building FWRD
               </p>
             </div>
           </div>
