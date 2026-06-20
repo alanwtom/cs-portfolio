@@ -130,14 +130,6 @@ export default function Portfolio() {
             transition={{ duration: 0.6, delay: 0.35 }}
           >
             <p>
-              Part-time Research Assistant at the{" "}
-              <Underline href="https://ischool.syracuse.edu/summer-paid-research-experience/">
-                Syracuse iSchool
-              </Underline>
-              , building NLP and statistics pipelines that analyze Twitter
-              support conversations through construal fit theory.
-            </p>
-            <p>
               Currently building{" "}
               <Underline href="https://fwrdsms.com">FWRD</Underline>, a
               privacy-first iOS app that forwards SMS to Discord, Slack, and
