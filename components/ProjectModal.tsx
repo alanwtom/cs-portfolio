@@ -154,7 +154,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                             duration: 0.3,
                           }}
                         >
-                          <div className="font-mono text-sm font-medium">
+                          <div className="text-sm font-medium">
                             {tech}
                           </div>
                           <div

@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import { useTheme } from "./theme-provider";
+import { ArrowUpRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import type { Project } from "@/lib/constants";
 
 interface ProjectCardProps {
@@ -11,12 +12,18 @@ interface ProjectCardProps {
   onClick: () => void;
 }
 
+/**
+ * Minimal editorial project row (Emil-style): title + external arrow on the
+ * left, one-line description below, mono tech tags trailing. Clicking the row
+ * opens the detailed ProjectModal. Keyboard accessible (Enter / Space).
+ */
 export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
-  const { theme } = useTheme();
+  const reduced = useReducedMotion();
 
   return (
     <motion.div
-      className="flex flex-row justify-between items-start w-full group cursor-pointer relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/60 rounded-md"
+      className="group relative w-full cursor-pointer border-t border-border py-6 first:border-t-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      role="button"
       tabIndex={0}
       onClick={onClick}
       onKeyDown={(e) => {
@@ -25,77 +32,36 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
           onClick();
         }
       }}
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.6,
-        delay: 1.8 + index * 0.1,
-        layout: { duration: 0.15, ease: "easeOut" },
-        default: { duration: 0.15, ease: "easeOut" },
-      }}
-      whileHover={{
-        scale: 1.03,
-        y: -8,
-        backgroundColor:
-          theme === "dark"
-            ? "rgba(15, 23, 42, 0.6)"
-            : "rgba(248, 250, 252, 0.6)",
-        borderRadius: "8px",
-        boxShadow:
-          theme === "dark"
-            ? "0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 25px 25px -10px rgba(0, 0, 0, 0.15)"
-            : "0 25px 50px -12px rgba(0, 0, 0, 0.08), 0 25px 25px -10px rgba(0, 0, 0, 0.04)",
-        transition: {
-          duration: 0.15,
-          ease: "easeOut",
-        },
-      }}
-      whileTap={{
-        scale: 0.98,
-      }}
+      initial={reduced ? false : { opacity: 0, y: 12 }}
+      whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.4, delay: index * 0.05 }}
     >
-      <div className="flex-1 space-y-2 p-4">
-        <div className="flex items-center gap-2">
-          <h3
-            className={`text-lg font-medium transition-colors duration-200 ${
-              theme === "dark"
-                ? "text-white group-hover:text-blue-300"
-                : "text-black group-hover:text-blue-600"
-            }`}
+      <div className="flex items-start justify-between gap-4">
+        <h3 className="text-lg font-medium text-foreground transition-colors group-hover:text-foreground">
+          {project.title}
+        </h3>
+        <ArrowUpRight
+          className={cn(
+            "mt-0.5 h-4 w-4 shrink-0 text-muted-foreground transition-all duration-200",
+            "group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground"
+          )}
+        />
+      </div>
+
+      <p className="mt-1.5 max-w-prose text-base leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground/80">
+        {project.description}
+      </p>
+
+      <div className="mt-3 flex flex-wrap gap-2">
+        {project.tech.map((tech) => (
+          <span
+            key={tech}
+            className="rounded-md border border-border bg-secondary/40 px-2 py-0.5 text-sm text-muted-foreground"
           >
-            {project.title}
-          </h3>
-          <ArrowRight
-            className={`w-4 h-4 transition-all duration-200 ${
-              theme === "dark"
-                ? "text-slate-400 group-hover:text-blue-300"
-                : "text-slate-600 group-hover:text-blue-600"
-            } group-hover:translate-x-1`}
-          />
-        </div>
-        <p
-          className={`text-base leading-relaxed transition-colors duration-200 ${
-            theme === "dark"
-              ? "text-slate-400 group-hover:text-slate-300"
-              : "text-slate-600 group-hover:text-slate-700"
-          }`}
-        >
-          {project.description}
-        </p>
-        <div className="flex flex-wrap gap-2 mt-3">
-          {project.tech.map((tech) => (
-            <span
-              key={tech}
-              className={`px-2 py-1 text-xs rounded-md font-mono transition-colors duration-200 ${
-                theme === "dark"
-                  ? "bg-slate-800 text-slate-300 group-hover:bg-slate-700"
-                  : "bg-slate-100 text-slate-700 group-hover:bg-slate-200"
-              }`}
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
+            {tech}
+          </span>
+        ))}
       </div>
     </motion.div>
   );
