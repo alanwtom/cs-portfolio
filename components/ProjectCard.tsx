@@ -38,7 +38,7 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
       transition={{ duration: 0.4, delay: index * 0.05 }}
     >
       <div className="flex items-start justify-between gap-4">
-        <h3 className="text-base font-medium text-foreground transition-colors group-hover:text-foreground">
+        <h3 className="text-lg font-medium text-foreground transition-colors group-hover:text-foreground">
           {project.title}
         </h3>
         <ArrowUpRight
@@ -49,7 +49,7 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
         />
       </div>
 
-      <p className="mt-1.5 max-w-prose text-sm leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground/80">
+      <p className="mt-1.5 max-w-prose text-base leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground/80">
         {project.description}
       </p>
 
@@ -57,7 +57,7 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
         {project.tech.map((tech) => (
           <span
             key={tech}
-            className="rounded-md border border-border bg-secondary/40 px-2 py-0.5 text-xs text-muted-foreground"
+            className="rounded-md border border-border bg-secondary/40 px-2 py-0.5 text-sm text-muted-foreground"
           >
             {tech}
           </span>

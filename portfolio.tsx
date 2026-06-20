@@ -12,7 +12,6 @@ import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import {
   PROJECTS,
   EXPERIENCES,
-  TYPEWRITER_TEXTS,
   EMAIL,
   GITHUB_URL,
   X_URL,
@@ -122,22 +121,7 @@ export default function Portfolio() {
         Skip to main content
       </a>
 
-      {/* Top bar */}
-      <motion.header
-        className="sticky top-0 z-30 border-b border-border/60 bg-background/70 backdrop-blur-md"
-        initial={reduced ? false : { opacity: 0, y: -12 }}
-        animate={reduced ? undefined : { opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="mx-auto flex w-full max-w-2xl items-center justify-between px-6 py-4">
-          <a
-            href="#hero"
-            className="text-sm font-medium tracking-tight text-foreground transition-colors hover:text-muted-foreground"
-          >
-            Alan Tom
-          </a>
-        </div>
-      </motion.header>
+      {/* Top progress bar is gone; sidebar rail handles section nav */}
 
       <main
         id="main-content"
@@ -170,7 +154,7 @@ export default function Portfolio() {
                 animate={reduced ? undefined : { opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.15 }}
               >
-                Hi, I&apos;m Alan.
+                Alan Tom
               </motion.h1>
               <motion.p
                 className="text-lg leading-relaxed text-muted-foreground"
@@ -178,35 +162,32 @@ export default function Portfolio() {
                 animate={reduced ? undefined : { opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.25 }}
               >
-                {TYPEWRITER_TEXTS[0]}
+                Computer Science senior at Syracuse University
               </motion.p>
             </div>
           </div>
 
           <motion.div
-            className="mt-12 max-w-xl space-y-5 text-[15px] leading-relaxed text-muted-foreground"
+            className="mt-12 max-w-xl space-y-5 text-lg leading-relaxed text-muted-foreground"
             initial={reduced ? false : { opacity: 0, y: 16 }}
             animate={reduced ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.35 }}
           >
             <p>
-              I currently work as a Software Development Engineer Intern at{" "}
-              <Underline>Micron Technology</Underline>, building data-driven UIs
-              and caching systems for semiconductor simulations.
+              SDE Intern at <Underline>Micron Technology</Underline>, building
+              data-driven UIs and caching for semiconductor simulations.
             </p>
             <p>
-              I previously served as the President of{" "}
-              <Underline>Innovate Orange</Underline>, where I led a team of 20+
-              students to organize Syracuse University&apos;s largest hackathons
-              and datathons.
+              Former President of <Underline>Innovate Orange</Underline>, where
+              I led 20+ students running Syracuse&apos;s largest hackathons and
+              datathons.
             </p>
             <p>
-              Previously, I conducted research at Syracuse University&apos;s{" "}
-              <Underline>iSchool</Underline> and <Underline>Data Lab</Underline>,
-              exploring the intersection of LLMs, human memory, and financial
-              market analysis.
+              Previously researched LLMs, human memory, and financial markets at
+              the <Underline>iSchool</Underline> and{" "}
+              <Underline>Data Lab</Underline>.
             </p>
-            <p>Outside of work, I play video games, travel, and work out!</p>
+            <p>Outside of work, I play video games, travel, and work out.</p>
           </motion.div>
         </section>
 
@@ -227,18 +208,18 @@ export default function Portfolio() {
               >
                 <div className="flex-1">
                   <div className="flex items-baseline gap-2">
-                    <h3 className="text-base font-medium text-foreground">
+                    <h3 className="text-lg font-medium text-foreground">
                       {item.company}
                     </h3>
-                    <span className="text-sm italic text-muted-foreground">
+                    <span className="text-base italic text-muted-foreground">
                       {item.role}
                     </span>
                   </div>
-                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-1.5 text-base leading-relaxed text-muted-foreground">
                     {item.description}
                   </p>
                 </div>
-                <span className="shrink-0 text-xs text-muted-foreground/70 md:text-right">
+                <span className="shrink-0 text-sm text-muted-foreground/70 md:text-right">
                   {item.years}
                 </span>
               </motion.div>
@@ -278,24 +259,24 @@ export default function Portfolio() {
                 <h3 className="text-lg font-medium text-foreground">
                   CuseHacks
                 </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="mt-1 text-base text-muted-foreground">
                   Former President, Syracuse University&apos;s largest
                   student-run hackathon
                 </p>
               </div>
-              <div className="shrink-0 text-left text-xs text-muted-foreground/70 md:text-right">
+              <div className="shrink-0 text-left text-sm text-muted-foreground/70 md:text-right">
                 <p>Feb. 2024 – May 2025</p>
                 <p className="italic">200+ participants annually</p>
               </div>
             </div>
 
-            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
               Led the entire event lifecycle—team building, finance, logistics,
               and outreach—to deliver a flagship experience for Syracuse
               University creatives and engineers.
             </p>
 
-            <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+            <ul className="mt-4 space-y-2 text-base text-muted-foreground">
               <Bullet>
                 Orchestrated a 40% YoY growth in attendance through targeted
                 outreach and partnerships.
