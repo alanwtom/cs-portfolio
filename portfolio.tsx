@@ -174,20 +174,25 @@ export default function Portfolio() {
             transition={{ duration: 0.6, delay: 0.35 }}
           >
             <p>
-              SDE Intern at <Underline>Micron Technology</Underline>, building
-              data-driven UIs and caching for semiconductor simulations.
+              Part-time Research Assistant at the{" "}
+              <Underline href="https://ischool.syracuse.edu/summer-paid-research-experience/">
+                Syracuse iSchool
+              </Underline>
+              , building NLP and statistics pipelines that analyze Twitter
+              support conversations through construal fit theory.
             </p>
             <p>
-              Former President of <Underline>Innovate Orange</Underline>, where
-              I led 20+ students running Syracuse&apos;s largest hackathons and
-              datathons.
+              Currently building{" "}
+              <Underline href="https://fwrdsms.com">FWRD</Underline>, a
+              privacy-first iOS app that forwards SMS to Discord, Slack, and
+              Telegram — running entirely on-device via Apple Shortcuts.
             </p>
             <p>
-              Previously researched LLMs, human memory, and financial markets at
-              the <Underline>iSchool</Underline> and{" "}
-              <Underline>Data Lab</Underline>.
+              Former President of{" "}
+              <Underline href="https://cusehacks.com">Innovate Orange</Underline>
+              , where I led 20+ students running Syracuse&apos;s largest
+              hackathons and datathons.
             </p>
-            <p>Outside of work, I play video games, travel, and work out.</p>
           </motion.div>
         </section>
 
@@ -373,12 +378,28 @@ export default function Portfolio() {
 
 /* ───────────────────── Small presentational helpers ───────────────────── */
 
-function Underline({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="text-foreground/90 underline decoration-border underline-offset-4">
-      {children}
-    </span>
-  );
+function Underline({
+  children,
+  href,
+}: {
+  children: React.ReactNode;
+  href?: string;
+}) {
+  const className =
+    "text-foreground/90 underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground";
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={className}
+      >
+        {children}
+      </a>
+    );
+  }
+  return <span className={className}>{children}</span>;
 }
 
 function Divider() {
