@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, Github } from "lucide-react";
+import { Github } from "lucide-react";
 import { useTheme } from "./components/theme-provider";
 import { ProjectCard } from "./components/ProjectCard";
 import { ScrollProgress } from "./components/ScrollProgress";
@@ -12,11 +12,9 @@ import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import {
   PROJECTS,
   EXPERIENCES,
-  EMAIL,
   GITHUB_URL,
   X_URL,
   THREADS_URL,
-  COPY_FEEDBACK_DURATION,
 } from "./lib/constants";
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
@@ -38,10 +36,6 @@ const SCROLL_SECTIONS = [
 export default function Portfolio() {
   const { isLoaded } = useTheme();
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
-  const [footerEmailRevealed, setFooterEmailRevealed] = useState(false);
-  const [footerShowCopy, setFooterShowCopy] = useState(false);
-  const [footerCopied, setFooterCopied] = useState(false);
-  const footerCopyRef = useRef<HTMLDivElement | null>(null);
   const lastFocusedRef = useRef<HTMLElement | null>(null);
   const reduced = useReducedMotion();
 
@@ -51,23 +45,6 @@ export default function Portfolio() {
       if (selectedProject !== null) setSelectedProject(null);
     },
   });
-
-  // Close the footer email copy popover on outside click.
-  useEffect(() => {
-    if (!footerShowCopy) return;
-    function handleClick(e: MouseEvent) {
-      if (
-        footerCopyRef.current &&
-        e.target instanceof Node &&
-        !footerCopyRef.current.contains(e.target as Node)
-      ) {
-        setFooterShowCopy(false);
-        setFooterEmailRevealed(false);
-      }
-    }
-    window.addEventListener("mousedown", handleClick);
-    return () => window.removeEventListener("mousedown", handleClick);
-  }, [footerShowCopy]);
 
   // Remember last focused element and restore it when modal closes.
   useEffect(() => {
@@ -87,27 +64,6 @@ export default function Portfolio() {
       </div>
     );
   }
-
-  const revealEmail = () => {
-    if (!footerEmailRevealed) setFooterEmailRevealed(true);
-    else if (!footerShowCopy) setFooterShowCopy(true);
-  };
-
-  const copyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText(EMAIL);
-      setFooterEmailRevealed(true);
-      setFooterShowCopy(true);
-      setFooterCopied(true);
-      setTimeout(() => {
-        setFooterShowCopy(false);
-        setFooterEmailRevealed(false);
-        setFooterCopied(false);
-      }, COPY_FEEDBACK_DURATION);
-    } catch (err) {
-      console.warn("Failed to copy email:", err);
-    }
-  };
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-background text-foreground">
@@ -322,53 +278,6 @@ export default function Portfolio() {
             <FooterIcon href={GITHUB_URL} label="GitHub">
               <Github className="h-5 w-5" />
             </FooterIcon>
-
-            <div
-              className="flex cursor-pointer items-center text-muted-foreground transition-colors hover:text-foreground"
-              onClick={revealEmail}
-              onDoubleClick={async (e) => {
-                e.stopPropagation();
-                await copyEmail();
-              }}
-            >
-              <Mail className="h-5 w-5" />
-              {footerEmailRevealed && (
-                <span className="relative ml-2">
-                  <span className="underline decoration-dotted underline-offset-4">
-                    {EMAIL}
-                  </span>
-                  {footerShowCopy && (
-                    <div
-                      ref={footerCopyRef}
-                      className="absolute left-1/2 top-full z-50 mt-2 -translate-x-1/2 whitespace-nowrap rounded-lg border border-border bg-popover px-2 py-1 text-xs font-medium text-popover-foreground shadow-sm transition-all duration-200"
-                    >
-                      {footerCopied ? (
-                        <span className="text-green-500">Copied!</span>
-                      ) : (
-                        <div
-                          role="button"
-                          tabIndex={0}
-                          className="cursor-pointer"
-                          onClick={async (e) => {
-                            e.stopPropagation();
-                            await copyEmail();
-                          }}
-                          onKeyDown={async (e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              await copyEmail();
-                            }
-                          }}
-                        >
-                          Copy Email
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </span>
-              )}
-            </div>
           </div>
           <p className="text-center text-xs text-muted-foreground/60">
             © 2025 Alan Tom
@@ -458,12 +367,12 @@ function XIcon({ className }: { className?: string }) {
 function ThreadsIcon({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 24 24"
+      viewBox="0 0 192 192"
       aria-hidden="true"
       fill="currentColor"
       className={className}
     >
-      <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.461-.218-3.454-.775-1.182-.66-1.868-1.715-1.884-2.886-.017-1.208.623-2.272 1.753-2.918 1.085-.622 2.57-.953 4.418-.982.575-.009 1.118.014 1.626.066-.062-.94-.273-1.6-.63-2.037-.488-.583-1.243-.88-2.247-.888h-.025c-.81 0-1.91.221-2.605 1.274l-1.728-1.155c.94-1.408 2.479-2.179 4.339-2.179h.037c3.083.018 4.918 1.964 5.095 5.376.105.045.208.092.31.142 1.45.668 2.51 1.74 3.056 3.1.702 1.775.784 4.684-1.519 6.943-1.79 1.753-4.09 2.526-7.083 2.55zm1.348-8.49c-.326-.058-.7-.086-1.118-.086-.06 0-.12 0-.182.002-2.273.037-3.722.612-3.756 1.862-.026.95.936 1.442 1.794 1.488 1.666.09 3.472-.764 3.578-3.444.016-.41.015-.8-.061-1.15-.102.014-.207.027-.315.027z" />
+      <path d="M141.537 88.988366C140.71 88.591934 139.87 88.210435 139.019 87.8451C137.537 60.5382 122.616 44.905 97.5619 44.745C97.4484 44.7443 97.3355 44.7443 97.222 44.7443C82.2364 44.7443 69.7731 51.1409 62.102 62.7807L75.881 72.2328C81.611 63.5455 90.6085 61.6931 97.2286 61.6931C97.3051 61.6931 97.3819 61.6931 97.4576 61.694C111.352 61.7824 118.89 68.9702 120.029 83.694C113.395 82.5658 106.226 82.2144 98.5601 82.6525C74.6936 84.0268 59.432 98.7311 60.4748 117.735C61.0118 127.516 65.8007 136.024 73.979 141.691C80.8544 146.474 89.8485 148.799 98.8438 148.272C110.532 147.604 119.83 142.788 126.388 134.034C131.46 127.355 134.679 118.611 136.142 107.337C141.274 110.43 145.092 114.491 147.276 119.364C150.927 127.512 151.141 140.922 140.801 151.232C131.684 160.301 120.607 164.258 104.342 164.376C86.2104 164.244 72.6289 158.415 63.0408 147.064C54.0791 136.474 49.4466 121.152 49.2886 101.524C49.4466 81.8958 54.0791 66.5737 63.0408 55.9837C72.6289 44.6331 86.2104 38.8036 104.342 38.672C122.661 38.8048 136.581 44.6712 146.428 56.2066C151.231 61.8593 154.832 69.5782 157.218 79.3415L173.398 75.0061C170.526 62.968 165.719 52.7694 158.982 44.7988C146.594 30.0546 128.447 22.6837 104.295 22.5C104.194 22.5 104.094 22.5 103.993 22.5005C79.8611 22.6358 61.9247 30.0977 49.5615 44.6426C38.3832 57.8486 32.6896 76.7451 32.5 101.493L32.5 101.555L32.5 101.617C32.6896 126.365 38.3832 145.262 49.5615 158.468C61.9247 173.013 79.8611 180.474 103.993 180.61C104.094 180.61 104.194 180.611 104.295 180.611C125.602 180.611 142.522 174.708 155.821 162.781C173.298 146.806 172.758 125.588 166.754 112.471C162.388 102.762 153.926 94.8647 141.537 88.988366ZM99.6054 131.389C89.5218 131.955 79.1329 127.343 78.6346 118.498C78.2618 111.79 83.4022 104.252 99.4175 103.342C100.719 103.268 101.996 103.232 103.25 103.232C108.594 103.232 113.493 103.749 117.847 104.755C116.137 126.081 107.473 130.886 99.6054 131.389Z" />
     </svg>
   );
 }
