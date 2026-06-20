@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     default: "Alan Tom",
     template: "%s | Alan Tom",
   },
-  description: "cs lead at syracuse",
+  description: "CS @ SU, building FWRD",
   keywords: [
     "Alan Tom",
     "Computer Science",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://alantom.dev"),
   openGraph: {
     title: "Alan Tom",
-    description: "cs lead at syracuse",
+    description: "CS @ SU, building FWRD",
     url: "https://alantom.dev",
     siteName: "Alan's Portfolio",
     images: [
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Alan Tom",
-    description: "cs lead at syracuse",
+    description: "CS @ SU, building FWRD",
     images: [`/images/buttercup_1.webp?v=${Date.now()}`],
   },
   robots: {
