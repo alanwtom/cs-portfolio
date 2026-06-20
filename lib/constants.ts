@@ -93,7 +93,8 @@ export const EXPERIENCES: Experience[] = [
 
 export const EMAIL = "alanwtom@outlook.com";
 export const GITHUB_URL = "https://github.com/alanwtom";
-export const LINKEDIN_URL = "https://www.linkedin.com/in/alan-tom/";
+export const X_URL = "https://x.com/alantomdev";
+export const THREADS_URL = "https://www.threads.com/search?q=ios%20desing&serp_type=default";
 
 // Animation constants
 export const ANIMATION_DURATIONS = {
