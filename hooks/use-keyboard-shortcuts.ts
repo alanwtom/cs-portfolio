@@ -3,15 +3,13 @@ import { useEffect } from "react"
 interface KeyboardShortcutOptions {
   onThemeToggle: () => void
   onEscapePress: () => void
-  theme: "dark" | "light"
 }
 
-export function useKeyboardShortcuts({ 
-  onThemeToggle, 
+export function useKeyboardShortcuts({
+  onThemeToggle,
   onEscapePress,
-  theme 
 }: KeyboardShortcutOptions) {
-  
+
   // Theme toggle shortcut (Cmd/Ctrl + L)
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -20,7 +18,7 @@ export function useKeyboardShortcuts({
         onThemeToggle()
       }
     }
-    
+
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [onThemeToggle])
@@ -36,16 +34,8 @@ export function useKeyboardShortcuts({
         }
       }
     }
-    
+
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [onEscapePress])
-
-  // Get keyboard shortcut display text
-  const getKeyboardShortcut = () => {
-    const isMac = typeof navigator !== "undefined" && navigator.platform.toUpperCase().indexOf("MAC") >= 0
-    return isMac ? "⌘L" : "Ctrl+L"
-  }
-
-  return { getKeyboardShortcut }
 }

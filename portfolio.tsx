@@ -1,7 +1,6 @@
 "use client";
 
-import { Mail, Github, Linkedin } from "lucide-react";
-import { ThemeToggle } from "./components/theme-toggle";
+import { Mail, Github } from "lucide-react";
 import { useTheme } from "./components/theme-provider";
 import { ProjectCard } from "./components/ProjectCard";
 import { ScrollProgress } from "./components/ScrollProgress";
@@ -16,7 +15,8 @@ import {
   TYPEWRITER_TEXTS,
   EMAIL,
   GITHUB_URL,
-  LINKEDIN_URL,
+  X_URL,
+  THREADS_URL,
   COPY_FEEDBACK_DURATION,
 } from "./lib/constants";
 import React, { useEffect, useRef, useState } from "react";
@@ -37,7 +37,7 @@ const SCROLL_SECTIONS = [
 ];
 
 export default function Portfolio() {
-  const { theme, setTheme, isLoaded } = useTheme();
+  const { isLoaded } = useTheme();
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [footerEmailRevealed, setFooterEmailRevealed] = useState(false);
   const [footerShowCopy, setFooterShowCopy] = useState(false);
@@ -46,12 +46,11 @@ export default function Portfolio() {
   const lastFocusedRef = useRef<HTMLElement | null>(null);
   const reduced = useReducedMotion();
 
-  const { getKeyboardShortcut } = useKeyboardShortcuts({
-    onThemeToggle: () => setTheme(theme === "dark" ? "light" : "dark"),
+  useKeyboardShortcuts({
+    onThemeToggle: () => {},
     onEscapePress: () => {
       if (selectedProject !== null) setSelectedProject(null);
     },
-    theme,
   });
 
   // Close the footer email copy popover on outside click.
@@ -135,33 +134,8 @@ export default function Portfolio() {
             href="#hero"
             className="text-sm font-medium tracking-tight text-foreground transition-colors hover:text-muted-foreground"
           >
-            alan tom
+            Alan Tom
           </a>
-          <div className="flex items-center gap-2">
-            <a
-              href={GITHUB_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-muted-foreground transition-colors hover:text-foreground"
-            >
-              github
-            </a>
-            <a
-              href={LINKEDIN_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden text-xs text-muted-foreground transition-colors hover:text-foreground sm:inline"
-            >
-              linkedin
-            </a>
-            <kbd
-              className="hidden shrink-0 select-none rounded border border-border bg-secondary/40 px-1.5 py-0.5 text-[10px] text-muted-foreground sm:inline-block"
-              title={`Press ${getKeyboardShortcut()} to toggle theme`}
-            >
-              {getKeyboardShortcut()}
-            </kbd>
-            <ThemeToggle />
-          </div>
         </div>
       </motion.header>
 
@@ -350,8 +324,11 @@ export default function Portfolio() {
       <footer className="border-t border-border">
         <div className="mx-auto w-full max-w-2xl px-6 py-10">
           <div className="mb-8 flex justify-center gap-8">
-            <FooterIcon href={LINKEDIN_URL} label="LinkedIn">
-              <Linkedin className="h-5 w-5" />
+            <FooterIcon href={X_URL} label="X">
+              <XIcon className="h-5 w-5" />
+            </FooterIcon>
+            <FooterIcon href={THREADS_URL} label="Threads">
+              <ThreadsIcon className="h-5 w-5" />
             </FooterIcon>
             <FooterIcon href={GITHUB_URL} label="GitHub">
               <Github className="h-5 w-5" />
@@ -455,5 +432,33 @@ function FooterIcon({
     >
       {children}
     </a>
+  );
+}
+
+/* Brand logos (lucide has no X/Threads marks) — official glyphs as inline SVG */
+
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="currentColor"
+      className={className}
+    >
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
+function ThreadsIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="currentColor"
+      className={className}
+    >
+      <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.461-.218-3.454-.775-1.182-.66-1.868-1.715-1.884-2.886-.017-1.208.623-2.272 1.753-2.918 1.085-.622 2.57-.953 4.418-.982.575-.009 1.118.014 1.626.066-.062-.94-.273-1.6-.63-2.037-.488-.583-1.243-.88-2.247-.888h-.025c-.81 0-1.91.221-2.605 1.274l-1.728-1.155c.94-1.408 2.479-2.179 4.339-2.179h.037c3.083.018 4.918 1.964 5.095 5.376.105.045.208.092.31.142 1.45.668 2.51 1.74 3.056 3.1.702 1.775.784 4.684-1.519 6.943-1.79 1.753-4.09 2.526-7.083 2.55zm1.348-8.49c-.326-.058-.7-.086-1.118-.086-.06 0-.12 0-.182.002-2.273.037-3.722.612-3.756 1.862-.026.95.936 1.442 1.794 1.488 1.666.09 3.472-.764 3.578-3.444.016-.41.015-.8-.061-1.15-.102.014-.207.027-.315.027z" />
+    </svg>
   );
 }
