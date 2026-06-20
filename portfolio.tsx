@@ -136,7 +136,7 @@ export default function Portfolio() {
               Telegram.
             </p>
             <p>
-              Formerly Researcher at{" "}
+              Former Researcher at{" "}
               <Underline href="https://ischool.syracuse.edu/summer-paid-research-experience/">
                 iSchool NSF REU
               </Underline>
