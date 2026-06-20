@@ -66,7 +66,12 @@ export default function Portfolio() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background text-foreground">
+    <motion.div
+      className="flex min-h-screen flex-col overflow-x-hidden bg-background text-foreground"
+      initial={reduced ? false : { opacity: 0 }}
+      animate={reduced ? undefined : { opacity: 1 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+    >
       <ScrollProgress sections={SCROLL_SECTIONS} />
 
       {/* Skip to main content link for accessibility */}
@@ -276,7 +281,7 @@ export default function Portfolio() {
           </p>
         </div>
       </footer>
-    </div>
+    </motion.div>
   );
 }
 
