@@ -91,12 +91,7 @@ export default function Portfolio() {
         {/* ───────────────────────── Hero ───────────────────────── */}
         <section id="hero" className="scroll-mt-20 py-20 md:py-28">
           <div className="flex flex-col gap-8 md:flex-row md:items-start">
-            <motion.div
-              className="h-24 w-24 shrink-0 overflow-hidden rounded-full border border-border shadow-sm"
-              initial={reduced ? false : { opacity: 0, scale: 0.85 }}
-              animate={reduced ? undefined : { opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
+            <div className="h-24 w-24 shrink-0 overflow-hidden rounded-full border border-border shadow-sm">
               <Image
                 src={`/images/buttercup_1.webp?v=${Date.now()}`}
                 alt="Alan Tom's profile photo"
@@ -106,34 +101,19 @@ export default function Portfolio() {
                 priority
                 sizes="96px"
               />
-            </motion.div>
+            </div>
 
             <div className="flex-1 space-y-5">
-              <motion.h1
-                className="text-4xl font-medium tracking-tight text-foreground md:text-5xl"
-                initial={reduced ? false : { opacity: 0, y: 16 }}
-                animate={reduced ? undefined : { opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.15 }}
-              >
+              <h1 className="text-4xl font-medium tracking-tight text-foreground md:text-5xl">
                 Alan Tom
-              </motion.h1>
-              <motion.p
-                className="text-lg leading-relaxed text-muted-foreground"
-                initial={reduced ? false : { opacity: 0, y: 16 }}
-                animate={reduced ? undefined : { opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.25 }}
-              >
+              </h1>
+              <p className="text-lg leading-relaxed text-muted-foreground">
                 Computer Science senior at Syracuse University
-              </motion.p>
+              </p>
             </div>
           </div>
 
-          <motion.div
-            className="mt-12 max-w-xl space-y-5 text-lg leading-relaxed text-muted-foreground"
-            initial={reduced ? false : { opacity: 0, y: 16 }}
-            animate={reduced ? undefined : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35 }}
-          >
+          <div className="mt-12 max-w-xl space-y-5 text-lg leading-relaxed text-muted-foreground">
             <p>
               Currently building{" "}
               <Underline href="https://fwrdsms.com">FWRD</Underline>, a
@@ -149,7 +129,7 @@ export default function Portfolio() {
               <Underline href="https://cusehacks.com">Innovate Orange</Underline>
               .
             </p>
-          </motion.div>
+          </div>
         </section>
 
         <Divider />
