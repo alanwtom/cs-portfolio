@@ -203,7 +203,7 @@ export default function Portfolio() {
 
         {/* ─────────────────────── Experience ─────────────────────── */}
         <section id="experience" className="scroll-mt-20 py-20 md:py-24">
-          <SectionHeading index="01 — Experience" title="Experience" />
+          <SectionHeading title="Experience" />
           <div className="flex flex-col">
             {EXPERIENCES.map((item, idx) => (
               <motion.div
@@ -239,7 +239,7 @@ export default function Portfolio() {
 
         {/* ───────────────────────── Projects ───────────────────── */}
         <section id="projects" className="scroll-mt-20 py-20 md:py-24">
-          <SectionHeading index="02 — Projects" title="Projects" />
+          <SectionHeading title="Projects" />
           <div className="flex flex-col">
             {PROJECTS.map((project, index) => (
               <ProjectCard
@@ -260,7 +260,7 @@ export default function Portfolio() {
 
         {/* ─────────────────────── University ────────────────────── */}
         <section id="university" className="scroll-mt-20 py-20 md:py-24">
-          <SectionHeading index="03 — University" title="University" />
+          <SectionHeading title="University" />
           <div className="rounded-lg border border-border bg-card/40 p-6">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div>
