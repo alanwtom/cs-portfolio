@@ -185,13 +185,16 @@ export default function Portfolio() {
               Currently building{" "}
               <Underline href="https://fwrdsms.com">FWRD</Underline>, a
               privacy-first iOS app that forwards SMS to Discord, Slack, and
-              Telegram — running entirely on-device via Apple Shortcuts.
+              Telegram.
             </p>
             <p>
-              Former President of{" "}
+              Formerly Researcher at{" "}
+              <Underline href="https://ischool.syracuse.edu/summer-paid-research-experience/">
+                iSchool NSF REU
+              </Underline>
+              , and President of{" "}
               <Underline href="https://cusehacks.com">Innovate Orange</Underline>
-              , where I led 20+ students running Syracuse&apos;s largest
-              hackathons and datathons.
+              .
             </p>
           </motion.div>
         </section>
