@@ -89,19 +89,7 @@ export default function Portfolio() {
       >
         {/* ───────────────────────── Hero ───────────────────────── */}
         <section id="hero" className="scroll-mt-20 py-20 md:py-28">
-          <div className="flex flex-col gap-8 md:flex-row md:items-start">
-            <div className="h-24 w-24 shrink-0 overflow-hidden rounded-full border border-border shadow-sm">
-              <Image
-                src={`/images/buttercup_1.webp?v=${Date.now()}`}
-                alt="Alan Tom's profile photo"
-                width={96}
-                height={96}
-                className="h-full w-full object-cover"
-                priority
-                sizes="96px"
-              />
-            </div>
-
+          <div className="flex flex-row items-start justify-between gap-8">
             <div className="flex-1 space-y-5">
               <h1 className="text-4xl font-medium tracking-tight text-foreground md:text-5xl">
                 Alan Tom
@@ -109,6 +97,18 @@ export default function Portfolio() {
               <p className="text-lg leading-relaxed text-muted-foreground">
                 Computer Science senior at Syracuse University
               </p>
+            </div>
+
+            <div className="aspect-square h-24 w-24 shrink-0 overflow-hidden border border-border shadow-sm md:h-28 md:w-28">
+              <Image
+                src={`/images/buttercup_1.webp?v=${Date.now()}`}
+                alt="Alan Tom's profile photo"
+                width={112}
+                height={112}
+                className="h-full w-full object-cover"
+                priority
+                sizes="112px"
+              />
             </div>
           </div>
 
