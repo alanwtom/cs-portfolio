@@ -57,7 +57,7 @@ export const PROJECTS: Project[] = [
 ];
 
 export const TYPEWRITER_TEXTS = [
-  "I'm a Computer Science junior at Syracuse University.",
+  "I'm a Computer Science senior at Syracuse University.",
 ];
 
 export interface Experience {

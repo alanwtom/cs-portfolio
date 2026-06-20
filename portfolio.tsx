@@ -195,8 +195,8 @@ export default function Portfolio() {
               and caching systems for semiconductor simulations.
             </p>
             <p>
-              I also serve as the President of{" "}
-              <Underline>Innovate Orange</Underline>, where I lead a team of 20+
+              I previously served as the President of{" "}
+              <Underline>Innovate Orange</Underline>, where I led a team of 20+
               students to organize Syracuse University&apos;s largest hackathons
               and datathons.
             </p>
@@ -279,18 +279,18 @@ export default function Portfolio() {
                   CuseHacks
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  President, Syracuse University&apos;s largest student-run
-                  hackathon
+                  Former President, Syracuse University&apos;s largest
+                  student-run hackathon
                 </p>
               </div>
               <div className="shrink-0 text-left text-xs text-muted-foreground/70 md:text-right">
-                <p>Feb. 2024 – Present</p>
+                <p>Feb. 2024 – May 2025</p>
                 <p className="italic">200+ participants annually</p>
               </div>
             </div>
 
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              Lead the entire event lifecycle—team building, finance, logistics,
+              Led the entire event lifecycle—team building, finance, logistics,
               and outreach—to deliver a flagship experience for Syracuse
               University creatives and engineers.
             </p>
