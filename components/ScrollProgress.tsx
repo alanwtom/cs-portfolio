@@ -14,14 +14,14 @@ interface ScrollProgressProps {
 
 /**
  * Revamped Vertical section rail (fixed, left edge, desktop only).
- * Renders compact tick marks that dynamically scale in width and opacity to form
- * a curving "arch" pointing to the current scroll position on the page.
- * Section labels are placed dynamically at the tick mark closest to their actual page offset.
+ * Renders extremely compact tick marks (12 ticks total) that scale in width
+ * and opacity to form a curving "arch" pointing to the active scroll position.
+ * The labels' opacities are bound directly to the Gaussian bulge factor (distance to the peak).
  *
  * Respects prefers-reduced-motion.
  */
 export function ScrollProgress({ sections }: ScrollProgressProps) {
-  const NUM_TICKS = 16; // Compacted from 25 to fit beautifully on any screen height
+  const NUM_TICKS = 12; // Compacted to 12 ticks to minimize vertical space on the page
   const [scrollProgress, setScrollProgress] = useState(0);
   const [sectionProgresses, setSectionProgresses] = useState<Record<string, number>>({});
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
@@ -116,19 +116,6 @@ export function ScrollProgress({ sections }: ScrollProgressProps) {
     return closestId;
   }, [sections, sectionProgresses, scrollProgress]);
 
-  // Calculate smooth scroll-based opacity for each section label
-  const labelOpacity = useMemo(() => {
-    const opacities: Record<string, number> = {};
-    sections.forEach(({ id }) => {
-      const prog = sectionProgresses[id] ?? 0;
-      const diff = Math.abs(scrollProgress - prog);
-      // Fully visible when scroll is near, fades out smoothly over a range of 0.15 progress diff
-      const opacity = Math.max(0, Math.min(1, 1 - diff / 0.15));
-      opacities[id] = opacity;
-    });
-    return opacities;
-  }, [sections, sectionProgresses, scrollProgress]);
-
   const handleJumpToProgress = (progress: number) => {
     const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
     window.scrollTo({
@@ -157,16 +144,17 @@ export function ScrollProgress({ sections }: ScrollProgressProps) {
         const diff = Math.abs(scrollProgress - tickProgress);
 
         // Gaussian bulge formula to scale width and opacity of the current point
-        const sigma = 0.12; // Spread width of the pointing arch (tuned for 16 ticks)
-        const scale = 0.25 + 0.75 * Math.exp(-(diff * diff) / (2 * sigma * sigma));
-        const opacity = 0.25 + 0.75 * Math.exp(-(diff * diff) / (2 * sigma * sigma));
+        const sigma = 0.12; // Spread width of the pointing arch
+        const factor = Math.exp(-(diff * diff) / (2 * sigma * sigma));
+        const scale = 0.25 + 0.75 * factor;
+        const opacity = 0.25 + 0.75 * factor;
 
         const section = tickToSection[i];
         const isSectionActive = section && activeSectionId === section.id;
-        const sectionOpacity = section ? labelOpacity[section.id] : 0;
         
+        // Label opacity is bound directly to the Gaussian factor (distance to peak)
         // Show fully opaque if hovered, otherwise follow the smooth scroll fade progress
-        const targetOpacity = hoveredIdx === i ? 1.0 : sectionOpacity;
+        const targetOpacity = hoveredIdx === i ? 1.0 : factor;
 
         return (
           <div
