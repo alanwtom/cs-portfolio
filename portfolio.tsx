@@ -114,7 +114,7 @@ export default function Portfolio() {
           <div className="mt-6 max-w-xl space-y-5 text-lg leading-relaxed text-muted-foreground">
             <p>
               Currently building{" "}
-              <Underline href="https://fwrdsms.com">FWRD</Underline>, a
+              <Underline href="https://fwrdsms.com">Fwrd</Underline>, a
               privacy-first iOS app that forwards SMS to Discord, Slack, and
               Telegram.
             </p>

@@ -11,14 +11,14 @@ export interface Project {
 
 export const PROJECTS: Project[] = [
   {
-    title: "FWRD",
+    title: "Fwrd",
     description:
       "privacy-first iOS app that forwards SMS messages to Discord, Slack, and Telegram",
     tech: ["Swift", "SwiftUI", "iOS Extensions", "Webhooks"],
     github: "",
     demo: "https://fwrdsms.com",
     detailedDescription:
-      "FWRD is a privacy-first iOS application designed to securely intercept and forward incoming SMS messages to platforms like Discord, Slack, and Telegram in real-time.",
+      "Fwrd is a privacy-first iOS application designed to securely intercept and forward incoming SMS messages to platforms like Discord, Slack, and Telegram in real-time.",
     techStack: {
       Swift: "core application logic",
       SwiftUI: "native iOS interface development",
