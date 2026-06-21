@@ -124,7 +124,7 @@ export default function Portfolio() {
                 iSchool NSF REU
               </Underline>
               , and President of{" "}
-              <Underline href="https://cusehacks.com">Innovate Orange</Underline>
+              <Underline href="https://cusehacks.com">CuseHacks</Underline>
               .
             </p>
           </div>
