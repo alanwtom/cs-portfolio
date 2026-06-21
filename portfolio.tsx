@@ -130,8 +130,6 @@ export default function Portfolio() {
           </div>
         </section>
 
-        <Divider />
-
         {/* ───────────────────────── Projects ───────────────────── */}
         <section id="projects" className="scroll-mt-20 py-10 md:py-12">
           <SectionHeading title="Projects" />
@@ -150,8 +148,6 @@ export default function Portfolio() {
             ))}
           </div>
         </section>
-
-        <Divider />
 
         {/* ─────────────────────── Experience ─────────────────────── */}
         <section id="experience" className="scroll-mt-20 py-10 md:py-12">
@@ -239,9 +235,7 @@ function Underline({
   return <span className={className}>{children}</span>;
 }
 
-function Divider() {
-  return <div className="h-px w-full bg-border" aria-hidden="true" />;
-}
+
 
 function FooterIcon({
   href,
