@@ -20,8 +20,8 @@ export function SectionHeading({ index, title }: SectionHeadingProps) {
   return (
     <motion.div
       className="mb-4 flex flex-col gap-2"
-      initial={reduced ? false : { opacity: 0, y: 12 }}
-      whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+      initial={reduced ? false : { opacity: 0 }}
+      whileInView={reduced ? undefined : { opacity: 1 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
