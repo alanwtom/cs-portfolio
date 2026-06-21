@@ -208,21 +208,23 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5, duration: 0.3 }}
                 >
-                  <Button
-                    asChild
-                    className="flex-1"
-                    variant={theme === "dark" ? "default" : "default"}
-                  >
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2"
+                  {project.github && (
+                    <Button
+                      asChild
+                      className="flex-1"
+                      variant={theme === "dark" ? "default" : "default"}
                     >
-                      <Github className="w-4 h-4" />
-                      View Code
-                    </a>
-                  </Button>
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2"
+                      >
+                        <Github className="w-4 h-4" />
+                        View Code
+                      </a>
+                    </Button>
+                  )}
                   <Button asChild variant="outline" className="flex-1">
                     <a
                       href={project.demo}

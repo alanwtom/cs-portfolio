@@ -11,6 +11,28 @@ export interface Project {
 
 export const PROJECTS: Project[] = [
   {
+    title: "FWRD",
+    description:
+      "privacy-first iOS app that forwards SMS messages to Discord, Slack, and Telegram",
+    tech: ["Swift", "SwiftUI", "iOS Extensions", "Webhooks"],
+    github: "",
+    demo: "https://fwrdsms.com",
+    detailedDescription:
+      "FWRD is a privacy-first iOS application designed to securely intercept and forward incoming SMS messages to platforms like Discord, Slack, and Telegram in real-time.",
+    techStack: {
+      Swift: "core application logic",
+      SwiftUI: "native iOS interface development",
+      "iOS Extensions": "message interception filtering capabilities",
+      "Webhook API": "real-time forwarding to messaging services",
+    },
+    features: [
+      "automatic background forwarding of SMS",
+      "secure webhooks for Discord, Slack, and Telegram",
+      "custom filtering rules based on sender or keywords",
+      "privacy-first architecture with all processing on-device",
+    ],
+  },
+  {
     title: "Bug Bot",
     description:
       "discord bot for career development with resume resources, real time job and event tracking, and learning material recommendations",
