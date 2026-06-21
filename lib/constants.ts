@@ -69,32 +69,32 @@ export interface Experience {
 
 export const EXPERIENCES: Experience[] = [
   {
-    company: "Micron Technology",
-    role: "Software Engineer Intern",
-    years: "Feb. 2025 – Present",
+    company: "Micron × Syracuse University",
+    role: "Game Development Engineer Intern",
+    years: "4 semesters · 2024–2026",
     description:
-      "developing interactive C#/Unity simulations with 90% query reduction via custom caching and 60% UI overhead cut",
+      "joint project building an educational game that teaches semiconductor manufacturing — interactive C#/Unity simulations with 90% query reduction via custom caching and 60% UI overhead cut",
   },
   {
     company: "iSchool at Syracuse University",
     role: "NSF REU Researcher",
-    years: "June 2025 – Aug. 2025",
+    years: "2025",
     description:
       "engineered financial sentiment pipeline using FinBERT/Llama 3.1, analyzing 5K+ posts to validate market volatility correlations",
   },
   {
-    company: "Data Lab at Syracuse University",
-    role: "Undergraduate Researcher",
-    years: "Aug. 2024 – Feb. 2025",
-    description:
-      "built Python evaluation pipeline for LLM memory interference testing, automating analysis of 300+ associations",
-  },
-  {
     company: "CuseHacks",
     role: "Former President",
-    years: "Feb. 2024 – May 2025",
+    years: "2024–2025",
     description:
       "led Syracuse's largest student-run hackathon, orchestrating 40% YoY attendance growth, $10K+ in sponsorships, and a 15+ member leadership council",
+  },
+  {
+    company: "Data Lab at Syracuse University",
+    role: "Undergraduate Researcher",
+    years: "2024–2025",
+    description:
+      "built Python evaluation pipeline for LLM memory interference testing, automating analysis of 300+ associations",
   },
 ];
 
