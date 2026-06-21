@@ -19,7 +19,7 @@ export function SectionHeading({ index, title }: SectionHeadingProps) {
 
   return (
     <motion.div
-      className="mb-10 flex flex-col gap-2"
+      className="mb-4 flex flex-col gap-2"
       initial={reduced ? false : { opacity: 0, y: 12 }}
       whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}

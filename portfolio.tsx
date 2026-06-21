@@ -87,7 +87,7 @@ export default function Portfolio() {
         className="mx-auto w-full max-w-2xl flex-1 px-6"
       >
         {/* ───────────────────────── Hero ───────────────────────── */}
-        <section id="hero" className="scroll-mt-20 py-20 md:py-28">
+        <section id="hero" className="scroll-mt-20 pt-12 pb-8 md:pt-16 md:pb-10">
           <div className="flex flex-row items-start justify-between gap-8">
             <div className="flex-1 space-y-5">
               <h1 className="text-4xl font-medium tracking-tight text-foreground md:text-5xl">
@@ -111,7 +111,7 @@ export default function Portfolio() {
             </div>
           </div>
 
-          <div className="mt-12 max-w-xl space-y-5 text-lg leading-relaxed text-muted-foreground">
+          <div className="mt-6 max-w-xl space-y-5 text-lg leading-relaxed text-muted-foreground">
             <p>
               Currently building{" "}
               <Underline href="https://fwrdsms.com">FWRD</Underline>, a
@@ -133,7 +133,7 @@ export default function Portfolio() {
         <Divider />
 
         {/* ───────────────────────── Projects ───────────────────── */}
-        <section id="projects" className="scroll-mt-20 py-20 md:py-24">
+        <section id="projects" className="scroll-mt-20 py-10 md:py-12">
           <SectionHeading title="Projects" />
           <div className="flex flex-col">
             {PROJECTS.map((project, index) => (
@@ -154,7 +154,7 @@ export default function Portfolio() {
         <Divider />
 
         {/* ─────────────────────── Experience ─────────────────────── */}
-        <section id="experience" className="scroll-mt-20 py-20 md:py-24">
+        <section id="experience" className="scroll-mt-20 py-10 md:py-12">
           <SectionHeading title="Experience" />
           <div className="flex flex-col">
             {EXPERIENCES.map((item, idx) => (
