@@ -14,16 +14,17 @@ interface ScrollProgressProps {
 
 /**
  * Revamped Vertical section rail (fixed, left edge, desktop only).
- * Renders many tick marks that dynamically scale in width and opacity to form
+ * Renders compact tick marks that dynamically scale in width and opacity to form
  * a curving "arch" pointing to the current scroll position on the page.
  * Section labels are placed dynamically at the tick mark closest to their actual page offset.
  *
  * Respects prefers-reduced-motion.
  */
 export function ScrollProgress({ sections }: ScrollProgressProps) {
-  const NUM_TICKS = 25;
+  const NUM_TICKS = 16; // Compacted from 25 to fit beautifully on any screen height
   const [scrollProgress, setScrollProgress] = useState(0);
   const [sectionProgresses, setSectionProgresses] = useState<Record<string, number>>({});
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const reduced = usePrefersReducedMotion();
 
   // Track page scroll progress
@@ -115,6 +116,19 @@ export function ScrollProgress({ sections }: ScrollProgressProps) {
     return closestId;
   }, [sections, sectionProgresses, scrollProgress]);
 
+  // Calculate smooth scroll-based opacity for each section label
+  const labelOpacity = useMemo(() => {
+    const opacities: Record<string, number> = {};
+    sections.forEach(({ id }) => {
+      const prog = sectionProgresses[id] ?? 0;
+      const diff = Math.abs(scrollProgress - prog);
+      // Fully visible when scroll is near, fades out smoothly over a range of 0.15 progress diff
+      const opacity = Math.max(0, Math.min(1, 1 - diff / 0.15));
+      opacities[id] = opacity;
+    });
+    return opacities;
+  }, [sections, sectionProgresses, scrollProgress]);
+
   const handleJumpToProgress = (progress: number) => {
     const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
     window.scrollTo({
@@ -136,22 +150,31 @@ export function ScrollProgress({ sections }: ScrollProgressProps) {
   return (
     <nav
       aria-label="Sections"
-      className="fixed left-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-[3px] lg:flex"
+      className="fixed left-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-[2px] lg:flex"
     >
       {Array.from({ length: NUM_TICKS }).map((_, i) => {
         const tickProgress = i / (NUM_TICKS - 1);
         const diff = Math.abs(scrollProgress - tickProgress);
 
         // Gaussian bulge formula to scale width and opacity of the current point
-        const sigma = 0.08; // Spread width of the pointing arch
+        const sigma = 0.12; // Spread width of the pointing arch (tuned for 16 ticks)
         const scale = 0.25 + 0.75 * Math.exp(-(diff * diff) / (2 * sigma * sigma));
         const opacity = 0.25 + 0.75 * Math.exp(-(diff * diff) / (2 * sigma * sigma));
 
         const section = tickToSection[i];
         const isSectionActive = section && activeSectionId === section.id;
+        const sectionOpacity = section ? labelOpacity[section.id] : 0;
+        
+        // Show fully opaque if hovered, otherwise follow the smooth scroll fade progress
+        const targetOpacity = hoveredIdx === i ? 1.0 : sectionOpacity;
 
         return (
-          <div key={i} className="group relative flex h-2.5 items-center">
+          <div
+            key={i}
+            className="group relative flex h-2 items-center"
+            onMouseEnter={() => setHoveredIdx(i)}
+            onMouseLeave={() => setHoveredIdx(null)}
+          >
             {/* Tick line button */}
             <button
               onClick={() => {
@@ -173,7 +196,7 @@ export function ScrollProgress({ sections }: ScrollProgressProps) {
                 style={{
                   transform: `scaleX(${scale})`,
                   opacity: opacity,
-                  width: "32px", // Base width at scale=1.0 is 32px; at scale=0.25 it is 8px
+                  width: "32px", // Base width
                 }}
               />
             </button>
@@ -183,11 +206,12 @@ export function ScrollProgress({ sections }: ScrollProgressProps) {
               <button
                 onClick={() => handleJumpToSection(section.id)}
                 className={cn(
-                  "absolute left-10 text-[10px] font-medium uppercase tracking-[0.2em] transition-all duration-300 whitespace-nowrap focus-visible:outline-none",
-                  isSectionActive
-                    ? "text-foreground opacity-100 translate-x-0"
-                    : "text-foreground/40 opacity-0 group-hover:opacity-100 group-hover:translate-x-1"
+                  "absolute left-10 text-[10px] font-medium uppercase tracking-[0.2em] transition-all duration-300 whitespace-nowrap focus-visible:outline-none text-foreground",
+                  isSectionActive ? "translate-x-0" : "translate-x-0 group-hover:translate-x-1"
                 )}
+                style={{
+                  opacity: targetOpacity,
+                }}
               >
                 {section.label}
               </button>
