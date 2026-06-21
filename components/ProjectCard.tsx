@@ -19,10 +19,16 @@ interface ProjectCardProps {
  */
 export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
   const reduced = useReducedMotion();
+  const isFeatured = project.title === "Fwrd";
 
   return (
     <motion.div
-      className="group relative w-full cursor-pointer border-t border-border py-6 first:border-t-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className={cn(
+        "group relative w-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+        isFeatured
+          ? "-mx-4 px-4 rounded-lg bg-gradient-to-r from-secondary/30 via-secondary/5 to-transparent hover:from-secondary/60 hover:via-secondary/15 transition-all duration-300 border-t-0 py-6"
+          : "border-t border-border py-6 first:border-t-0"
+      )}
       role="button"
       tabIndex={0}
       onClick={onClick}
