@@ -167,14 +167,12 @@ export default function Portfolio() {
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
               >
                 <div className="flex-1">
-                  <div className="flex items-baseline gap-2">
-                    <h3 className="text-lg font-medium text-foreground">
-                      {item.company}
-                    </h3>
-                    <span className="text-base italic text-muted-foreground">
+                  <h3 className="text-lg font-medium leading-relaxed text-foreground">
+                    {item.company}{" "}
+                    <span className="text-base italic font-normal text-muted-foreground">
                       {item.role}
                     </span>
-                  </div>
+                  </h3>
                   <p className="mt-1.5 text-base leading-relaxed text-muted-foreground">
                     {item.description}
                   </p>
