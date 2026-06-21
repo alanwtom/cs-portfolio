@@ -89,6 +89,13 @@ export const EXPERIENCES: Experience[] = [
     description:
       "built Python evaluation pipeline for LLM memory interference testing, automating analysis of 300+ associations",
   },
+  {
+    company: "CuseHacks",
+    role: "Former President",
+    years: "Feb. 2024 – May 2025",
+    description:
+      "led Syracuse's largest student-run hackathon, orchestrating 40% YoY attendance growth, $10K+ in sponsorships, and a 15+ member leadership council",
+  },
 ];
 
 export const EMAIL = "alanwtom@outlook.com";

@@ -27,9 +27,8 @@ const ProjectModal = dynamic(
 
 const SCROLL_SECTIONS = [
   { id: "hero", label: "Intro" },
-  { id: "experience", label: "Experience" },
   { id: "projects", label: "Projects" },
-  { id: "university", label: "University" },
+  { id: "experience", label: "Experience" },
 ];
 
 export default function Portfolio() {
@@ -133,6 +132,27 @@ export default function Portfolio() {
 
         <Divider />
 
+        {/* ───────────────────────── Projects ───────────────────── */}
+        <section id="projects" className="scroll-mt-20 py-20 md:py-24">
+          <SectionHeading title="Projects" />
+          <div className="flex flex-col">
+            {PROJECTS.map((project, index) => (
+              <ProjectCard
+                key={project.title}
+                project={project}
+                index={index}
+                onClick={() =>
+                  setSelectedProject(
+                    selectedProject === index ? null : index
+                  )
+                }
+              />
+            ))}
+          </div>
+        </section>
+
+        <Divider />
+
         {/* ─────────────────────── Experience ─────────────────────── */}
         <section id="experience" className="scroll-mt-20 py-20 md:py-24">
           <SectionHeading title="Experience" />
@@ -164,72 +184,6 @@ export default function Portfolio() {
                 </span>
               </motion.div>
             ))}
-          </div>
-        </section>
-
-        <Divider />
-
-        {/* ───────────────────────── Projects ───────────────────── */}
-        <section id="projects" className="scroll-mt-20 py-20 md:py-24">
-          <SectionHeading title="Projects" />
-          <div className="flex flex-col">
-            {PROJECTS.map((project, index) => (
-              <ProjectCard
-                key={project.title}
-                project={project}
-                index={index}
-                onClick={() =>
-                  setSelectedProject(
-                    selectedProject === index ? null : index
-                  )
-                }
-              />
-            ))}
-          </div>
-        </section>
-
-        <Divider />
-
-        {/* ─────────────────────── University ────────────────────── */}
-        <section id="university" className="scroll-mt-20 py-20 md:py-24">
-          <SectionHeading title="University" />
-          <div className="rounded-lg border border-border bg-card/40 p-6">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div>
-                <h3 className="text-lg font-medium text-foreground">
-                  CuseHacks
-                </h3>
-                <p className="mt-1 text-base text-muted-foreground">
-                  Former President, Syracuse University&apos;s largest
-                  student-run hackathon
-                </p>
-              </div>
-              <div className="shrink-0 text-left text-sm text-muted-foreground/70 md:text-right">
-                <p>Feb. 2024 – May 2025</p>
-                <p className="italic">200+ participants annually</p>
-              </div>
-            </div>
-
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-              Led the entire event lifecycle—team building, finance, logistics,
-              and outreach—to deliver a flagship experience for Syracuse
-              University creatives and engineers.
-            </p>
-
-            <ul className="mt-4 space-y-2 text-base text-muted-foreground">
-              <Bullet>
-                Orchestrated a 40% YoY growth in attendance through targeted
-                outreach and partnerships.
-              </Bullet>
-              <Bullet>
-                Secured $10,000+ in industry sponsorships while managing a 15+
-                member leadership council.
-              </Bullet>
-              <Bullet>
-                Balanced operations across logistics, fundraising, and marketing
-                to keep the hackathon on-brand and sustainable.
-              </Bullet>
-            </ul>
           </div>
         </section>
       </main>
@@ -289,15 +243,6 @@ function Underline({
 
 function Divider() {
   return <div className="h-px w-full bg-border" aria-hidden="true" />;
-}
-
-function Bullet({ children }: { children: React.ReactNode }) {
-  return (
-    <li className="flex items-start gap-2">
-      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-muted-foreground/50" />
-      <span>{children}</span>
-    </li>
-  );
 }
 
 function FooterIcon({
