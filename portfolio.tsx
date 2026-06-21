@@ -135,7 +135,7 @@ export default function Portfolio() {
         {/* ───────────────────────── Projects ───────────────────── */}
         <section id="projects" className="scroll-mt-20 py-10 md:py-12">
           <SectionHeading title="Projects" />
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-4">
             {PROJECTS.map((project, index) => (
               <ProjectCard
                 key={project.title}
@@ -156,11 +156,11 @@ export default function Portfolio() {
         {/* ─────────────────────── Experience ─────────────────────── */}
         <section id="experience" className="scroll-mt-20 py-10 md:py-12">
           <SectionHeading title="Experience" />
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-4">
             {EXPERIENCES.map((item, idx) => (
               <motion.div
                 key={item.company + item.role}
-                className="group relative flex flex-col gap-1 border-t border-border py-6 first:border-t-0 md:flex-row md:items-baseline md:justify-between md:gap-8"
+                className="group relative flex flex-col gap-1 rounded-lg px-4 py-4 -mx-4 transition-all duration-300 hover:bg-secondary/40 md:flex-row md:items-baseline md:justify-between md:gap-8"
                 initial={reduced ? false : { opacity: 0, y: 12 }}
                 whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}

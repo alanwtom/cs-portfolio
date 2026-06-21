@@ -22,7 +22,7 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
 
   return (
     <motion.div
-      className="group relative w-full cursor-pointer border-t border-border py-6 first:border-t-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="group relative w-full cursor-pointer rounded-lg px-4 py-4 -mx-4 transition-all duration-300 hover:bg-secondary/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       role="button"
       tabIndex={0}
       onClick={onClick}
