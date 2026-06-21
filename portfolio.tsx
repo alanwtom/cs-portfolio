@@ -161,8 +161,8 @@ export default function Portfolio() {
               <motion.div
                 key={item.company + item.role}
                 className="group relative flex flex-col gap-1 rounded-lg px-4 py-4 -mx-4 transition-all duration-300 hover:bg-secondary/40 md:flex-row md:items-baseline md:justify-between md:gap-8"
-                initial={reduced ? false : { opacity: 0, y: 12 }}
-                whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+                initial={reduced ? false : { opacity: 0 }}
+                whileInView={reduced ? undefined : { opacity: 1 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
               >

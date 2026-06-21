@@ -32,8 +32,8 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
           onClick();
         }
       }}
-      initial={reduced ? false : { opacity: 0, y: 12 }}
-      whileInView={reduced ? undefined : { opacity: 1, y: 0 }}
+      initial={reduced ? false : { opacity: 0 }}
+      whileInView={reduced ? undefined : { opacity: 1 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
     >
