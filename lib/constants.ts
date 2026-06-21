@@ -95,7 +95,7 @@ export const EXPERIENCES: Experience[] = [
     role: "Former President",
     years: "2024–2026",
     description:
-      "led Syracuse's largest student-run hackathon, orchestrating 40% YoY attendance growth, $10K+ in sponsorships, and a 15+ member leadership council",
+      "led Syracuse's largest hackathon, orchestrating 40% YoY attendance growth, $10K+ in sponsorships, and a team of 15+ members.",
   },
   {
     company: "Micron × SU",
