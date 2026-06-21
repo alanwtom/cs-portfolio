@@ -194,7 +194,7 @@ export function ScrollProgress({ sections }: ScrollProgressProps) {
               <button
                 onClick={() => handleJumpToSection(section.id)}
                 className={cn(
-                  "absolute left-10 text-[10px] font-medium uppercase tracking-[0.2em] transition-all duration-300 whitespace-nowrap focus-visible:outline-none text-foreground",
+                  "absolute left-10 text-[10px] font-medium uppercase tracking-[0.2em] transition-[transform] group-hover:transition-all duration-300 whitespace-nowrap focus-visible:outline-none text-foreground",
                   isSectionActive ? "translate-x-0" : "translate-x-0 group-hover:translate-x-1"
                 )}
                 style={{
