@@ -87,7 +87,7 @@ export default function Portfolio() {
         className="mx-auto w-full max-w-2xl flex-1 px-6"
       >
         {/* ───────────────────────── Hero ───────────────────────── */}
-        <section id="hero" className="scroll-mt-20 pt-12 pb-8 md:pt-16 md:pb-10">
+        <section id="hero" className="scroll-mt-20 pt-16 pb-12 md:pt-24 md:pb-16">
           <div className="flex flex-row items-start justify-between gap-8">
             <div className="flex-1 space-y-5">
               <h1 className="text-4xl font-medium tracking-tight text-foreground md:text-5xl">
@@ -131,7 +131,7 @@ export default function Portfolio() {
         </section>
 
         {/* ───────────────────────── Projects ───────────────────── */}
-        <section id="projects" className="scroll-mt-20 py-10 md:py-12">
+        <section id="projects" className="scroll-mt-20 py-16 md:py-20">
           <SectionHeading title="Projects" />
           <div className="flex flex-col gap-4">
             {PROJECTS.map((project, index) => (
@@ -150,7 +150,7 @@ export default function Portfolio() {
         </section>
 
         {/* ─────────────────────── Experience ─────────────────────── */}
-        <section id="experience" className="scroll-mt-20 py-10 md:py-12">
+        <section id="experience" className="scroll-mt-20 py-16 md:py-20">
           <SectionHeading title="Experience" />
           <div className="flex flex-col gap-4">
             {EXPERIENCES.map((item, idx) => (
