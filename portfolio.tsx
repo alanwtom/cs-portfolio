@@ -102,7 +102,7 @@ export default function Portfolio() {
             </div>
           </div>
 
-          <div className="mt-6 max-w-xl space-y-5 text-lg leading-relaxed text-muted-foreground">
+          <div className="mt-12 max-w-xl space-y-5 text-lg leading-relaxed text-muted-foreground">
             <p>
               Currently building{" "}
               <Underline href="https://fwrdsms.com">Fwrd</Underline>, a
