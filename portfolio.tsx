@@ -3,7 +3,6 @@
 import { Github } from "lucide-react";
 import { useTheme } from "./components/theme-provider";
 import { ProjectCard } from "./components/ProjectCard";
-import { ScrollProgress } from "./components/ScrollProgress";
 import { SectionHeading } from "./components/SectionHeading";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -24,12 +23,6 @@ const ProjectModal = dynamic(
   () => import("./components/ProjectModal").then((m) => m.ProjectModal),
   { ssr: false }
 );
-
-const SCROLL_SECTIONS = [
-  { id: "hero", label: "Intro" },
-  { id: "projects", label: "Projects" },
-  { id: "experience", label: "Experience" },
-];
 
 export default function Portfolio() {
   const { isLoaded } = useTheme();
@@ -70,8 +63,6 @@ export default function Portfolio() {
       animate={reduced ? undefined : { opacity: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      <ScrollProgress sections={SCROLL_SECTIONS} />
-
       {/* Skip to main content link for accessibility */}
       <a
         href="#main-content"
