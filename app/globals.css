@@ -120,6 +120,61 @@
   }
 }
 
+/* Flowing blue gradient for the Fwrd link in the hero.
+   The blue shades shift and flow smoothly across the text like a lava
+   lamp — blobs of color morphing and drifting, but more uniform. No
+   streak or glint; just living, moving color. */
+@keyframes mc-enchant-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.mc-enchant {
+  background-image: linear-gradient(
+    120deg,
+    #1e3a8a,
+    #3b82f6,
+    #60a5fa,
+    #93c5fd,
+    #60a5fa,
+    #3b82f6,
+    #1d4ed8,
+    #3b82f6,
+    #1e3a8a
+  );
+  background-size: 400% 100%;
+  background-repeat: no-repeat;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: mc-enchant-flow 8s ease-in-out infinite;
+}
+
+/* nested <a> inside .mc-enchant inherits the text clip */
+.mc-enchant :is(a, span) {
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mc-enchant {
+    animation: none;
+    background-position: 0% 50%;
+  }
+}
+
 /* Smooth scrolling with respect for reduced motion */
 html {
   scroll-behavior: smooth;
