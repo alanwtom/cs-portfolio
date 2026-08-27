@@ -39,25 +39,56 @@ CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 3. **Local dev server** — `pkill -f "next dev"; pkill -f "next-server"`
 
 ```bash
-# Find the keep-set: alias + previous prod
-LIVE=$(vercel inspect https://alantom.dev 2>&1 | grep -oE "cs-portfolio-[a-z0-9]+-" | head -1)
-# Paginate ALL deployments (vercel ls truncates to ~20)
-NEXT=""; > /tmp/all-ids.txt
+#!/bin/bash
+# Self-contained cleanup. Resolves BOTH keep-set IDs programmatically and
+# ABORTS if either cannot be determined — never substitute them by hand.
+PROJECT="cs-portfolio"; DOMAIN="alantom.dev"
+URL_RE="${PROJECT}-[a-z0-9]+-[a-z0-9-]*\.vercel\.app"
+to_id() { sed -E "s/${PROJECT}-([a-z0-9]+)-.*/\1/"; }
+
+# 1) LIVE deployment = whatever alantom.dev currently aliases to
+LIVE_ID=$(vercel inspect "https://${DOMAIN}" 2>&1 | grep -oE "$URL_RE" | head -1 | to_id)
+[ -n "$LIVE_ID" ] || { echo "ABORT: could not resolve LIVE deployment from ${DOMAIN}"; exit 1; }
+
+# 2) Paginate ALL deployments (vercel ls truncates to ~20), tracking Production rows
+NEXT=""; : > /tmp/all-ids.txt; : > /tmp/prod-ids.txt
 while :; do
-  [ -z "$NEXT" ] && OUT=$(vercel ls 2>&1) || OUT=$(vercel ls --next "$NEXT" 2>&1)
-  echo "$OUT" | grep -oE "cs-portfolio-[a-z0-9]+-alantomws-projects\.vercel\.app" \
-    | sed -E 's/cs-portfolio-([a-z0-9]+)-alantomws.*/\1/' >> /tmp/all-ids.txt
-  NEWNEXT=$(echo "$OUT" | grep -oE "vercel ls --next [0-9]+" | grep -oE "[0-9]+")
-  [ -z "$NEWNEXT" ] && break; [ "$NEWNEXT" = "$NEXT" ] && break; NEXT="$NEWNEXT"
+  OUT=$(vercel ls ${NEXT:+--next "$NEXT"} 2>&1)
+  echo "$OUT" | grep -oE "^.*${URL_RE}.*$" | while read -r row; do
+    id=$(echo "$row" | grep -oE "$URL_RE" | head -1 | to_id)
+    echo "$id" >> /tmp/all-ids.txt
+    echo "$row" | grep -qiw production && echo "$id" >> /tmp/prod-ids.txt
+  done
+  NEWNEXT=$(echo "$OUT" | grep -oE -- "--next [0-9]+" | grep -oE "[0-9]+" | tail -1)
+  [ -z "$NEWNEXT" ] && break
+  [ "$NEWNEXT" = "$NEXT" ] && break
+  NEXT="$NEWNEXT"
 done
-sort -u /tmp/all-ids.txt | grep -vE '^(LIVE_ID|PREVIOUS_PROD_ID)$' \
-  | while read id; do vercel rm "https://cs-portfolio-${id}-alantomws-projects.vercel.app" --yes; done
+
+# 3) PREVIOUS prod = second-newest Production deployment (first is usually LIVE itself;
+#    fall through the list until we find a Production ID that differs from LIVE)
+PREVIOUS_PROD_ID=""
+for id in $(cat /tmp/prod-ids.txt); do
+  if [ "$id" != "$LIVE_ID" ]; then PREVIOUS_PROD_ID="$id"; break; fi
+done
+[ -n "$PREVIOUS_PROD_ID" ] || { echo "ABORT: could not resolve PREVIOUS PROD deployment"; exit 1; }
+if [ "$PREVIOUS_PROD_ID" = "$LIVE_ID" ]; then
+  echo "ABORT: keep-set collapsed to a single deployment — refusing to delete anything"; exit 1
+fi
+
+# 4) Final sanity check, then delete everything NOT in the keep-set
+echo "KEEP: $LIVE_ID (live), $PREVIOUS_PROD_ID (previous prod)"
+grep -vxF -e "$LIVE_ID" -e "$PREVIOUS_PROD_ID" /tmp/all-ids.txt | sort -u > /tmp/delete-ids.txt
+[ -s /tmp/delete-ids.txt ] || { echo "Nothing to delete."; }
+while read id; do vercel rm "https://cs-portfolio-${id}-alantomws-projects.vercel.app" --yes; done < /tmp/delete-ids.txt
+
 rm -rf .next
 pkill -f "next dev" 2>/dev/null; pkill -f "next-server" 2>/dev/null
 ```
 
-**Always sanity-check the keep-set is NOT in the delete list before deleting.**
-Deployments are irreversible.
+**Guarantees:** both keep-set IDs are resolved programmatically or the script
+exits without deleting anything; the keep-set is echoed before any deletion.
+Deployments are irreversible — never bypass these abort checks.
 
 ## Toolchain notes
 
