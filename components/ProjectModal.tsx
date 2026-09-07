@@ -187,10 +187,12 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                   </div>
                 </motion.div>
 
-                {/* ── Highlights, as a hairline spec sheet ───────────────
-                    Rules instead of bullet glyphs. Reads like a spec table,
-                    which suits an engineering portfolio, and it survives
-                    any number of items without orphan dividers. */}
+                {/* ── Highlights ─────────────────────────────────────────
+                    Plain bullets. This was a hairline-ruled spec sheet and
+                    it read as a broken table: with an odd number of items
+                    the last row has no rule under it, so the grid looks
+                    like it failed to finish. Real list markers, and the
+                    24px line-height plus 8px row gap keeps them on grid. */}
                 <motion.div
                   className="space-y-4"
                   initial={{ opacity: 0, y: 8 }}
@@ -200,11 +202,11 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                   <h3 className="type-micro text-muted-foreground/70">
                     Highlights
                   </h3>
-                  <ul className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+                  <ul className="grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2">
                     {project.features.map((feature, i) => (
                       <motion.li
                         key={feature}
-                        className="type-body border-t border-border py-2 text-muted-foreground"
+                        className="type-body ml-4 list-disc text-muted-foreground marker:text-muted-foreground/40"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{
