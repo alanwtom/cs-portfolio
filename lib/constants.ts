@@ -11,6 +11,30 @@ export interface Project {
 
 export const PROJECTS: Project[] = [
   {
+    title: "Current",
+    description:
+      "native macOS BitTorrent client that stays quiet when idle and explains every automatic decision it makes",
+    tech: ["Swift 6", "SwiftUI", "AppKit", "libtorrent", "C++"],
+    github: "https://github.com/alanwtom/current",
+    demo: "https://current.alantom.dev",
+    detailedDescription:
+      "a torrent client built on libtorrent that treats torrenting as a background activity: quiet when nothing is happening, informative when something is, and reversible when it acts on its own. draws its own window chrome and every one of its own controls rather than using stock Mac ones. signed, notarised, and updates itself through a signed appcast.",
+    techStack: {
+      "Swift 6": "app logic, plus a pure domain core with no UI or I/O in it",
+      SwiftUI: "the interface, including hand-drawn window chrome and controls",
+      AppKit: "window behaviour, the menu bar item, and its live status panel",
+      "C++ / libtorrent": "a minimal C shim over the torrent engine",
+      Sparkle: "signed automatic updates, with none of its stock interface",
+    },
+    features: [
+      "one card asks what a magnet is, how big, which files, and where it goes",
+      "seed policies that say in plain words why they did what they did",
+      "storage budget that only ever moves finished downloads to the Trash",
+      "menu bar panel with live progress and a pause button per transfer",
+      "keyboard path for every action, and a command palette",
+    ],
+  },
+  {
     title: "Fwrd",
     description:
       "privacy-first iOS app that forwards SMS messages to Discord, Slack, and Telegram",
