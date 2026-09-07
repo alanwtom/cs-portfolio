@@ -168,3 +168,18 @@ export const TYPEWRITER_CONFIG = {
   SPEED: 16,
   PAUSE_DURATION: 200,
 } as const;
+
+/*
+  Cache-buster appended to image URLs.
+
+  These used to say `?v=${Date.now()}`, which meant the URL changed on
+  every single render. The browser treated each one as a brand-new image
+  and re-downloaded it, so the profile photo would visibly blank out and
+  reload — and social platforms could never cache the OG preview, because
+  the URL they scraped was different every time they looked.
+
+  A fixed number does the job the timestamp was meant to do: bump this by
+  hand when you actually replace one of the images in /public/images, and
+  everyone gets the new file. Leave it alone otherwise.
+*/
+export const ASSET_VERSION = 3;

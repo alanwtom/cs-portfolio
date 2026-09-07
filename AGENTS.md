@@ -12,7 +12,7 @@ Never push to `main` / deploy to prod without first verifying locally:
 
 ```bash
 npx tsc --noEmit      # type-check (fastest signal)
-npx eslint .          # lint — do NOT use `next lint` (broken on ESLint 9 + .eslintrc.json)
+npx eslint .          # lint — must exit 0 (or `pnpm lint`)
 npx next build        # production build
 ```
 
@@ -178,8 +178,17 @@ console.log({ offGridSpacing: sn(off), radii: sn(radii), fontSizes: sn(sizes),
 
 - **Package manager:** `pnpm` (v11). `onlyBuiltDependencies` lives in
   **`pnpm-workspace.yaml`**, NOT `package.json`.
-- **`next lint` is broken** (ESLint 9 + `.eslintrc.json` mismatch) — use
-  `npx eslint .` directly.
+- **Linting** is ESLint 9 flat config in `eslint.config.mjs`, spreading
+  `eslint-config-next/{core-web-vitals,typescript}` (v16 exports real flat
+  configs — no `FlatCompat` shim needed). Run `npx eslint .` or `pnpm lint`.
+  The old `.eslintrc.json` is gone; ESLint 9 silently ignored it, so for a
+  while nothing in this repo was being linted at all. If you see
+  "couldn't find an eslint.config file", the flat config went missing —
+  don't re-add an `.eslintrc`.
+- **Don't cache-bust image URLs with `Date.now()`.** It changes the URL every
+  render, so the browser re-downloads the image (the profile photo used to
+  visibly blank out) and social scrapers can never cache the OG preview.
+  Bump `ASSET_VERSION` in `lib/constants.ts` instead.
 - **OG image** must be true **1200×630** — platforms stretch mismatched
   aspect ratios. Source: `public/images/buttercup_og.png`.
 - **Force-push to `main`:** avoid. Prefer append a revert commit to keep

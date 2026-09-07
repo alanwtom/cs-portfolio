@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 // One family, two weights (400 and 500). Hierarchy comes from size and
 // weight, not from switching voice.
 import { GeistSans } from "geist/font/sans";
+import { ASSET_VERSION } from "../lib/constants";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
     siteName: "Alan's Portfolio",
     images: [
       {
-        url: `/images/buttercup_og.png?v=${Date.now()}`,
+        url: `/images/buttercup_og.png?v=${ASSET_VERSION}`,
         width: 1200,
         height: 630,
         alt: "Alan Tom's Portfolio",
@@ -45,7 +46,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Alan Tom",
     description: "CS @ SU, building FWRD",
-    images: [`/images/buttercup_og.png?v=${Date.now()}`],
+    images: [`/images/buttercup_og.png?v=${ASSET_VERSION}`],
   },
   robots: {
     index: true,
@@ -68,7 +69,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href={`/images/cockatiel.webp?v=${Date.now()}`} type="image/webp" />
+        <link rel="icon" href={`/images/cockatiel.webp?v=${ASSET_VERSION}`} type="image/webp" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script
           type="application/ld+json"
@@ -78,7 +79,7 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
               "@type": "Person",
               name: "Alan Tom",
               url: "https://alantom.dev",
-              image: `https://alantom.dev/images/buttercup_og.png?v=${Date.now()}`,
+              image: `https://alantom.dev/images/buttercup_og.png?v=${ASSET_VERSION}`,
               sameAs: [
                 "https://github.com/alanwtom",
                 "https://linkedin.com/in/alan-tom/",

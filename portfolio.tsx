@@ -13,6 +13,7 @@ import {
   EXPERIENCES,
   GITHUB_URL,
   X_URL,
+  ASSET_VERSION,
 } from "./lib/constants";
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
@@ -95,7 +96,7 @@ export default function Portfolio() {
                 every other surface on the page. */}
             <div className="aspect-square h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-border shadow-sm md:h-28 md:w-28">
               <Image
-                src={`/images/buttercup_1.webp?v=${Date.now()}`}
+                src={`/images/buttercup_1.webp?v=${ASSET_VERSION}`}
                 alt="Alan Tom's profile photo"
                 width={112}
                 height={112}
