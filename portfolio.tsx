@@ -81,7 +81,7 @@ export default function Portfolio() {
         {/* ───────────────────────── Hero ─────────────────────────
             Budget: 3 sizes (40 / 12 / 16), 2 weights (500, 400). Big name,
             uppercase micro role line, body copy. */}
-        <section id="hero" className="scroll-mt-16 pt-20 pb-12 md:pt-28 md:pb-16">
+        <section id="hero" className="scroll-mt-16 pt-20 pb-8 md:pb-10 md:pt-28">
           {/* The profile photo used to sit to the right of this. It was a
               3024x4032 phone photo being displayed at 112px, so the browser
               downloaded 380KB to paint a thumbnail, and it was the slowest
@@ -118,7 +118,7 @@ export default function Portfolio() {
         {/* ───────────────────────── Projects ─────────────────────
             An index, not a set of cards: one 40px row each, hairline
             separated, click a row for the detail. */}
-        <section id="projects" className="scroll-mt-16 py-16 md:py-20">
+        <section id="projects" className="scroll-mt-16 py-8 md:py-10">
           <SectionHeading title="Projects" />
           <ul className="flex flex-col border-b border-border">
             {PROJECTS.map((project, index) => (
@@ -126,6 +126,7 @@ export default function Portfolio() {
                 key={project.title}
                 project={project}
                 index={index}
+                showYear={PROJECTS[index - 1]?.year !== project.year}
                 onClick={() =>
                   setSelectedProject(
                     selectedProject === index ? null : index
@@ -137,7 +138,7 @@ export default function Portfolio() {
         </section>
 
         {/* ─────────────────────── Experience ─────────────────────── */}
-        <section id="experience" className="scroll-mt-16 py-16 md:py-20">
+        <section id="experience" className="scroll-mt-16 py-8 md:py-10">
           <SectionHeading title="Experience" />
           {/* Same index row as Projects: 1 size (14), 1 weight, hierarchy
               from colour alone. Years sit in a left gutter, company at full

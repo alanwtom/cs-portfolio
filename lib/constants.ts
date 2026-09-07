@@ -3,6 +3,12 @@ export interface Project {
   description: string;
   /** Drives both the row's chips and the modal's tech icons. */
   tech: string[];
+  /**
+   * Year work started, taken from the first commit in each repo rather than
+   * guessed. Rendered benji.org style: shown once per group, blank on the
+   * rows beneath it, so the eye reads the list as grouped by year.
+   */
+  year: string;
   github: string;
   demo: string;
   /** One sentence. The modal is a look at the thing, not an essay. */
@@ -20,6 +26,7 @@ export interface Project {
 export const PROJECTS: Project[] = [
   {
     title: "Current",
+    year: "2026",
     description: "sleek native macOS BitTorrent client",
     tech: ["Swift 6", "SwiftUI", "AppKit", "C++", "libtorrent", "Sparkle"],
     github: "https://github.com/alanwtom/current",
@@ -37,6 +44,7 @@ export const PROJECTS: Project[] = [
   },
   {
     title: "Fwrd",
+    year: "2026",
     description:
       "privacy-forward iOS app that automatically forwards SMS messages to Discord, Slack, and Telegram",
     tech: ["Swift", "SwiftUI", "iOS Extensions", "Webhooks"],
@@ -54,6 +62,7 @@ export const PROJECTS: Project[] = [
   },
   {
     title: "Bug Bot",
+    year: "2025",
     description:
       "discord bot for career development with resume resources, real time job and event tracking, and learning material recommendations",
     tech: ["Python", "Discord.py", "GCP", "Nox"],
@@ -70,6 +79,7 @@ export const PROJECTS: Project[] = [
   },
   {
     title: "Flow",
+    year: "2025",
     description:
       "sleek browser extension that helps users maintain focus by blocking distracting elements while browsing",
     tech: ["JavaScript", "Chrome Extension API", "HTML", "CSS"],

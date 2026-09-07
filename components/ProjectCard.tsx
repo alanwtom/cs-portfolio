@@ -7,6 +7,11 @@ import type { Project } from "@/lib/constants";
 interface ProjectCardProps {
   project: Project;
   index: number;
+  /**
+   * False when the project above shares this year, which blanks the gutter
+   * so a run of same-year projects reads as one group.
+   */
+  showYear: boolean;
   onClick: () => void;
 }
 
@@ -19,14 +24,19 @@ interface ProjectCardProps {
  * it shouting.
  *
  * This used to be a title, a description, and a wrapped row of tech chips,
- * about five lines per project. Now it is three columns on one 40px line:
- * name, one-line description, primary tech. Everything cut from here still
- * exists in the modal, which is what the row opens.
+ * about five lines per project. Now it is four columns on one 40px line:
+ * year, name, one-line description, primary tech. Everything cut from here
+ * still exists in the modal, which is what the row opens.
  *
  * 40px rows: 24px line-height plus 8px top and bottom, so the whole table
  * stays on the 8px grid. Keyboard accessible (Enter / Space).
  */
-export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
+export function ProjectCard({
+  project,
+  index,
+  showYear,
+  onClick,
+}: ProjectCardProps) {
   const reduced = useReducedMotion();
 
   return (
@@ -49,6 +59,18 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
         }}
         className="type-meta flex w-full cursor-pointer items-baseline gap-4 py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
+        {/* Year gutter. w-40 matches the Experience table's gutter exactly,
+            so the two tables share one column grid and the titles below line
+            up with the companies above. It's wider than "2026" needs, but a
+            visible step between two stacked tables looks like a mistake and
+            generous space in front of a grouped year does not.
+
+            Same rule as Experience: least load-bearing column, so it's the
+            one that drops on a phone. */}
+        <span className="hidden w-40 shrink-0 text-muted-foreground/60 sm:block">
+          {showYear ? project.year : ""}
+        </span>
+
         <span className="w-24 shrink-0 text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-200 group-hover:decoration-border sm:w-32">
           {project.title}
         </span>
