@@ -7,11 +7,6 @@ import type { Project } from "@/lib/constants";
 interface ProjectCardProps {
   project: Project;
   index: number;
-  /**
-   * False when the project above shares this year, which blanks the gutter
-   * so a run of same-year projects reads as one group.
-   */
-  showYear: boolean;
   onClick: () => void;
 }
 
@@ -23,21 +18,19 @@ interface ProjectCardProps {
  * That is the trick that lets a whole row sit on one line without any of
  * it shouting.
  *
- * This used to be a title, a description, and a wrapped row of tech chips,
- * about five lines per project. It is now a bullet, a year and a name.
+ * A bullet and a name on the left, the year hard against the right edge.
+ * Two anchors, so the row spans the full column width. An earlier version
+ * put the year in a fixed left gutter sized for the longest value on the
+ * page, which left every other row with a hole punched through its middle.
+ *
  * Everything cut from here still exists in the modal, which is what the
- * row opens — the row is an index entry, not a summary.
+ * row opens — this is an index entry, not a summary.
  *
  * 40px rows: 24px line-height plus 8px top and bottom, so the whole table
  * stays on the 8px grid. Rows are separated by a bullet per entry rather
  * than by hairline rules. Keyboard accessible (Enter / Space).
  */
-export function ProjectCard({
-  project,
-  index,
-  showYear,
-  onClick,
-}: ProjectCardProps) {
+export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
   const reduced = useReducedMotion();
 
   return (
@@ -58,25 +51,27 @@ export function ProjectCard({
             onClick();
           }
         }}
-        className="type-meta flex w-full cursor-pointer items-baseline gap-4 py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="type-meta flex w-full cursor-pointer items-baseline gap-2 py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
-        {/* Bullet leads the row. */}
+        {/* Bullet sits against the name, 8px away, so it reads as a list
+            marker rather than as a column of its own. */}
         <span
           aria-hidden="true"
-          className="w-2 shrink-0 text-muted-foreground/40"
+          className="shrink-0 text-muted-foreground/40"
         >
           &bull;
         </span>
 
-        {/* Year, shown once per group and blank on the rows beneath it.
-            It stays visible on mobile now: with the description and tech
-            columns gone there is no longer any width to compete for. */}
-        <span className="w-40 shrink-0 whitespace-nowrap text-muted-foreground/60">
-          {showYear ? project.year : ""}
-        </span>
-
+        {/* flex-1 on the name is what pushes the year to the right edge,
+            which is the whole trick: the row gets an anchor at each end and
+            spans the column, instead of huddling on the left with a void
+            beside it. */}
         <span className="flex-1 truncate text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-200 group-hover:decoration-border">
           {project.title}
+        </span>
+
+        <span className="shrink-0 whitespace-nowrap text-muted-foreground/60">
+          {project.year}
         </span>
       </div>
     </motion.li>

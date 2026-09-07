@@ -126,7 +126,6 @@ export default function Portfolio() {
                 key={project.title}
                 project={project}
                 index={index}
-                showYear={PROJECTS[index - 1]?.year !== project.year}
                 onClick={() =>
                   setSelectedProject(
                     selectedProject === index ? null : index
@@ -141,7 +140,7 @@ export default function Portfolio() {
         <section id="experience" className="scroll-mt-16 py-8 md:py-10">
           <SectionHeading title="Experience" />
           {/* Same index row as Projects: 1 size (14), 1 weight, hierarchy
-              from colour alone. Bullet, year, company, and nothing else.
+              from colour alone. Bullet and company left, years right.
 
               The role and the description are no longer rendered. Both are
               still in constants.ts, and unlike Projects there's no modal to
@@ -155,30 +154,28 @@ export default function Portfolio() {
             {EXPERIENCES.map((item, idx) => (
               <motion.li
                 key={item.company + item.role}
-                className="type-meta flex items-baseline gap-4 py-2"
+                className="type-meta flex items-baseline gap-2 py-2"
                 initial={reduced ? false : { opacity: 0 }}
                 whileInView={reduced ? undefined : { opacity: 1 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.4, delay: idx * 0.04 }}
               >
-                {/* Bullet leads the row, same as Projects, so the two
-                    lists share one column grid. */}
                 <span
                   aria-hidden="true"
-                  className="w-2 shrink-0 text-muted-foreground/40"
+                  className="shrink-0 text-muted-foreground/40"
                 >
                   &bull;
                 </span>
 
-                {/* w-40 and nowrap: "4 semesters · 2024–2026" is the longest
-                    value here and wrapped in anything narrower, which made
-                    that one row double height and broke the even rhythm. */}
-                <span className="w-40 shrink-0 whitespace-nowrap text-muted-foreground/60">
-                  {item.years}
-                </span>
-
                 <span className="flex-1 truncate text-foreground">
                   {item.company}
+                </span>
+
+                {/* Right-aligned, so "4 semesters · 2024–2026" simply runs
+                    further left instead of forcing a gutter wide enough for
+                    it on every other row. */}
+                <span className="shrink-0 whitespace-nowrap text-muted-foreground/60">
+                  {item.years}
                 </span>
               </motion.li>
             ))}
