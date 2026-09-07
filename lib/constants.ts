@@ -1,60 +1,56 @@
 export interface Project {
   title: string;
   description: string;
+  /** Drives both the row's chips and the modal's tech icons. */
   tech: string[];
   github: string;
   demo: string;
+  /** One sentence. The modal is a look at the thing, not an essay. */
   detailedDescription: string;
-  techStack: Record<string, string>;
+  /** Short bullets — a few words each, not sentences. */
   features: string[];
+  /**
+   * 2:1 screenshot in /public/images/projects. When absent the modal draws a
+   * generated cover instead, so a project without a shot still looks
+   * deliberate rather than broken.
+   */
+  shot?: string;
 }
 
 export const PROJECTS: Project[] = [
   {
     title: "Current",
-    description:
-      "native macOS BitTorrent client that stays quiet when idle and explains every automatic decision it makes",
-    tech: ["Swift 6", "SwiftUI", "AppKit", "libtorrent", "C++"],
+    description: "sleek native macOS BitTorrent client",
+    tech: ["Swift 6", "SwiftUI", "AppKit", "C++", "libtorrent", "Sparkle"],
     github: "https://github.com/alanwtom/current",
     demo: "https://current.alantom.dev",
     detailedDescription:
-      "a torrent client built on libtorrent that treats torrenting as a background activity: quiet when nothing is happening, informative when something is, and reversible when it acts on its own. draws its own window chrome and every one of its own controls rather than using stock Mac ones. signed, notarised, and updates itself through a signed appcast.",
-    techStack: {
-      "Swift 6": "app logic, plus a pure domain core with no UI or I/O in it",
-      SwiftUI: "the interface, including hand-drawn window chrome and controls",
-      AppKit: "window behaviour, the menu bar item, and its live status panel",
-      "C++ / libtorrent": "a minimal C shim over the torrent engine",
-      Sparkle: "signed automatic updates, with none of its stock interface",
-    },
+      "treats torrenting as background work: quiet when idle, informative when active, and reversible when it acts on its own.",
     features: [
-      "one card asks what a magnet is, how big, which files, and where it goes",
-      "seed policies that say in plain words why they did what they did",
-      "storage budget that only ever moves finished downloads to the Trash",
-      "menu bar panel with live progress and a pause button per transfer",
-      "keyboard path for every action, and a command palette",
+      "one card per magnet decision",
+      "seed policies that explain themselves",
+      "storage budget, Trash-only deletes",
+      "live menu bar panel",
+      "full keyboard + command palette",
     ],
+    shot: "current.webp",
   },
   {
     title: "Fwrd",
     description:
-      "privacy-first iOS app that forwards SMS messages to Discord, Slack, and Telegram",
+      "privacy-forward iOS app that automatically forwards SMS messages to Discord, Slack, and Telegram",
     tech: ["Swift", "SwiftUI", "iOS Extensions", "Webhooks"],
     github: "",
     demo: "https://fwrdsms.com",
     detailedDescription:
-      "Fwrd is a privacy-first iOS application designed to securely intercept and forward incoming SMS messages to platforms like Discord, Slack, and Telegram in real-time.",
-    techStack: {
-      Swift: "core application logic",
-      SwiftUI: "native iOS interface development",
-      "iOS Extensions": "message interception filtering capabilities",
-      "Webhook API": "real-time forwarding to messaging services",
-    },
+      "intercepts incoming SMS and forwards it to Discord, Slack or Telegram in real time.",
     features: [
-      "automatic background forwarding of SMS",
-      "secure webhooks for Discord, Slack, and Telegram",
-      "custom filtering rules based on sender or keywords",
-      "privacy-first architecture with all processing on-device",
+      "automatic background forwarding",
+      "Discord, Slack and Telegram webhooks",
+      "filter by sender or keyword",
+      "all processing stays on-device",
     ],
+    shot: "fwrd.webp",
   },
   {
     title: "Bug Bot",
@@ -64,18 +60,12 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/innovateorange/DiscordBot",
     demo: "https://discord.gg/cvqbKxPtHE",
     detailedDescription:
-      "student-focused career development bot with real-time job tracking, resume resources, and personalized learning recommendations",
-    techStack: {
-      Python: "core bot development",
-      "Discord.py": "discord API integration",
-      GCP: "cloud hosting & storage",
-      Nox: "testing & automation",
-    },
+      "career development for students in one place: jobs, resumes and learning material, surfaced in the Discord they already use.",
     features: [
-      "real-time job tracking from multiple sources",
-      "personalized resume feedback and templates",
-      "curated learning material recommendations",
-      "event notifications for career fairs and workshops",
+      "real-time job tracking",
+      "resume feedback and templates",
+      "curated learning recommendations",
+      "career fair and workshop alerts",
     ],
   },
   {
@@ -86,19 +76,13 @@ export const PROJECTS: Project[] = [
     github: "https://github.com/alanwtom/Flow",
     demo: "https://chromewebstore.google.com/detail/flow/odenofhkafaeedoohodgdndpeeadpndg",
     detailedDescription:
-      "browser extension that helps users maintain focus by intelligently blocking distracting elements while preserving core functionality",
-    techStack: {
-      JavaScript: "core extension logic",
-      "Chrome Extension API": "browser integration",
-      HTML: "popup interface structure",
-      CSS: "styling & user interface",
-    },
+      "blocks the distracting parts of a page without breaking the rest of it.",
     features: [
-      "intelligent content blocking algorithms",
+      "intelligent content blocking",
       "customizable distraction filters",
       "minimal performance impact",
-      "seamless user experience",
     ],
+    shot: "flow.webp",
   },
 ];
 

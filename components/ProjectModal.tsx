@@ -1,9 +1,12 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Github, ArrowRight } from "lucide-react";
-import type { Project } from "@/lib/constants";
+import { Github, ArrowUpRight, X } from "lucide-react";
+import { ASSET_VERSION, type Project } from "@/lib/constants";
+import { TechIcon } from "./TechIcon";
+import { ProjectCover } from "./ProjectCover";
 import { useEffect } from "react";
 
 interface ProjectModalProps {
@@ -12,21 +15,36 @@ interface ProjectModalProps {
   onClose: () => void;
 }
 
+/*
+  Sharp, slightly expensive-feeling ease, borrowed from Sequel's system.
+  Deliberately not a spring: a spring makes a big panel feel bouncy and
+  cheap at this size, and the overshoot fights the scrim fading in.
+*/
+const EASE: [number, number, number, number] = [0.625, 0.05, 0, 1];
+
 /**
  * Project detail sheet.
  *
- * Budget: 3 sizes (24 / 16 / 12), 2 weights (500 for the title, labels and
- * tech names; 400 for prose).
+ * Budget: 3 sizes (40/48 display, 16 body, 12 micro), 2 weights (500, 400).
  *
- * Structure, top to bottom: a 24px-radius panel with 24px of safe space, then
- * four content groups — header, description, tech stack, features, actions —
- * separated by 32px. Inside a group, related lines sit 8px apart. That gap
- * difference (32 between groups, 8 within) is the whole grouping story; no
- * dividers needed.
+ * The shape of this thing is the point. The previous version was a padded
+ * box with a small framed screenshot inside it, then three labelled
+ * sections underneath, which is the layout every AI-built modal converges
+ * on and it reads as filler. Three borrowed rules fixed it:
  *
- * This used to hardcode slate colours and branch on the theme by hand. It now
- * reads the same palette tokens as the rest of the site, so light and dark
- * both follow from one place.
+ *  - Editorial project cards run their media FULL BLEED: no internal
+ *    padding, no border, no shadow. So the panel itself carries no padding;
+ *    the snapshot goes edge to edge and inherits the panel's own 24px top
+ *    corners, and only the copy below is inset.
+ *  - Depth comes from hairline borders and extreme type-scale contrast,
+ *    never from shadows. Hence a 48px title against 16px body and 12px
+ *    labels, and highlights separated by 1px rules instead of bullets.
+ *  - Never put text on raw photography without a gradient scrim. The title
+ *    sits over the snapshot on a black scrim, which is also why
+ *    ProjectCover is dark in both themes.
+ *
+ * Still on the 8px grid: 24px inset for copy, 32px between groups, 8px
+ * within one.
  */
 export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
   // Handle escape key to close modal
@@ -51,162 +69,176 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{ duration: 0.25, ease: EASE }}
             onClick={onClose}
           />
 
-          {/* Modal */}
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center p-inset"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{ duration: 0.25, ease: EASE }}
             onClick={onClose}
           >
+            {/* No padding on the panel: the snapshot has to reach its edges.
+                The copy below carries its own 24px inset instead. */}
             <motion.div
               role="dialog"
               aria-modal="true"
               aria-label={project.title}
-              className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-border bg-card p-inset text-card-foreground shadow-2xl"
-              initial={{ scale: 0.85, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.85, opacity: 0, y: 20 }}
-              transition={{
-                type: "spring",
-                damping: 30,
-                stiffness: 400,
-                duration: 0.4,
-              }}
+              className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-border bg-card text-card-foreground"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 12 }}
+              transition={{ duration: 0.3, ease: EASE }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="space-y-8">
-                {/* Header */}
-                <div className="flex items-start justify-between gap-4">
-                  <motion.h2
-                    className="type-title text-foreground"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1, duration: 0.3 }}
-                  >
-                    {project.title}
-                  </motion.h2>
-                  {/* 32px control on an 8px radius — the control corner, not
-                      the surface one. */}
-                  <motion.button
-                    onClick={onClose}
-                    className="type-body flex h-8 w-8 shrink-0 items-center justify-center rounded-sm text-muted-foreground transition-colors duration-200 hover:bg-secondary hover:text-foreground"
-                    aria-label="Close"
-                    initial={{ opacity: 0, rotate: -90 }}
-                    animate={{ opacity: 1, rotate: 0 }}
-                    transition={{ delay: 0.1, duration: 0.3 }}
-                    /* Motion already grows this on hover, just below. The class
-                       list used to *also* say `hover:scale-110` with
-                       `transition-all`, which fought the entry animation over
-                       both opacity and transform — and the CSS scale never took
-                       effect anyway, because Motion writes an inline transform
-                       that overrides Tailwind's. */
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    ×
-                  </motion.button>
-                </div>
+              {/* ── Snapshot, full bleed, title over a scrim ──────────── */}
+              <div className="relative overflow-hidden rounded-t-lg">
+                {project.shot ? (
+                  <div className="relative aspect-[2/1] w-full bg-[#0a0a0a]">
+                    <Image
+                      src={`/images/projects/${project.shot}?v=${ASSET_VERSION}`}
+                      alt={`${project.title} screenshot`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 672px"
+                      priority
+                    />
+                  </div>
+                ) : (
+                  <ProjectCover tech={project.tech} title={project.title} />
+                )}
 
-                {/* Description */}
+                {/* Scrim. Without this the title sits on raw screenshot and
+                    becomes unreadable the moment the image is busy, which
+                    Current's app UI very much is. */}
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/55 to-transparent"
+                />
+
+                <motion.h2
+                  className="type-display absolute bottom-0 left-0 p-inset text-white"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1, duration: 0.3, ease: EASE }}
+                >
+                  {project.title}
+                </motion.h2>
+
+                {/* Frosted glass, which works here because there is actually
+                    an image behind it to blur. 32px control, 8px radius. */}
+                <button
+                  onClick={onClose}
+                  className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-sm border border-white/15 bg-black/40 text-white backdrop-blur-md transition-colors duration-200 hover:bg-black/70"
+                  aria-label="Close"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="space-y-8 p-inset">
+                {/* ── One-line summary ───────────────────────────────── */}
                 <motion.p
                   className="type-body text-muted-foreground"
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.3 }}
+                  transition={{ delay: 0.14, duration: 0.3, ease: EASE }}
                 >
                   {project.detailedDescription}
                 </motion.p>
 
-                {/* Tech Stack */}
+                {/* ── Tech stack, as marks ───────────────────────────────
+                    32px tall chips with the inset top highlight that reads
+                    as a lit edge on dark. Invisible in light mode, which is
+                    correct: there is nothing to catch the light there. */}
                 <motion.div
                   className="space-y-4"
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 0.3 }}
+                  transition={{ delay: 0.18, duration: 0.3, ease: EASE }}
                 >
                   <h3 className="type-micro text-muted-foreground/70">
-                    Tech Stack
+                    Built with
                   </h3>
-                  <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                    {Object.entries(project.techStack).map(
-                      ([tech, description], index) => (
-                        <motion.div
-                          key={tech}
-                          className="space-y-2 rounded-md border border-border bg-secondary/40 p-inset-sm"
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{
-                            delay: 0.3 + index * 0.05,
-                            duration: 0.3,
-                          }}
-                        >
-                          <div className="type-body-strong text-foreground">
-                            {tech}
-                          </div>
-                          <div className="type-body text-muted-foreground">
-                            {description}
-                          </div>
-                        </motion.div>
-                      )
-                    )}
+                  <div className="flex flex-wrap gap-2">
+                    {project.tech.map((tech, i) => (
+                      <motion.span
+                        key={tech}
+                        className="type-micro flex h-8 items-center gap-2 rounded-sm border border-border bg-secondary/60 px-2 text-muted-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          delay: 0.18 + i * 0.03,
+                          duration: 0.25,
+                          ease: EASE,
+                        }}
+                      >
+                        <TechIcon name={tech} />
+                        {tech}
+                      </motion.span>
+                    ))}
                   </div>
                 </motion.div>
 
-                {/* Features */}
+                {/* ── Highlights, as a hairline spec sheet ───────────────
+                    Rules instead of bullet glyphs. Reads like a spec table,
+                    which suits an engineering portfolio, and it survives
+                    any number of items without orphan dividers. */}
                 <motion.div
                   className="space-y-4"
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.3 }}
+                  transition={{ delay: 0.22, duration: 0.3, ease: EASE }}
                 >
                   <h3 className="type-micro text-muted-foreground/70">
-                    Key Features
+                    Highlights
                   </h3>
-                  <ul className="space-y-2">
-                    {project.features.map((feature, index) => (
+                  <ul className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+                    {project.features.map((feature, i) => (
                       <motion.li
-                        key={index}
-                        className="type-body flex items-start gap-2 text-muted-foreground"
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
+                        key={feature}
+                        className="type-body border-t border-border py-2 text-muted-foreground"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         transition={{
-                          delay: 0.4 + index * 0.05,
-                          duration: 0.3,
+                          delay: 0.22 + i * 0.03,
+                          duration: 0.25,
+                          ease: EASE,
                         }}
                       >
-                        {/* Bullet sits in a 24px box so it lands on the first
-                            line's baseline grid instead of being nudged. */}
-                        <span
-                          aria-hidden="true"
-                          className="flex h-6 w-2 shrink-0 items-center text-muted-foreground/50"
-                        >
-                          •
-                        </span>
                         {feature}
                       </motion.li>
                     ))}
                   </ul>
                 </motion.div>
 
-                {/* Action Buttons */}
+                {/* ── Actions ───────────────────────────────────────────── */}
                 <motion.div
                   className="flex flex-col gap-2 sm:flex-row"
-                  initial={{ opacity: 0, y: 10 }}
+                  initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5, duration: 0.3 }}
+                  transition={{ delay: 0.28, duration: 0.3, ease: EASE }}
                 >
+                  <Button asChild className="flex-1">
+                    <a
+                      href={project.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2"
+                    >
+                      <ArrowUpRight className="h-4 w-4" />
+                      Live Demo
+                    </a>
+                  </Button>
                   {project.github && (
-                    <Button asChild className="flex-1">
+                    <Button asChild variant="outline" className="flex-1">
                       <a
                         href={project.github}
                         target="_blank"
@@ -218,17 +250,6 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       </a>
                     </Button>
                   )}
-                  <Button asChild variant="outline" className="flex-1">
-                    <a
-                      href={project.demo}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2"
-                    >
-                      <ArrowRight className="h-4 w-4" />
-                      Live Demo
-                    </a>
-                  </Button>
                 </motion.div>
               </div>
             </motion.div>

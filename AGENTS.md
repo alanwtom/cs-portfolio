@@ -148,6 +148,80 @@ certainly needs to reuse one of the three it already has.
 Each component file states its own budget in a comment at the top. Keep those
 comments accurate when you change a component.
 
+### Media bleeds, copy insets
+
+One deliberate exception to "24px of safe space inside every 24px surface":
+**media runs full bleed.** The project modal carries no padding of its own.
+The snapshot reaches all four of its edges and inherits the panel's 24px top
+corners; only the copy underneath gets `p-inset`.
+
+This is the difference between the modal reading as an editorial spread and
+reading as a padded box with a picture in it, which is what it was before and
+what every AI-built modal defaults to. Three rules from published dark
+editorial systems, if you need to argue with a future version of me about it:
+
+- Editorial project cards run media full bleed, with no internal padding, no
+  border and no shadow.
+- Depth comes from hairline borders and extreme type-scale contrast, never
+  from shadows. That is why the modal pairs a 40/48px title against 16px body
+  and 12px labels, and why highlights are separated by 1px rules rather than
+  bullet glyphs.
+- Never put text over raw photography without a gradient scrim. The title
+  sits on a black scrim over the snapshot, and that is also why
+  `ProjectCover` is dark in **both** themes: a cover that went pale in light
+  mode would take the white title with it.
+
+Sources: [Extract](https://styles.refero.design/style/c4e125b6-e3a3-4509-b06f-f0169216a394)
+and [Sequel](https://styles.refero.design/style/1bd3b2ba-9ad9-44ed-9130-03f9d94de821)
+on Refero Styles. Modal easing is Sequel's `cubic-bezier(0.625, 0.05, 0, 1)`
+at 0.25–0.3s, deliberately not a spring: overshoot on a panel this size reads
+as cheap and fights the scrim fading in.
+
+### Project snapshots and tech icons
+
+The project modal leads with a picture, not prose. Two rules keep that
+working:
+
+- **Snapshots** live in `public/images/projects/` and are referenced by the
+  `shot` field on a project in `lib/constants.ts`. They must be **2:1** —
+  the modal reserves that box either way. A project with no `shot` gets
+  `ProjectCover` instead: its primary tech's mark over a dot grid, tinted
+  with that tech's brand colour. So a missing screenshot looks deliberate
+  rather than broken, and dropping one in later changes no layout.
+
+  To capture one from a live site (needs the full app window in frame):
+
+  ```bash
+  CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+  "$CHROME" --headless=new --disable-gpu --hide-scrollbars \
+    --window-size=1440,1500 --force-device-scale-factor=2 \
+    --virtual-time-budget=9000 --screenshot=/tmp/shot.png https://example.com
+  # crop to the region you want, then encode 2:1 at 1600px wide
+  cwebp -crop <x> <y> <w> <h> -resize 1600 0 -q 82 /tmp/shot.png -o public/images/projects/name.webp
+  ```
+
+  Bump `ASSET_VERSION` after replacing an existing one. Adding a *new*
+  filename needs no bump.
+
+  Some of these already exist elsewhere on this machine. `flow.webp` is
+  cropped from `~/Documents/GitHub/Flow/store-screenshots/chrome/01-youtube.png`
+  (the Chrome Web Store submission). Check the sibling repo before
+  screenshotting a marketing page: a store submission is a better source,
+  because it shows the actual product UI. Note the Chrome set is 1280x800
+  and the Mozilla set is 2400x1800 but 4:3 — the taller one looks like the
+  better source and isn't, because Flow's popup is too tall to survive a
+  2:1 crop at that aspect.
+
+- **Tech icons** come from `components/TechIcon.tsx`. Add a `BRAND` entry
+  (a `simple-icons` export) when a real logo exists, or a `GLYPH` entry
+  (a lucide icon) when it doesn't — don't hand-draw a logo. Brand marks keep
+  their brand colour, which is the one deliberate exception to the
+  single-palette rule; `brandFill` darkens anything too pale for the white
+  card and drops anything too dark to inherit the text colour, so nothing
+  goes invisible in either theme. Bare-name coverage matters: the map is
+  keyed on the lowercased `tech` string, so renaming a tech in
+  `constants.ts` silently falls back to a generic glyph.
+
 ### Verifying the system still holds
 
 Paste this in the browser console (or via the preview tools) on any page. It

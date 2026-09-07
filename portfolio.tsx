@@ -113,8 +113,8 @@ export default function Portfolio() {
               <span className="mc-enchant">
                 <Underline href="https://fwrdsms.com">Fwrd</Underline>
               </span>
-              , a privacy-first iOS app that forwards SMS to Discord, Slack, and
-              Telegram.
+              , a privacy-forward iOS app that automatically forwards SMS to
+              Discord, Slack, and Telegram.
             </p>
             <p>
               Former Researcher at{" "}

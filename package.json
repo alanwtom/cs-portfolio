@@ -23,6 +23,7 @@
     "next-themes": "^0.4.4",
     "react": "^19",
     "react-dom": "^19",
+    "simple-icons": "^16.30.0",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7"
   },
