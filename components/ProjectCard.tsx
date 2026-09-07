@@ -13,9 +13,14 @@ interface ProjectCardProps {
 }
 
 /**
- * Minimal editorial project row (Emil-style): title + external arrow on the
- * left, one-line description below, mono tech tags trailing. Clicking the row
- * opens the detailed ProjectModal. Keyboard accessible (Enter / Space).
+ * Minimal editorial project row: title + external arrow on the left, one-line
+ * description below, tech tags trailing. Clicking the row opens the detailed
+ * ProjectModal. Keyboard accessible (Enter / Space).
+ *
+ * Budget: 3 sizes (18 / 16 / 12), 2 weights (Inter 500, Inter 400).
+ * Structure: 24px-radius surface, 24px inset, then title → 8px → description
+ * → 16px → tags. The arrow is a 24px box so it aligns to the title's 24px
+ * line-height on its own, with no nudge offset to fall off the grid.
  */
 export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
   const reduced = useReducedMotion();
@@ -28,7 +33,7 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
   // scrolling. Firefox showed it plainly; Chrome mostly hid it.
   return (
     <motion.div
-      className="group relative w-full cursor-pointer rounded-lg px-4 py-4 -mx-4 transition-colors duration-300 hover:bg-secondary/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="group relative -mx-inset w-full cursor-pointer rounded-lg p-inset transition-colors duration-300 hover:bg-secondary/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       role="button"
       tabIndex={0}
       onClick={onClick}
@@ -44,28 +49,30 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
       transition={{ duration: 0.4, delay: index * 0.05 }}
     >
       <div className="flex items-start justify-between gap-4">
-        <h3 className="text-lg font-medium text-foreground transition-colors group-hover:text-foreground">
+        <h3 className="type-heading text-foreground transition-colors group-hover:text-foreground">
           {project.title}
         </h3>
         <ArrowUpRight
           className={cn(
             // Narrowed for the same reason, though this one was never the
             // cause: the arrow only moves and changes colour on hover.
-            "mt-0.5 h-4 w-4 shrink-0 text-muted-foreground transition-[transform,color] duration-200",
+            "h-6 w-6 shrink-0 text-muted-foreground transition-[transform,color] duration-200",
             "group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground"
           )}
         />
       </div>
 
-      <p className="mt-1.5 max-w-prose text-base leading-relaxed text-muted-foreground transition-colors group-hover:text-foreground/80">
+      <p className="type-body mt-2 max-w-prose text-muted-foreground transition-colors group-hover:text-foreground/80">
         {project.description}
       </p>
 
-      <div className="mt-3 flex flex-wrap gap-2">
+      {/* Tags are 24px tall (one grid unit) with 8px side padding and an 8px
+          radius — the control-scale corner, not the surface one. */}
+      <div className="mt-4 flex flex-wrap gap-2">
         {project.tech.map((tech) => (
           <span
             key={tech}
-            className="rounded-md border border-border bg-secondary/40 px-2 py-0.5 text-sm text-muted-foreground"
+            className="type-micro flex h-6 items-center rounded-sm border border-border bg-secondary/40 px-2 text-muted-foreground"
           >
             {tech}
           </span>

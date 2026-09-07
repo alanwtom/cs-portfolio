@@ -10,29 +10,27 @@ interface SectionHeadingProps {
 }
 
 /**
- * Editorial section header: a small monospace index/overline on top of a
- * lightweight title. Used to break the long-scroll page into clear sections,
- * matching Emil's understated section labels.
+ * Section header. Breaks the long scroll into clearly labelled sections.
+ *
+ * Budget: 1 size (24), 1 weight (500), plus the optional micro index — which
+ * nothing currently passes. Numbered sections were tried and dropped.
+ * Spacing: 8px between index and title, 24px down to the section body.
  */
 export function SectionHeading({ index, title }: SectionHeadingProps) {
   const reduced = useReducedMotion();
 
   return (
     <motion.div
-      className="mb-4 flex flex-col gap-2"
+      className="mb-6 flex flex-col gap-2"
       initial={reduced ? false : { opacity: 0 }}
       whileInView={reduced ? undefined : { opacity: 1 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
       {index && (
-        <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-          {index}
-        </span>
+        <span className="type-micro text-muted-foreground/70">{index}</span>
       )}
-      <h2 className="text-2xl font-medium tracking-tight text-foreground">
-        {title}
-      </h2>
+      <h2 className="type-title text-foreground">{title}</h2>
     </motion.div>
   );
 }

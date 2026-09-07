@@ -15,6 +15,12 @@ const config: Config = {
   		fontFamily: {
   			sans: ["var(--font-geist-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
   		},
+  		// The 8px grid, named. `p-inset` is the 24px safe space that
+  		// belongs inside every 24px-radius surface.
+  		spacing: {
+  			inset: 'var(--inset)',
+  			'inset-sm': 'var(--inset-sm)',
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -67,10 +73,13 @@ const config: Config = {
   				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
+  		// Three radii, derived from the 24px signature. `md` is what a
+  		// child inset 8px into a 24px parent needs for its corner to
+  		// stay concentric with the parent's.
   		borderRadius: {
-  			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			lg: 'var(--radius)',      /* 24px — outer surfaces */
+  			md: 'var(--radius-md)',   /* 16px — nested surfaces */
+  			sm: 'var(--radius-sm)'    /* 8px  — controls, tags */
   		},
   		keyframes: {
   			'accordion-down': {

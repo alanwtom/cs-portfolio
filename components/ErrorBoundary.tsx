@@ -45,36 +45,39 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
+      // Budget: 3 sizes (24 / 16 / 12), 2 weights (500, 400). Same palette
+      // tokens and 24px surface as everything else —
+      // this used to be hardcoded grays that ignored the site's theme.
       return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50 dark:bg-gray-900">
-          <Card className="max-w-md w-full p-6 text-center space-y-4">
+        <div className="flex min-h-screen items-center justify-center bg-background p-inset">
+          <Card className="w-full max-w-md space-y-6 p-inset text-center">
             <div className="flex justify-center">
-              <AlertTriangle className="w-12 h-12 text-red-500" />
+              <AlertTriangle className="h-12 w-12 text-destructive" />
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+              <h2 className="type-title text-foreground">
                 Oops! Something went wrong
               </h2>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="type-body text-muted-foreground">
                 We&apos;re sorry, but something unexpected happened. This error
                 has been logged and we&apos;ll work to fix it.
               </p>
             </div>
 
             {process.env.NODE_ENV === "development" && this.state.error && (
-              <details className="text-left bg-gray-100 dark:bg-gray-800 p-3 rounded text-sm">
-                <summary className="cursor-pointer font-medium mb-2">
+              <details className="rounded-md bg-secondary p-inset-sm text-left">
+                <summary className="type-micro mb-2 cursor-pointer text-muted-foreground">
                   Error Details (Development Only)
                 </summary>
-                <pre className="whitespace-pre-wrap text-xs text-red-600 dark:text-red-400">
+                <pre className="type-micro whitespace-pre-wrap normal-case tracking-normal text-destructive">
                   {this.state.error.toString()}
                   {this.state.error.stack}
                 </pre>
               </details>
             )}
 
-            <div className="flex flex-col sm:flex-row gap-2 pt-4">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <Button
                 onClick={this.handleReset}
                 variant="outline"
@@ -83,7 +86,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 Try Again
               </Button>
               <Button onClick={this.handleReload} className="flex-1">
-                <RefreshCw className="w-4 h-4 mr-2" />
+                <RefreshCw className="h-4 w-4" />
                 Reload Page
               </Button>
             </div>

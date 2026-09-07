@@ -3,14 +3,63 @@
 @tailwind utilities;
 
 /*
-  Editorial dark-first palette (zinc-neutral, no slate-blue cast),
-  with a true Emil-style light mode (#f3f4f6 bg + near-black text).
-  Fonts are applied via the Geist variable classes wired in layout.tsx.
+  ═══════════════════════════════════════════════════════════════════
+  THE DESIGN SYSTEM
+  ═══════════════════════════════════════════════════════════════════
+
+  Everything on this site is built on three constraints. If you (or an
+  AI) add a new component later, obey these and it will look like it
+  belongs without anyone having to art-direct it.
+
+  1. AN 8px GRID. Every gap, every bit of padding, every line-height
+     is a multiple of 8. Nothing is 6px or 20px or 14px. That's what
+     makes unrelated blocks line up without anyone measuring.
+
+  2. THREE RADII, DERIVED FROM ONE. Outer surfaces are 24px. When you
+     nest something inside a 24px surface with 8px of breathing room,
+     the inner corner is 16px (24 − 8) so the curves stay parallel.
+     Small controls are 8px. That's the whole list.
+
+  3. ONE TYPEFACE, AND NO COMPONENT USES MORE THAN THREE SIZES OR
+     THREE WEIGHTS. Geist throughout, at 400 and 500 only. Hierarchy
+     comes from size and weight, not from switching voice — we tried a
+     Baskerville serif for the display type and it read far too formal
+     for this site. The size ramp lives below as .type-* classes; use
+     one of those rather than picking a font-size by hand.
+
+  Palette is an editorial dark-first zinc neutral, with a light mode
+  of #f3f4f6 + near-black text.
 */
 
 @layer base {
   :root {
-    /* Light (Emil-style editorial) */
+    /* ── 1. The 8px grid ─────────────────────────────────────────
+       Named so the intent is visible in the markup. Tailwind's own
+       scale is 4px-based, so only its EVEN steps are on our grid:
+       2=8, 4=16, 6=24, 8=32, 10=40, 12=48, 16=64, 20=80, 24=96.
+       Never reach for p-3 (12px), gap-5 (20px) or mt-1.5 (6px). */
+    --grid: 8px;
+    --space-1: 8px;
+    --space-2: 16px;
+    --space-3: 24px;
+    --space-4: 32px;
+    --space-5: 40px;
+    --space-6: 48px;
+    --space-8: 64px;
+    --space-10: 80px;
+    --space-12: 96px;
+    --space-14: 112px;
+
+    /* ── 2. Radius + inset ────────────────────────────────────────
+       24px is the signature. --inset is the safe space inside any
+       24px surface: also 24px, so content never crowds the curve. */
+    --radius: 24px; /* outer surfaces: cards, rows, modal, photo */
+    --radius-md: 16px; /* nested surfaces, 8px inside a 24px parent */
+    --radius-sm: 8px; /* controls: buttons, tags, inputs, focus ring */
+    --inset: 24px;
+    --inset-sm: 16px;
+
+    /* Light (editorial) */
     --background: 220 14% 96%; /* #f3f4f6 gray-100 */
     --foreground: 240 10% 4%; /* near-black */
     --card: 0 0% 100%;
@@ -35,7 +84,6 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
   }
 
   .dark {
@@ -73,6 +121,94 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/*
+  ── 3. The type ramp ──────────────────────────────────────────────
+  Six steps, and that is the entire vocabulary of the site. Every
+  line-height is a multiple of 8 so text blocks land on the same grid
+  as the boxes around them.
+
+  Do not write `text-lg` or `font-semibold` in a component. Pick a
+  step from this list. If a new component seems to need a seventh
+  step, it almost certainly needs one of these six instead.
+
+      step        size / line     weight
+      ──────────────────────────────────────
+      display     40/48 → 48/56   500
+      title       24/32           500
+      heading     18/24           500
+      body        16/24           400  (500 = -strong)
+      accent      16/24 italic    400
+      meta        14/24           400
+      micro       12/16           500  uppercase
+
+  Per-component budget: at most THREE sizes and THREE weights. The
+  hero uses display + body + micro. A project row uses heading + body
+  + micro. That ceiling is what keeps the hierarchy readable.
+*/
+@layer components {
+  .type-display {
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 48px;
+    letter-spacing: -0.03em;
+  }
+  @media (min-width: 768px) {
+    .type-display {
+      font-size: 48px;
+      line-height: 56px;
+    }
+  }
+
+  .type-title {
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -0.02em;
+  }
+
+  /* Italic, used only to set a secondary phrase against a heading — job
+     titles beside a company name. */
+  .type-accent {
+    font-weight: 400;
+    font-style: italic;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .type-heading {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: -0.01em;
+  }
+
+  .type-body {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .type-body-strong {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .type-meta {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 24px;
+  }
+
+  .type-micro {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 }
 
@@ -205,7 +341,7 @@ html {
 
 ::-webkit-scrollbar-thumb {
   background: hsl(0 0% 22%);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -227,7 +363,7 @@ html {
 :focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
 }
 
 /* Restore sensible cursors (removes the old `cursor: default !important` hack) */

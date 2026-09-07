@@ -66,30 +66,34 @@ export default function Portfolio() {
       {/* Skip to main content link for accessibility */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 z-50 rounded-md bg-primary px-4 py-2 text-primary-foreground transition-all duration-200"
+        className="type-body sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 z-50 rounded-sm bg-primary px-4 py-2 text-primary-foreground transition-all duration-200"
       >
         Skip to main content
       </a>
 
       {/* Top progress bar is gone; sidebar rail handles section nav */}
 
+      {/* max-w-2xl is 672px = 84 × 8, and the 24px gutter matches --inset,
+          so the text column itself sits on the grid. */}
       <main
         id="main-content"
-        className="mx-auto w-full max-w-2xl flex-1 px-6"
+        className="mx-auto w-full max-w-2xl flex-1 px-inset"
       >
-        {/* ───────────────────────── Hero ───────────────────────── */}
-        <section id="hero" className="scroll-mt-20 pt-20 pb-12 md:pt-28 md:pb-16">
+        {/* ───────────────────────── Hero ─────────────────────────
+            Budget: 3 sizes (40 / 12 / 16), 2 weights (500, 400). Big name,
+            uppercase micro role line, body copy. */}
+        <section id="hero" className="scroll-mt-16 pt-20 pb-12 md:pt-28 md:pb-16">
           <div className="flex flex-row items-start justify-between gap-8">
-            <div className="flex-1 space-y-5">
-              <h1 className="text-4xl font-medium tracking-tight text-foreground md:text-5xl">
-                Alan Tom
-              </h1>
-              <p className="text-lg leading-relaxed text-muted-foreground">
+            <div className="flex-1">
+              <h1 className="type-display text-foreground">Alan Tom</h1>
+              <p className="type-micro mt-4 text-muted-foreground">
                 Computer Science senior at Syracuse University
               </p>
             </div>
 
-            <div className="aspect-square h-24 w-24 shrink-0 overflow-hidden border border-border shadow-sm md:h-28 md:w-28">
+            {/* 96px / 112px are both multiples of 8; 24px radius matches
+                every other surface on the page. */}
+            <div className="aspect-square h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-border shadow-sm md:h-28 md:w-28">
               <Image
                 src={`/images/buttercup_1.webp?v=${Date.now()}`}
                 alt="Alan Tom's profile photo"
@@ -102,7 +106,7 @@ export default function Portfolio() {
             </div>
           </div>
 
-          <div className="mt-12 max-w-xl space-y-5 text-lg leading-relaxed text-muted-foreground">
+          <div className="type-body mt-12 max-w-xl space-y-6 text-muted-foreground">
             <p>
               Currently building{" "}
               <span className="mc-enchant">
@@ -124,9 +128,9 @@ export default function Portfolio() {
         </section>
 
         {/* ───────────────────────── Projects ───────────────────── */}
-        <section id="projects" className="scroll-mt-20 py-16 md:py-20">
+        <section id="projects" className="scroll-mt-16 py-16 md:py-20">
           <SectionHeading title="Projects" />
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
             {PROJECTS.map((project, index) => (
               <ProjectCard
                 key={project.title}
@@ -143,34 +147,38 @@ export default function Portfolio() {
         </section>
 
         {/* ─────────────────────── Experience ─────────────────────── */}
-        <section id="experience" className="scroll-mt-20 py-16 md:py-20">
+        <section id="experience" className="scroll-mt-16 py-16 md:py-20">
           <SectionHeading title="Experience" />
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
             {/* `transition-colors`, not `transition-all`: Motion animates each
                 row's opacity on scroll-in, and `transition-all` makes CSS
                 transition opacity too, so the two fight over it every frame.
                 That was the flicker down this section in Firefox. */}
+            {/* Budget: 3 sizes (18 / 16 / 12), 2 weights (500 + 400, with
+                italic 400 for the role). Each row is a
+                24px-radius surface with 24px inset, pulled back by that same
+                24px so the text still aligns to the column edge. */}
             {EXPERIENCES.map((item, idx) => (
               <motion.div
                 key={item.company + item.role}
-                className="group relative flex flex-col gap-1 rounded-lg px-4 py-4 -mx-4 transition-colors duration-300 hover:bg-secondary/40 md:flex-row md:items-baseline md:justify-between md:gap-8"
+                className="group relative -mx-inset flex flex-col gap-2 rounded-lg p-inset transition-colors duration-300 hover:bg-secondary/40 md:flex-row md:items-baseline md:justify-between md:gap-8"
                 initial={reduced ? false : { opacity: 0 }}
                 whileInView={reduced ? undefined : { opacity: 1 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.4, delay: idx * 0.05 }}
               >
                 <div className="flex-1">
-                  <h3 className="text-lg font-medium leading-relaxed text-foreground">
+                  <h3 className="type-heading text-foreground">
                     {item.company}{" "}
-                    <span className="text-base italic font-normal text-muted-foreground">
+                    <span className="type-accent text-muted-foreground">
                       {item.role}
                     </span>
                   </h3>
-                  <p className="mt-1.5 text-base leading-relaxed text-muted-foreground">
+                  <p className="type-body mt-2 text-muted-foreground">
                     {item.description}
                   </p>
                 </div>
-                <span className="shrink-0 text-sm text-muted-foreground/70 md:text-right">
+                <span className="type-micro shrink-0 text-muted-foreground/70 md:text-right">
                   {item.years}
                 </span>
               </motion.div>
@@ -187,17 +195,18 @@ export default function Portfolio() {
       />
 
       {/* Footer */}
+      {/* Budget: 1 size (12), 1 weight. Icons are 24px — one grid unit. */}
       <footer className="border-t border-border">
-        <div className="mx-auto w-full max-w-2xl px-6 py-10">
+        <div className="mx-auto w-full max-w-2xl px-inset py-12">
           <div className="mb-8 flex justify-center gap-8">
             <FooterIcon href={X_URL} label="X">
-              <XIcon className="h-5 w-5" />
+              <XIcon className="h-6 w-6" />
             </FooterIcon>
             <FooterIcon href={GITHUB_URL} label="GitHub">
-              <Github className="h-5 w-5" />
+              <Github className="h-6 w-6" />
             </FooterIcon>
           </div>
-          <p className="text-center text-xs text-muted-foreground/60">
+          <p className="type-micro text-center text-muted-foreground/60">
             © 2025 Alan Tom
           </p>
         </div>

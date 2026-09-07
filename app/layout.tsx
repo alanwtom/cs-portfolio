@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+// One family, two weights (400 and 500). Hierarchy comes from size and
+// weight, not from switching voice.
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 
