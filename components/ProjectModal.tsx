@@ -103,13 +103,19 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                   </motion.h2>
                   <motion.button
                     onClick={onClose}
-                    className={`text-2xl hover:opacity-70 transition-all duration-200 hover:scale-110 ${
+                    className={`text-2xl transition-colors duration-200 ${
                       theme === "dark" ? "text-slate-400" : "text-slate-600"
                     }`}
                     aria-label="Close modal"
                     initial={{ opacity: 0, rotate: -90 }}
                     animate={{ opacity: 1, rotate: 0 }}
                     transition={{ delay: 0.1, duration: 0.3 }}
+                    /* Motion already grows this on hover, just below. The class
+                       list used to *also* say `hover:scale-110` with
+                       `transition-all`, which fought the entry animation over
+                       both opacity and transform — and the CSS scale never took
+                       effect anyway, because Motion writes an inline transform
+                       that overrides Tailwind's. */
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                   >

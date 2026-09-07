@@ -146,10 +146,14 @@ export default function Portfolio() {
         <section id="experience" className="scroll-mt-20 py-16 md:py-20">
           <SectionHeading title="Experience" />
           <div className="flex flex-col gap-4">
+            {/* `transition-colors`, not `transition-all`: Motion animates each
+                row's opacity on scroll-in, and `transition-all` makes CSS
+                transition opacity too, so the two fight over it every frame.
+                That was the flicker down this section in Firefox. */}
             {EXPERIENCES.map((item, idx) => (
               <motion.div
                 key={item.company + item.role}
-                className="group relative flex flex-col gap-1 rounded-lg px-4 py-4 -mx-4 transition-all duration-300 hover:bg-secondary/40 md:flex-row md:items-baseline md:justify-between md:gap-8"
+                className="group relative flex flex-col gap-1 rounded-lg px-4 py-4 -mx-4 transition-colors duration-300 hover:bg-secondary/40 md:flex-row md:items-baseline md:justify-between md:gap-8"
                 initial={reduced ? false : { opacity: 0 }}
                 whileInView={reduced ? undefined : { opacity: 1 }}
                 viewport={{ once: true, margin: "-60px" }}

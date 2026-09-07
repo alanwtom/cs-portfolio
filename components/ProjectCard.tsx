@@ -20,9 +20,15 @@ interface ProjectCardProps {
 export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
   const reduced = useReducedMotion();
 
+  // `transition-colors` below, never `transition-all`: Motion animates this
+  // row's opacity as it scrolls into view, and `transition-all` tells CSS to
+  // transition opacity as well. The two then fight over the same property every
+  // frame — Motion writes a value, CSS starts a fresh 300ms interpolation from
+  // wherever it had got to — which is the flicker these rows had while
+  // scrolling. Firefox showed it plainly; Chrome mostly hid it.
   return (
     <motion.div
-      className="group relative w-full cursor-pointer rounded-lg px-4 py-4 -mx-4 transition-all duration-300 hover:bg-secondary/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="group relative w-full cursor-pointer rounded-lg px-4 py-4 -mx-4 transition-colors duration-300 hover:bg-secondary/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       role="button"
       tabIndex={0}
       onClick={onClick}
@@ -43,7 +49,9 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
         </h3>
         <ArrowUpRight
           className={cn(
-            "mt-0.5 h-4 w-4 shrink-0 text-muted-foreground transition-all duration-200",
+            // Narrowed for the same reason, though this one was never the
+            // cause: the arrow only moves and changes colour on hover.
+            "mt-0.5 h-4 w-4 shrink-0 text-muted-foreground transition-[transform,color] duration-200",
             "group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground"
           )}
         />
