@@ -1,8 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import type { Project } from "@/lib/constants";
 
@@ -13,71 +11,59 @@ interface ProjectCardProps {
 }
 
 /**
- * Minimal editorial project row: title + external arrow on the left, one-line
- * description below, tech tags trailing. Clicking the row opens the detailed
- * ProjectModal. Keyboard accessible (Enter / Space).
+ * One project, compressed to a single index row.
  *
- * Budget: 3 sizes (18 / 16 / 12), 2 weights (Inter 500, Inter 400).
- * Structure: 24px-radius surface, 24px inset, then title → 8px → description
- * → 16px → tags. The arrow is a 24px box so it aligns to the title's 24px
- * line-height on its own, with no nudge offset to fall off the grid.
+ * Budget: 1 size (14), 1 weight (400). Hierarchy comes entirely from
+ * colour: the name is full-strength foreground, everything else is muted.
+ * That is the trick that lets a whole row sit on one line without any of
+ * it shouting.
+ *
+ * This used to be a title, a description, and a wrapped row of tech chips,
+ * about five lines per project. Now it is three columns on one 40px line:
+ * name, one-line description, primary tech. Everything cut from here still
+ * exists in the modal, which is what the row opens.
+ *
+ * 40px rows: 24px line-height plus 8px top and bottom, so the whole table
+ * stays on the 8px grid. Keyboard accessible (Enter / Space).
  */
 export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
   const reduced = useReducedMotion();
 
-  // `transition-colors` below, never `transition-all`: Motion animates this
-  // row's opacity as it scrolls into view, and `transition-all` tells CSS to
-  // transition opacity as well. The two then fight over the same property every
-  // frame — Motion writes a value, CSS starts a fresh 300ms interpolation from
-  // wherever it had got to — which is the flicker these rows had while
-  // scrolling. Firefox showed it plainly; Chrome mostly hid it.
   return (
-    <motion.div
-      className="group relative -mx-inset w-full cursor-pointer rounded-lg p-inset transition-colors duration-300 hover:bg-secondary/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-      role="button"
-      tabIndex={0}
-      onClick={onClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onClick();
-        }
-      }}
+    <motion.li
+      className="group border-t border-border"
       initial={reduced ? false : { opacity: 0 }}
       whileInView={reduced ? undefined : { opacity: 1 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
+      transition={{ duration: 0.4, delay: index * 0.04 }}
     >
-      <div className="flex items-start justify-between gap-4">
-        <h3 className="type-heading text-foreground transition-colors group-hover:text-foreground">
+      <div
+        role="button"
+        tabIndex={0}
+        onClick={onClick}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onClick();
+          }
+        }}
+        className="type-meta flex w-full cursor-pointer items-baseline gap-4 py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      >
+        <span className="w-24 shrink-0 text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-200 group-hover:decoration-border sm:w-32">
           {project.title}
-        </h3>
-        <ArrowUpRight
-          className={cn(
-            // Narrowed for the same reason, though this one was never the
-            // cause: the arrow only moves and changes colour on hover.
-            "h-6 w-6 shrink-0 text-muted-foreground transition-[transform,color] duration-200",
-            "group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground"
-          )}
-        />
-      </div>
+        </span>
 
-      <p className="type-body mt-2 max-w-prose text-muted-foreground transition-colors group-hover:text-foreground/80">
-        {project.description}
-      </p>
+        {/* The description is what makes the row readable — "Current" on its
+            own tells you nothing — so on a narrow screen this is the column
+            that survives and the tech mark is the one that goes. */}
+        <span className="flex-1 truncate text-muted-foreground transition-colors duration-200 group-hover:text-foreground/80">
+          {project.description}
+        </span>
 
-      {/* Tags are 24px tall (one grid unit) with 8px side padding and an 8px
-          radius — the control-scale corner, not the surface one. */}
-      <div className="mt-4 flex flex-wrap gap-2">
-        {project.tech.map((tech) => (
-          <span
-            key={tech}
-            className="type-micro flex h-6 items-center rounded-sm border border-border bg-secondary/40 px-2 text-muted-foreground"
-          >
-            {tech}
-          </span>
-        ))}
+        <span className="hidden shrink-0 whitespace-nowrap text-muted-foreground/60 sm:block">
+          {project.tech[0]}
+        </span>
       </div>
-    </motion.div>
+    </motion.li>
   );
 }

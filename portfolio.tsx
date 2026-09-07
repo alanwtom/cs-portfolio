@@ -115,10 +115,12 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* ───────────────────────── Projects ───────────────────── */}
+        {/* ───────────────────────── Projects ─────────────────────
+            An index, not a set of cards: one 40px row each, hairline
+            separated, click a row for the detail. */}
         <section id="projects" className="scroll-mt-16 py-16 md:py-20">
           <SectionHeading title="Projects" />
-          <div className="flex flex-col gap-2">
+          <ul className="flex flex-col border-b border-border">
             {PROJECTS.map((project, index) => (
               <ProjectCard
                 key={project.title}
@@ -131,47 +133,49 @@ export default function Portfolio() {
                 }
               />
             ))}
-          </div>
+          </ul>
         </section>
 
         {/* ─────────────────────── Experience ─────────────────────── */}
         <section id="experience" className="scroll-mt-16 py-16 md:py-20">
           <SectionHeading title="Experience" />
-          <div className="flex flex-col gap-2">
-            {/* `transition-colors`, not `transition-all`: Motion animates each
-                row's opacity on scroll-in, and `transition-all` makes CSS
-                transition opacity too, so the two fight over it every frame.
-                That was the flicker down this section in Firefox. */}
-            {/* Budget: 3 sizes (18 / 16 / 12), 2 weights (500 + 400, with
-                italic 400 for the role). Each row is a
-                24px-radius surface with 24px inset, pulled back by that same
-                24px so the text still aligns to the column edge. */}
+          {/* Same index row as Projects: 1 size (14), 1 weight, hierarchy
+              from colour alone. Years sit in a left gutter, company at full
+              strength, role muted on the right.
+
+              `transition-colors`, not `transition-all`: Motion animates each
+              row's opacity on scroll-in, and `transition-all` makes CSS
+              transition opacity too, so the two fight over it every frame.
+              That was the flicker down this section in Firefox. */}
+          <ul className="flex flex-col border-b border-border">
             {EXPERIENCES.map((item, idx) => (
-              <motion.div
+              <motion.li
                 key={item.company + item.role}
-                className="group relative -mx-inset flex flex-col gap-2 rounded-lg p-inset transition-colors duration-300 hover:bg-secondary/40 md:flex-row md:items-baseline md:justify-between md:gap-8"
+                className="type-meta flex items-baseline gap-4 border-t border-border py-2"
                 initial={reduced ? false : { opacity: 0 }}
                 whileInView={reduced ? undefined : { opacity: 1 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.4, delay: idx * 0.05 }}
+                transition={{ duration: 0.4, delay: idx * 0.04 }}
               >
-                <div className="flex-1">
-                  <h3 className="type-heading text-foreground">
-                    {item.company}{" "}
-                    <span className="type-accent text-muted-foreground">
-                      {item.role}
-                    </span>
-                  </h3>
-                  <p className="type-body mt-2 text-muted-foreground">
-                    {item.description}
-                  </p>
-                </div>
-                <span className="type-micro shrink-0 text-muted-foreground/70 md:text-right">
+                {/* Years go first on the grid but are the least load-bearing
+                    fact, so they're the column that drops on a phone.
+
+                    w-40 and nowrap, not w-32: "4 semesters · 2024–2026" is
+                    the longest value and it wrapped to two lines in a 128px
+                    gutter, which made that one row 64px tall and broke the
+                    even 40px rhythm the whole table depends on. */}
+                <span className="hidden w-40 shrink-0 whitespace-nowrap text-muted-foreground/60 sm:block">
                   {item.years}
                 </span>
-              </motion.div>
+                <span className="flex-1 truncate text-foreground">
+                  {item.company}
+                </span>
+                <span className="shrink-0 whitespace-nowrap text-muted-foreground">
+                  {item.role}
+                </span>
+              </motion.li>
             ))}
-          </div>
+          </ul>
         </section>
       </main>
 
