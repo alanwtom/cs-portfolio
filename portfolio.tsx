@@ -5,7 +5,6 @@ import { useTheme } from "./components/theme-provider";
 import { ProjectCard } from "./components/ProjectCard";
 import { SectionHeading } from "./components/SectionHeading";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import {
@@ -13,7 +12,6 @@ import {
   EXPERIENCES,
   GITHUB_URL,
   X_URL,
-  ASSET_VERSION,
 } from "./lib/constants";
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
@@ -84,27 +82,16 @@ export default function Portfolio() {
             Budget: 3 sizes (40 / 12 / 16), 2 weights (500, 400). Big name,
             uppercase micro role line, body copy. */}
         <section id="hero" className="scroll-mt-16 pt-20 pb-12 md:pt-28 md:pb-16">
-          <div className="flex flex-row items-start justify-between gap-8">
-            <div className="flex-1">
-              <h1 className="type-display text-foreground">Alan Tom</h1>
-              <p className="type-micro mt-4 text-muted-foreground">
-                Computer Science senior at Syracuse University
-              </p>
-            </div>
-
-            {/* 96px / 112px are both multiples of 8; 24px radius matches
-                every other surface on the page. */}
-            <div className="aspect-square h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-border shadow-sm md:h-28 md:w-28">
-              <Image
-                src={`/images/buttercup_1.webp?v=${ASSET_VERSION}`}
-                alt="Alan Tom's profile photo"
-                width={112}
-                height={112}
-                className="h-full w-full object-cover"
-                priority
-                sizes="112px"
-              />
-            </div>
+          {/* The profile photo used to sit to the right of this. It was a
+              3024x4032 phone photo being displayed at 112px, so the browser
+              downloaded 380KB to paint a thumbnail, and it was the slowest
+              thing on the page by a wide margin. The file is still in
+              public/images if it ever comes back; resize it first. */}
+          <div>
+            <h1 className="type-display text-foreground">Alan Tom</h1>
+            <p className="type-micro mt-4 text-muted-foreground">
+              Computer Science senior at Syracuse University
+            </p>
           </div>
 
           <div className="type-body mt-12 max-w-xl space-y-6 text-muted-foreground">
