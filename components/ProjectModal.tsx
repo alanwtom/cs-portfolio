@@ -132,11 +132,33 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                   {project.title}
                 </motion.h2>
 
-                {/* Frosted glass, which works here because there is actually
-                    an image behind it to blur. 32px control, 8px radius. */}
+                {/* A short scrim at the top too, purely so the close button
+                    always has something dark behind it. Without it the button
+                    lands on whatever the screenshot happens to have up there
+                    — in Current's case its own toolbar — and a translucent
+                    control over busy UI reads as a smudge. */}
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-black/60 via-black/20 to-transparent"
+                />
+
+                {/* Circular, not a rounded square.
+
+                    The old one was a 32px square at 8px radius, which is the
+                    mathematically concentric answer for a 16px inset inside a
+                    24px corner — and it looked wrong anyway. Concentric
+                    rounding is for a panel nested against a parent's corner,
+                    sharing its frame. This is a control floating on media, so
+                    matching the panel's geometry just put a third squircle
+                    next to the panel's corner and the screenshot's own square
+                    buttons, and the three fought each other.
+
+                    A circle has no corner to negotiate. It also fixes the
+                    size: 32px was under the 44px minimum for a touch target,
+                    and this is the only way to close the sheet on a phone. */}
                 <button
                   onClick={onClose}
-                  className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-sm border border-white/15 bg-black/40 text-white backdrop-blur-md transition-colors duration-200 hover:bg-black/70"
+                  className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/50 text-white backdrop-blur-xl transition-colors duration-200 hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
                   aria-label="Close"
                 >
                   <X className="h-4 w-4" />
