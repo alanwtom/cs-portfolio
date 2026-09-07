@@ -120,7 +120,7 @@ export default function Portfolio() {
             separated, click a row for the detail. */}
         <section id="projects" className="scroll-mt-16 py-8 md:py-10">
           <SectionHeading title="Projects" />
-          <ul className="flex flex-col border-b border-border">
+          <ul className="flex flex-col">
             {PROJECTS.map((project, index) => (
               <ProjectCard
                 key={project.title}
@@ -148,11 +148,11 @@ export default function Portfolio() {
               row's opacity on scroll-in, and `transition-all` makes CSS
               transition opacity too, so the two fight over it every frame.
               That was the flicker down this section in Firefox. */}
-          <ul className="flex flex-col border-b border-border">
+          <ul className="flex flex-col">
             {EXPERIENCES.map((item, idx) => (
               <motion.li
                 key={item.company + item.role}
-                className="type-meta flex items-baseline gap-4 border-t border-border py-2"
+                className="type-meta flex items-baseline gap-4 py-2"
                 initial={reduced ? false : { opacity: 0 }}
                 whileInView={reduced ? undefined : { opacity: 1 }}
                 viewport={{ once: true, margin: "-60px" }}
@@ -167,6 +167,14 @@ export default function Portfolio() {
                     even 40px rhythm the whole table depends on. */}
                 <span className="hidden w-40 shrink-0 whitespace-nowrap text-muted-foreground/60 sm:block">
                   {item.years}
+                </span>
+                {/* Same marker position as the Projects table: after the
+                    year gutter, so the two lists' bullets line up. */}
+                <span
+                  aria-hidden="true"
+                  className="w-2 shrink-0 text-muted-foreground/40"
+                >
+                  &bull;
                 </span>
                 <span className="flex-1 truncate text-foreground">
                   {item.company}

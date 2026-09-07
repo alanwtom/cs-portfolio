@@ -29,7 +29,8 @@ interface ProjectCardProps {
  * still exists in the modal, which is what the row opens.
  *
  * 40px rows: 24px line-height plus 8px top and bottom, so the whole table
- * stays on the 8px grid. Keyboard accessible (Enter / Space).
+ * stays on the 8px grid. Rows are separated by a bullet per entry rather
+ * than by hairline rules. Keyboard accessible (Enter / Space).
  */
 export function ProjectCard({
   project,
@@ -41,7 +42,7 @@ export function ProjectCard({
 
   return (
     <motion.li
-      className="group border-t border-border"
+      className="group"
       initial={reduced ? false : { opacity: 0 }}
       whileInView={reduced ? undefined : { opacity: 1 }}
       viewport={{ once: true, margin: "-60px" }}
@@ -69,6 +70,16 @@ export function ProjectCard({
             one that drops on a phone. */}
         <span className="hidden w-40 shrink-0 text-muted-foreground/60 sm:block">
           {showYear ? project.year : ""}
+        </span>
+
+        {/* Marker instead of a rule. It sits after the year gutter rather
+            than before it, so the bullets line up with the titles and the
+            years hang outside the list. */}
+        <span
+          aria-hidden="true"
+          className="w-2 shrink-0 text-muted-foreground/40"
+        >
+          &bull;
         </span>
 
         <span className="w-24 shrink-0 text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-200 group-hover:decoration-border sm:w-32">
