@@ -206,8 +206,14 @@ export default function Portfolio() {
               <Github className="h-6 w-6" />
             </FooterIcon>
           </div>
+          {/* Read the year rather than hardcoding it, so the footer doesn't
+              quietly go stale every January. Safe to compute during render
+              here: the `!isLoaded` gate above means the server only ever
+              sends the spinner, so this footer is client-only and there's no
+              build-year-vs-today mismatch to reconcile. If that gate ever
+              goes away, this needs to move into an effect. */}
           <p className="type-micro text-center text-muted-foreground/60">
-            © 2025 Alan Tom
+            © {new Date().getFullYear()} Alan Tom
           </p>
         </div>
       </footer>

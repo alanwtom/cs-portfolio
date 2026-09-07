@@ -1,7 +1,7 @@
 # Agent Guidelines — cs-portfolio
 
 This is a Next.js portfolio site deployed to **Vercel** (production domain:
-`alantom.dev`, project `cs-portfolio`, team `alantomws-projects`). Git is on
+`alantom.dev`, project `cs-portfolio`, team `alans-project`). Git is on
 GitHub at `alanwtom/cs-portfolio`; default branch is `main`.
 
 ## Standing rules
@@ -80,7 +80,7 @@ fi
 echo "KEEP: $LIVE_ID (live), $PREVIOUS_PROD_ID (previous prod)"
 grep -vxF -e "$LIVE_ID" -e "$PREVIOUS_PROD_ID" /tmp/all-ids.txt | sort -u > /tmp/delete-ids.txt
 [ -s /tmp/delete-ids.txt ] || { echo "Nothing to delete."; }
-while read id; do vercel rm "https://cs-portfolio-${id}-alantomws-projects.vercel.app" --yes; done < /tmp/delete-ids.txt
+while read id; do vercel rm "https://cs-portfolio-${id}-alans-project.vercel.app" --yes; done < /tmp/delete-ids.txt
 
 rm -rf .next
 pkill -f "next dev" 2>/dev/null; pkill -f "next-server" 2>/dev/null
