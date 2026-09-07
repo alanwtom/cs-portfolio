@@ -141,8 +141,11 @@ export default function Portfolio() {
         <section id="experience" className="scroll-mt-16 py-8 md:py-10">
           <SectionHeading title="Experience" />
           {/* Same index row as Projects: 1 size (14), 1 weight, hierarchy
-              from colour alone. Years sit in a left gutter, company at full
-              strength, role muted on the right.
+              from colour alone. Bullet, year, company, and nothing else.
+
+              The role and the description are no longer rendered. Both are
+              still in constants.ts, and unlike Projects there's no modal to
+              open, so this section is now names and dates only.
 
               `transition-colors`, not `transition-all`: Motion animates each
               row's opacity on scroll-in, and `transition-all` makes CSS
@@ -158,29 +161,24 @@ export default function Portfolio() {
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.4, delay: idx * 0.04 }}
               >
-                {/* Years go first on the grid but are the least load-bearing
-                    fact, so they're the column that drops on a phone.
-
-                    w-40 and nowrap, not w-32: "4 semesters · 2024–2026" is
-                    the longest value and it wrapped to two lines in a 128px
-                    gutter, which made that one row 64px tall and broke the
-                    even 40px rhythm the whole table depends on. */}
-                <span className="hidden w-40 shrink-0 whitespace-nowrap text-muted-foreground/60 sm:block">
-                  {item.years}
-                </span>
-                {/* Same marker position as the Projects table: after the
-                    year gutter, so the two lists' bullets line up. */}
+                {/* Bullet leads the row, same as Projects, so the two
+                    lists share one column grid. */}
                 <span
                   aria-hidden="true"
                   className="w-2 shrink-0 text-muted-foreground/40"
                 >
                   &bull;
                 </span>
+
+                {/* w-40 and nowrap: "4 semesters · 2024–2026" is the longest
+                    value here and wrapped in anything narrower, which made
+                    that one row double height and broke the even rhythm. */}
+                <span className="w-40 shrink-0 whitespace-nowrap text-muted-foreground/60">
+                  {item.years}
+                </span>
+
                 <span className="flex-1 truncate text-foreground">
                   {item.company}
-                </span>
-                <span className="shrink-0 whitespace-nowrap text-muted-foreground">
-                  {item.role}
                 </span>
               </motion.li>
             ))}

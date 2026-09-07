@@ -24,9 +24,9 @@ interface ProjectCardProps {
  * it shouting.
  *
  * This used to be a title, a description, and a wrapped row of tech chips,
- * about five lines per project. Now it is four columns on one 40px line:
- * year, name, one-line description, primary tech. Everything cut from here
- * still exists in the modal, which is what the row opens.
+ * about five lines per project. It is now a bullet, a year and a name.
+ * Everything cut from here still exists in the modal, which is what the
+ * row opens — the row is an index entry, not a summary.
  *
  * 40px rows: 24px line-height plus 8px top and bottom, so the whole table
  * stays on the 8px grid. Rows are separated by a bullet per entry rather
@@ -60,21 +60,7 @@ export function ProjectCard({
         }}
         className="type-meta flex w-full cursor-pointer items-baseline gap-4 py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
-        {/* Year gutter. w-40 matches the Experience table's gutter exactly,
-            so the two tables share one column grid and the titles below line
-            up with the companies above. It's wider than "2026" needs, but a
-            visible step between two stacked tables looks like a mistake and
-            generous space in front of a grouped year does not.
-
-            Same rule as Experience: least load-bearing column, so it's the
-            one that drops on a phone. */}
-        <span className="hidden w-40 shrink-0 text-muted-foreground/60 sm:block">
-          {showYear ? project.year : ""}
-        </span>
-
-        {/* Marker instead of a rule. It sits after the year gutter rather
-            than before it, so the bullets line up with the titles and the
-            years hang outside the list. */}
+        {/* Bullet leads the row. */}
         <span
           aria-hidden="true"
           className="w-2 shrink-0 text-muted-foreground/40"
@@ -82,19 +68,15 @@ export function ProjectCard({
           &bull;
         </span>
 
-        <span className="w-24 shrink-0 text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-200 group-hover:decoration-border sm:w-32">
+        {/* Year, shown once per group and blank on the rows beneath it.
+            It stays visible on mobile now: with the description and tech
+            columns gone there is no longer any width to compete for. */}
+        <span className="w-40 shrink-0 whitespace-nowrap text-muted-foreground/60">
+          {showYear ? project.year : ""}
+        </span>
+
+        <span className="flex-1 truncate text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-200 group-hover:decoration-border">
           {project.title}
-        </span>
-
-        {/* The description is what makes the row readable — "Current" on its
-            own tells you nothing — so on a narrow screen this is the column
-            that survives and the tech mark is the one that goes. */}
-        <span className="flex-1 truncate text-muted-foreground transition-colors duration-200 group-hover:text-foreground/80">
-          {project.description}
-        </span>
-
-        <span className="hidden shrink-0 whitespace-nowrap text-muted-foreground/60 sm:block">
-          {project.tech[0]}
         </span>
       </div>
     </motion.li>
