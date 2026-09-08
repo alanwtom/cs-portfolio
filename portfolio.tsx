@@ -171,9 +171,8 @@ export default function Portfolio() {
                   {item.company}
                 </span>
 
-                {/* Right-aligned, so "4 semesters · 2024–2026" simply runs
-                    further left instead of forcing a gutter wide enough for
-                    it on every other row. */}
+                {/* Right-aligned, so a longer range just runs further left
+                    instead of setting a gutter width for every other row. */}
                 <span className="shrink-0 whitespace-nowrap text-muted-foreground/60">
                   {item.years}
                 </span>

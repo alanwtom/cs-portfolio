@@ -5,8 +5,8 @@ export interface Project {
   tech: string[];
   /**
    * Year work started, taken from the first commit in each repo rather than
-   * guessed. Rendered benji.org style: shown once per group, blank on the
-   * rows beneath it, so the eye reads the list as grouped by year.
+   * guessed. Two digits, matching the Experience ranges directly below it in
+   * the same column.
    */
   year: string;
   github: string;
@@ -26,7 +26,7 @@ export interface Project {
 export const PROJECTS: Project[] = [
   {
     title: "Current",
-    year: "2026",
+    year: "26",
     description: "sleek native macOS BitTorrent client",
     tech: ["Swift 6", "SwiftUI", "AppKit", "C++", "libtorrent", "Sparkle"],
     github: "https://github.com/alanwtom/current",
@@ -44,7 +44,7 @@ export const PROJECTS: Project[] = [
   },
   {
     title: "Fwrd",
-    year: "2026",
+    year: "26",
     description:
       "privacy-forward iOS app that automatically forwards SMS messages to Discord, Slack, and Telegram",
     tech: ["Swift", "SwiftUI", "iOS Extensions", "Webhooks"],
@@ -62,7 +62,7 @@ export const PROJECTS: Project[] = [
   },
   {
     title: "Bug Bot",
-    year: "2025",
+    year: "25",
     description:
       "discord bot for career development with resume resources, real time job and event tracking, and learning material recommendations",
     tech: ["Python", "Discord.py", "GCP", "Nox"],
@@ -79,7 +79,7 @@ export const PROJECTS: Project[] = [
   },
   {
     title: "Flow",
-    year: "2025",
+    year: "25",
     description:
       "sleek browser extension that helps users maintain focus by blocking distracting elements while browsing",
     tech: ["JavaScript", "Chrome Extension API", "HTML", "CSS"],
@@ -111,28 +111,28 @@ export const EXPERIENCES: Experience[] = [
   {
     company: "CuseHacks",
     role: "Former President",
-    years: "2024–2026",
+    years: "24–26",
     description:
       "led Syracuse's largest hackathon, orchestrating 40% YoY attendance growth, $10K+ in sponsorships, and a team of 15+ members.",
   },
   {
     company: "Micron × SU",
     role: "Game Development Intern",
-    years: "4 semesters · 2024–2026",
+    years: "24–26",
     description:
       "joint project building an educational game that teaches semiconductor manufacturing",
   },
   {
     company: "iSchool @ SU",
     role: "NSF REU Researcher",
-    years: "2025",
+    years: "25",
     description:
       "engineered financial sentiment pipeline using FinBERT/Llama 3.1, analyzing Truth Social posts",
   },
   {
     company: "Data Lab @ SU",
     role: "Undergraduate Researcher",
-    years: "2024–2025",
+    years: "24–25",
     description:
       "built Python evaluation pipeline for LLM memory interference testing, automating analysis of 300+ associations",
   },
