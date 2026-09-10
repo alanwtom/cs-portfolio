@@ -3,8 +3,10 @@ import tailwindcssAnimate from "tailwindcss-animate";
 
 // all in fixtures is set to tailwind v3 as interims solutions
 
+// Light only. There is deliberately no `darkMode` key: the palette in
+// globals.css has a single set of values, so a `dark:` variant would have
+// nothing to switch to and would silently do nothing if anyone wrote one.
 const config: Config = {
-    darkMode: ["class"],
     content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -14,15 +16,10 @@ const config: Config = {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ["var(--font-geist-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
-  		},
-  		// The 8px grid, named. `p-inset` is the 24px safe space that
-  		// belongs inside every 24px-radius surface.
-  		spacing: {
-  			inset: 'var(--inset)',
-  			'inset-sm': 'var(--inset-sm)',
+  			sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
   		},
   		colors: {
+  			rule: 'hsl(var(--rule))',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -74,13 +71,13 @@ const config: Config = {
   				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
-  		// Three radii, derived from the 24px signature. `md` is what a
-  		// child inset 8px into a 24px parent needs for its corner to
-  		// stay concentric with the parent's.
+  		// The 24px signature radius is gone with the rest of the old
+  		// system. Almost nothing is rounded now, and what is, is rounded
+  		// barely — corners should never become a feature.
   		borderRadius: {
-  			lg: 'var(--radius)',      /* 24px — outer surfaces */
-  			md: 'var(--radius-md)',   /* 16px — nested surfaces */
-  			sm: 'var(--radius-sm)'    /* 8px  — controls, tags */
+  			lg: '8px',
+  			md: '6px',
+  			sm: '4px'
   		},
   		keyframes: {
   			'accordion-down': {

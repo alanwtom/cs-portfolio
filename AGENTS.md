@@ -92,90 +92,150 @@ Deployments are irreversible — never bypass these abort checks.
 
 ## The design system (read before building any new component)
 
-Every component on this site follows three constraints. They are enforced by
-tokens in `app/globals.css` and `tailwind.config.ts`, not by taste. Follow
-them and a new component will look like it belongs without anyone
-art-directing it.
+**The whole site is one column of 14px text.** That is the entire idea, and
+every constraint below exists to protect it. Several of the numbers are not
+round — 460 as a font weight, 11.76px of row padding, a 0.45s gap in the
+middle of the intro. They are tuned, not placeholders. Don't round them off;
+each one has a note saying what it holds up.
 
-### 1. An 8px base grid
+What this replaced, so nobody "restores" it by accident: a seven-step type
+ramp topping out at a 48px display size, an 8px grid, 24px radii, and a
+dark editorial palette with a light mode beside it. All gone. The bet is
+that a personal site doesn't need display type at all — the name is set at
+the same 14px as the body copy, separated only by weight — and the page is
+quiet enough that its one animation carries it. A 40px heading would undo
+the whole thing.
 
-Every gap, padding and line-height is a multiple of 8. Tailwind's scale is
-4px-based, so **only its even steps are legal**: `2`=8, `4`=16, `6`=24,
-`8`=32, `10`=40, `12`=48, `16`=64, `20`=80, `24`=96.
+### 1. Light only
 
-Never use `p-3` (12), `gap-5` (20), `mt-1.5` (6) or `py-0.5` (2). If an
-element needs to sit off-grid to look right, change its *box size* to a grid
-multiple instead of nudging it with a margin — e.g. an icon next to a 24px
-line of text should be a 24px box (`h-6 w-6`), not a 16px box with `mt-0.5`.
-
-### 2. Three radii, derived from one
+There is no dark mode and no `dark:` variant. `tailwind.config.ts` has no
+`darkMode` key on purpose, so a `dark:` class would silently do nothing.
 
 | token | value | use |
 |---|---|---|
-| `rounded-lg` | 24px | outer surfaces — cards, rows, modal, the hero photo |
-| `rounded-md` | 16px | surfaces nested 8px inside a 24px parent (24 − 8) |
-| `rounded-sm` | 8px  | controls — buttons, inputs, tags, focus rings |
+| `--background` | `#fdfdfc` | warm off-white; on `html`, not just `body` |
+| `--foreground` | `#111111` | all reading copy |
+| `--muted-foreground` | `rgba(0,0,0,.4)` | labels, dates, meta — **never** sentences |
+| `--border` | `#f2f2f2` | hairlines |
+| `--rule` | `#d9d9d9` | the line under a link |
 
-Safe space inside a 24px surface is `p-inset` (24px), or `p-inset-sm` (16px)
-for nested ones. That's why 24px shows up as both the radius and the padding:
-content never crowds the curve.
+That muted grey is about 2.8:1 on the background, which is under AA. It is
+a deliberate call for a date or a section label — things you scan, not read
+— and it is not acceptable for anything else. Body copy is `#111`.
 
-### 3. One family, three sizes and three weights per component
+`--muted-foreground` carries its own slash-alpha, so **Tailwind's `/60`
+opacity modifier cannot be used on it** — `text-muted-foreground/60` emits
+a second slash and the colour is dropped. There is only one muted grey.
 
-Geist throughout, at weights 400 and 500 only. Hierarchy comes from size and
-weight, never from a second typeface — a Baskerville serif was tried for the
-display type and rejected as far too formal for this site. Don't reintroduce
-one without asking.
+### 2. One size, two weights
 
-**Do not write `text-lg` or `font-semibold` in a component.** Pick a step from
-the ramp in `globals.css`:
+Inter, loaded as a **variable** font — that part is load-bearing. Body copy
+is weight 460, a real position on Inter's weight axis and not one of the
+static cuts. Pin the font to fixed weights and every line snaps to 500.
 
-| class | size / line-height | weight |
-|---|---|---|
-| `type-display` | 40/48 → 48/56 | 500 |
-| `type-title` | 24/32 | 500 |
-| `type-heading` | 18/24 | 500 |
-| `type-body` / `type-body-strong` | 16/24 | 400 / 500 |
-| `type-accent` | 16/24 italic | 400 |
-| `type-meta` | 14/24 | 400 |
-| `type-micro` | 12/16 uppercase | 500 |
+| class | size / line-height | weight | letter-spacing |
+|---|---|---|---|
+| `type-body` | 14 / 20 | 460 | -0.00563rem |
+| `type-strong` | 14 / 20 | 500 | -0.00563rem |
+| `type-small` | 13 / normal | 460 | -0.0025rem |
 
-Seven steps is the whole vocabulary of the site. **Any single component may use
-at most three of them and at most three weights.** That ceiling is what keeps
-the hierarchy readable — if a new component seems to need a fourth, it almost
-certainly needs to reuse one of the three it already has.
+Three classes is the entire vocabulary. `type-strong` is for a name and
+nothing else. `type-small` is footer small print and the year in an index
+row. **Never write `text-lg`, `font-semibold` or a raw `font-size`.**
 
-Each component file states its own budget in a comment at the top. Keep those
-comments accurate when you change a component.
+The letter-spacing is not eyeballed and not optional — Inter is drawn wide
+for UI use and needs the pull-in at 14px or the line looks loose.
+
+Index rows are the one place that sets type outside these classes, because
+they need `line-height: normal` rather than body copy's 20px. Same size,
+same weight, different leading: 20px there makes 44px rows instead of 41px.
+
+### 3. Measure and rhythm
+
+There is no 8px grid any more. The numbers that matter:
+
+| thing | value |
+|---|---|
+| column | `max-width: 36.375rem` (582px), centred |
+| page padding | `5rem 1rem 2.5rem`; `2rem 1.5rem 2.5rem` at ≤768px |
+| article | additionally capped at `70ch` |
+| paragraph spacing | `padding-top: 1rem` (top, not bottom) |
+| section → its label | `pt-12` (48px), label has `pb-2` |
+| index row | `padding: 0.735rem 0` → a 41px row |
+| footer | `pt-10 pb-20` |
+
+### 4. The intro animation
+
+Pure CSS in `globals.css`, keyed to the DOM shape in `portfolio.tsx`. It
+runs on first paint with no JavaScript, no hydration wait and no measuring,
+which is why it feels instant — and it means the `prefers-reduced-motion`
+block switches it off for free.
+
+```
+@keyframes staggerIn { 0% { opacity:0; transform:translateY(8px) } 100% { … } }
+0.5s ease both, 50ms between blocks
+.article > *   0, .05, .10, .15, .20, .25, .30, .35, then .40 for the 9th on
+section        .45      section:nth-of-type(2)  .50      footer  .55
+```
+
+Two things about this are easy to "fix" and must not be:
+
+- The sections **restart at 0.45s** instead of continuing the count, which
+  leaves a gap after the last paragraph. That gap is the best part — the
+  copy lands, then the index follows a beat later.
+- Everything past the 8th block shares 0.40s, so a long article can't drip.
+
+This is keyed to structure, so `portfolio.tsx` has to stay: `main.stagger`
+containing an `article` (header + paragraphs), then two `section`s, then a
+`footer`. Reorder them and the cascade silently loses its timing.
+
+An earlier attempt did this in Framer Motion with a per-element in-view
+check. It worked, but it needed the page to hydrate before anything moved,
+and it needed its own reduced-motion handling. CSS is both more faithful
+and less code. Don't reach for Framer Motion for the intro again.
+
+**Verifying motion:** the Browser pane freezes `requestAnimationFrame` when
+it isn't visible, so Framer Motion animations sit at their initial frame
+and look broken when they are fine. CSS animations are less affected but
+still throttle. Verify motion in headless Chrome over CDP, not in the pane.
+
+### Interaction: the list dims, the row doesn't light up
+
+Hovering an `.index-list` drops every row to 30% and the row under the
+cursor stays at 1, over 0.14s. The list steps back to let one item through,
+rather than one item highlighting. Pointer-only (`(hover: hover) and
+(pointer: fine)`) — on a touch screen `:hover` fires on tap and would dim
+the list at the moment you are trying to open something.
 
 ### Media bleeds, copy insets
 
-One deliberate exception to "24px of safe space inside every 24px surface":
-**media runs full bleed.** The project modal carries no padding of its own.
-The snapshot reaches all four of its edges and inherits the panel's 24px top
-corners; only the copy underneath gets `p-inset`.
+`ProjectModal` is the one surface that shows an image, so it is the one
+place with a shape of its own. Its type still comes from the three classes
+above. Two rules hold it up:
 
-This is the difference between the modal reading as an editorial spread and
-reading as a padded box with a picture in it, which is what it was before and
-what every AI-built modal defaults to. Three rules from published dark
-editorial systems, if you need to argue with a future version of me about it:
+- **Media runs full bleed.** The panel carries no padding of its own; the
+  snapshot reaches all four edges and inherits the panel's top corners, and
+  only the copy underneath is inset. That is the difference between an
+  editorial spread and a padded box with a picture in it, which is what
+  every AI-built modal defaults to.
+- **Never put text over raw photography without a gradient scrim.** The
+  title sits on a black scrim over the snapshot, which is also why
+  `ProjectCover` stays dark even though the site is light.
 
-- Editorial project cards run media full bleed, with no internal padding, no
-  border and no shadow.
-- Depth comes from hairline borders and extreme type-scale contrast, never
-  from shadows. That is why the modal pairs a 40/48px title against 16px body
-  and 12px labels, and why highlights are separated by 1px rules rather than
-  bullet glyphs.
-- Never put text over raw photography without a gradient scrim. The title
-  sits on a black scrim over the snapshot, and that is also why
-  `ProjectCover` is dark in **both** themes: a cover that went pale in light
-  mode would take the white title with it.
+Overlays use `.overlay-scrim` and `.overlay-panel`. On a light page you
+can't dim your way to depth — a black scrim over an off-white sheet just
+reads as the lights going out — so the scrim is white at 80% with a 1rem
+backdrop blur, and the panel is lifted by a seven-layer shadow whose
+largest step is 4% black.
 
-Sources: [Extract](https://styles.refero.design/style/c4e125b6-e3a3-4509-b06f-f0169216a394)
-and [Sequel](https://styles.refero.design/style/1bd3b2ba-9ad9-44ed-9130-03f9d94de821)
-on Refero Styles. Modal easing is Sequel's `cubic-bezier(0.625, 0.05, 0, 1)`
-at 0.25–0.3s, deliberately not a spring: overshoot on a panel this size reads
-as cheap and fights the scrim fading in.
+Write `backdrop-filter` **unprefixed only**. Hand-writing the `-webkit-`
+line alongside it makes the minifier collapse the pair and keep only the
+prefixed one, which Chrome ignores — the blur then vanishes everywhere but
+Safari. The build adds prefixes from browserslist.
+
+Modal easing is `cubic-bezier(0.625, 0.05, 0, 1)` at 0.25–0.3s, deliberately
+not a spring: overshoot on a panel this size reads as cheap and fights the
+scrim fading in. This predates the current type system and was kept.
 
 ### Project snapshots and tech icons
 
@@ -224,28 +284,46 @@ working:
 
 ### Verifying the system still holds
 
-Paste this in the browser console (or via the preview tools) on any page. It
-should report empty arrays for the off-grid buckets, a single family, and
-only 8/16/24 radii:
+Paste this into the console on the live page. The site is austere enough
+that the whole system fits in one assertion: **two font sizes, two weights,
+one family, and one text colour plus one muted grey.**
 
 ```js
-const SP=['paddingTop','paddingBottom','paddingLeft','paddingRight','marginTop','marginBottom','rowGap','columnGap'];
-const off=new Set(), sizes=new Set(), weights=new Set(), lhs=new Set(), fams=new Set(), radii=new Set();
-for (const el of document.querySelectorAll('main *, footer *')) {
+const sizes=new Set(), weights=new Set(), lhs=new Set(), fams=new Set(),
+      colors=new Set(), ls=new Set();
+for (const el of document.querySelectorAll('main *')) {
   if (!el.getClientRects().length || el.classList.contains('sr-only')) continue;
+  if (![...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) continue;
   const cs = getComputedStyle(el);
-  for (const p of SP) { const v = parseFloat(cs[p]) || 0; if (v > 0 && v % 8) off.add(v); }
-  const r = parseFloat(cs.borderTopLeftRadius) || 0; if (r > 0 && r < 999) radii.add(r);
-  if ([...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) {
-    sizes.add(Math.round(parseFloat(cs.fontSize)));
-    weights.add(cs.fontWeight);
-    lhs.add(Math.round(parseFloat(cs.lineHeight)));
-    fams.add(cs.fontFamily.split(',')[0].replace(/"/g, ''));
-  }
+  sizes.add(Math.round(parseFloat(cs.fontSize)));
+  weights.add(cs.fontWeight);
+  lhs.add(cs.lineHeight);
+  fams.add(cs.fontFamily.split(',')[0].replace(/"/g, ''));
+  colors.add(cs.color);
+  ls.add(cs.letterSpacing);
 }
 const sn = s => [...s].sort((a, b) => a - b);
-console.log({ offGridSpacing: sn(off), radii: sn(radii), fontSizes: sn(sizes),
-  weights: [...weights], offGridLineHeights: sn(lhs).filter(v => v % 8), families: [...fams] });
+console.log({ fontSizes: sn(sizes), weights: [...weights], families: [...fams],
+  lineHeights: [...lhs], colors: [...colors], letterSpacing: [...ls] });
+```
+
+Expected, exactly:
+
+```
+fontSizes:     [13, 14]
+weights:       ["460", "500"]
+families:      ["Inter"]
+lineHeights:   ["20px", "normal"]
+colors:        ["rgb(17, 17, 17)", "rgba(0, 0, 0, 0.4)"]
+letterSpacing: ["-0.09008px", "-0.04px"]
+```
+
+A third font size, a 400 or 600 weight, or a third colour means something
+reintroduced the old ramp. Row geometry should hold too — every
+`.index-row` is 41px:
+
+```js
+[...document.querySelectorAll('.index-row')].map(r => Math.round(r.getBoundingClientRect().height))
 ```
 
 ## Toolchain notes
@@ -271,8 +349,9 @@ console.log({ offGridSpacing: sn(off), radii: sn(radii), fontSizes: sn(sizes),
 ## Key file map
 
 - `portfolio.tsx` (root) — the whole single-page layout
-- `app/layout.tsx` — metadata, OG/Twitter tags, Geist font, JSON-LD
-- `app/globals.css` — dark/light editorial palette, a11y focus rings
-- `components/` — `ProjectCard`, `ProjectModal`, `ScrollProgress`,
-  `SectionHeading`, `theme-{provider,toggle}`
+- `app/layout.tsx` — metadata, OG/Twitter tags, Inter variable font, JSON-LD
+- `app/globals.css` — palette, the three type classes, the CSS intro,
+  index-row hover, overlay treatment, a11y focus rings
+- `components/` — `ProjectCard` (one index row), `ProjectModal`,
+  `ProjectCover`, `TechIcon`, `ErrorBoundary`
 - `lib/constants.ts` — content (projects, experiences, social URLs)

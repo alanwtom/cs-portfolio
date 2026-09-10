@@ -16,35 +16,34 @@ interface ProjectModalProps {
 }
 
 /*
-  Sharp, slightly expensive-feeling ease, borrowed from Sequel's system.
-  Deliberately not a spring: a spring makes a big panel feel bouncy and
-  cheap at this size, and the overshoot fights the scrim fading in.
+  Sharp, slightly expensive-feeling ease. Deliberately not a spring: a
+  spring makes a big panel feel bouncy and cheap at this size, and the
+  overshoot fights the scrim fading in.
 */
 const EASE: [number, number, number, number] = [0.625, 0.05, 0, 1];
 
 /**
  * Project detail sheet.
  *
- * Budget: 3 sizes (40/48 display, 16 body, 12 micro), 2 weights (500, 400).
+ * Budget: 2 type classes (strong for the title, body for everything else),
+ * 2 weights.
  *
- * The shape of this thing is the point. The previous version was a padded
- * box with a small framed screenshot inside it, then three labelled
- * sections underneath, which is the layout every AI-built modal converges
- * on and it reads as filler. Three borrowed rules fixed it:
+ * The type follows the site's three classes; the shape is this component's
+ * own, since nothing else here shows an image. Two rules hold it up:
  *
- *  - Editorial project cards run their media FULL BLEED: no internal
- *    padding, no border, no shadow. So the panel itself carries no padding;
- *    the snapshot goes edge to edge and inherits the panel's own 24px top
- *    corners, and only the copy below is inset.
- *  - Depth comes from hairline borders and extreme type-scale contrast,
- *    never from shadows. Hence a 48px title against 16px body and 12px
- *    labels, and highlights separated by 1px rules instead of bullets.
+ *  - Media runs FULL BLEED. The panel carries no padding of its own; the
+ *    snapshot reaches all four edges and inherits the panel's top corners,
+ *    and only the copy underneath is inset. That's the difference between
+ *    an editorial spread and a padded box with a picture in it, which is
+ *    what every AI-built modal defaults to.
  *  - Never put text on raw photography without a gradient scrim. The title
- *    sits over the snapshot on a black scrim, which is also why
- *    ProjectCover is dark in both themes.
+ *    sits on a black scrim over the snapshot, which is also why
+ *    ProjectCover is dark even though the site is light.
  *
- * Still on the 8px grid: 24px inset for copy, 32px between groups, 8px
- * within one.
+ * The title used to be 40px, set against 16px body and 12px labels — depth
+ * by type-scale contrast. That contrast is gone site-wide: the title is now
+ * the same 14px as the copy under it, separated by weight and by sitting
+ * white on the image. Everything is louder when nothing is.
  */
 export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
   // Handle escape key to close modal
@@ -69,7 +68,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+            className="overlay-scrim fixed inset-0 z-40"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -78,7 +77,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
           />
 
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-inset"
+            className="fixed inset-0 z-50 flex items-center justify-center p-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -91,7 +90,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
               role="dialog"
               aria-modal="true"
               aria-label={project.title}
-              className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg border border-border bg-card text-card-foreground"
+              className="overlay-panel max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg text-foreground"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 12 }}
@@ -124,7 +123,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                 />
 
                 <motion.h2
-                  className="type-display absolute bottom-0 left-0 p-inset text-white"
+                  className="type-strong absolute bottom-0 left-0 p-6 text-white"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1, duration: 0.3, ease: EASE }}
@@ -165,10 +164,14 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                 </button>
               </div>
 
-              <div className="space-y-8 p-inset">
+              <div className="space-y-8 p-6">
                 {/* ── One-line summary ───────────────────────────────── */}
+                {/* Reading copy is #111, not the 40% grey. That grey is for
+                    labels and dates only — every sentence anyone is meant to
+                    actually read stays full strength, and at 14px the grey
+                    would sit under 3:1 against this background. */}
                 <motion.p
-                  className="type-body text-muted-foreground"
+                  className="type-body text-foreground"
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.14, duration: 0.3, ease: EASE }}
@@ -186,14 +189,14 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.18, duration: 0.3, ease: EASE }}
                 >
-                  <h3 className="type-micro text-muted-foreground/70">
+                  <h3 className="type-small text-muted-foreground">
                     Built with
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {project.tech.map((tech, i) => (
                       <motion.span
                         key={tech}
-                        className="type-micro flex h-8 items-center gap-2 rounded-sm border border-border bg-secondary/60 px-2 text-muted-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+                        className="type-small flex h-8 items-center gap-2 rounded-sm bg-secondary px-2 text-muted-foreground"
                         initial={{ opacity: 0, y: 6 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{
@@ -221,14 +224,14 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.22, duration: 0.3, ease: EASE }}
                 >
-                  <h3 className="type-micro text-muted-foreground/70">
+                  <h3 className="type-small text-muted-foreground">
                     Highlights
                   </h3>
                   <ul className="grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2">
                     {project.features.map((feature, i) => (
                       <motion.li
                         key={feature}
-                        className="type-body ml-4 list-disc text-muted-foreground marker:text-muted-foreground/40"
+                        className="type-body ml-4 list-disc text-foreground marker:text-muted-foreground"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{

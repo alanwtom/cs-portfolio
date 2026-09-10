@@ -7,111 +7,77 @@
   THE DESIGN SYSTEM
   ═══════════════════════════════════════════════════════════════════
 
-  Everything on this site is built on three constraints. If you (or an
-  AI) add a new component later, obey these and it will look like it
-  belongs without anyone having to art-direct it.
+  Some of the numbers below are not round — 460 as a font weight,
+  11.76px of row padding, -0.00563rem of tracking. They are tuned
+  values, not placeholders. Don't "fix" them into rounder ones; the
+  notes on each say what they are holding up.
 
-  1. AN 8px GRID. Every gap, every bit of padding, every line-height
-     is a multiple of 8. Nothing is 6px or 20px or 14px. That's what
-     makes unrelated blocks line up without anyone measuring.
+  What replaced what, so future me knows this was deliberate:
 
-  2. THREE RADII, DERIVED FROM ONE. Outer surfaces are 24px. When you
-     nest something inside a 24px surface with 8px of breathing room,
-     the inner corner is 16px (24 − 8) so the curves stay parallel.
-     Small controls are 8px. That's the whole list.
+  This site used to run a seven-step type ramp (40px display down to a
+  12px uppercase micro) on an 8px grid, in a dark editorial palette,
+  with 24px radii. All of that is gone. The bet now is that a personal
+  site does not need display type at all — the name is set at the same
+  14px as the body copy and separated only by weight, and the page is
+  quiet enough that its one animation carries it. Reintroducing a 40px
+  heading would undo the whole thing.
 
-  3. ONE TYPEFACE, AND NO COMPONENT USES MORE THAN THREE SIZES OR
-     THREE WEIGHTS. Geist throughout, at 400 and 500 only. Hierarchy
-     comes from size and weight, not from switching voice — we tried a
-     Baskerville serif for the display type and it read far too formal
-     for this site. The size ramp lives below as .type-* classes; use
-     one of those rather than picking a font-size by hand.
+  Three constraints now:
 
-  Palette is an editorial dark-first zinc neutral, with a light mode
-  of #f3f4f6 + near-black text.
+  1. ONE SIZE. 14px / 20px line-height, everywhere. There is one
+     exception, 13px, and it is for footer small print only.
+
+  2. TWO WEIGHTS. 460 for everything, 500 for a name. 460 is a
+     variable-font weight — it is Inter sitting just above Regular,
+     which is what stops 14px body copy looking thin at this measure.
+     It only works because the font is loaded as a variable font.
+
+  3. LIGHT ONLY. Warm off-white, near-black text, and one muted grey
+     that is really just black at 40%. There is no dark mode. There is
+     no second accent colour.
 */
 
 @layer base {
   :root {
-    /* ── 1. The 8px grid ─────────────────────────────────────────
-       Named so the intent is visible in the markup. Tailwind's own
-       scale is 4px-based, so only its EVEN steps are on our grid:
-       2=8, 4=16, 6=24, 8=32, 10=40, 12=48, 16=64, 20=80, 24=96.
-       Never reach for p-3 (12px), gap-5 (20px) or mt-1.5 (6px). */
-    --grid: 8px;
-    --space-1: 8px;
-    --space-2: 16px;
-    --space-3: 24px;
-    --space-4: 32px;
-    --space-5: 40px;
-    --space-6: 48px;
-    --space-8: 64px;
-    --space-10: 80px;
-    --space-12: 96px;
-    --space-14: 112px;
+    /* ── Palette ────────────────────────────────────────────────
+       Off-white, not white: #fdfdfc is a touch warm, which is what
+       keeps a page that is 95% empty from reading as a blank sheet.
+       Muted is rgba(0,0,0,.4) flattened onto that background, so it
+       stays a single token that Tailwind opacity can still modify. */
+    --background: 60 20% 99%; /* #fdfdfc */
+    --foreground: 0 0% 6.7%; /* #111111 */
+    /* Real alpha, not a flattened grey, because it has to sit on the page
+       AND on the modal panel. Note it carries its own slash-alpha, so
+       Tailwind's `/60` opacity modifier can't be used on this token —
+       it would produce a second slash and the colour would be dropped.
+       There is only one muted grey on this site anyway. */
+    --muted-foreground: 0 0% 0% / 0.4;
+    --border: 0 0% 95%; /* #f2f2f2 — hairlines */
+    --rule: 0 0% 85%; /* #d9d9d9 — the line under a link */
 
-    /* ── 2. Radius + inset ────────────────────────────────────────
-       24px is the signature. --inset is the safe space inside any
-       24px surface: also 24px, so content never crowds the curve. */
-    --radius: 24px; /* outer surfaces: cards, rows, modal, photo */
-    --radius-md: 16px; /* nested surfaces, 8px inside a 24px parent */
-    --radius-sm: 8px; /* controls: buttons, tags, inputs, focus ring */
-    --inset: 24px;
-    --inset-sm: 16px;
-
-    /* Light (editorial) */
-    --background: 220 14% 96%; /* #f3f4f6 gray-100 */
-    --foreground: 240 10% 4%; /* near-black */
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 4%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 4%;
-    --primary: 240 6% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 240 6% 10%;
-    --muted: 240 5% 94%;
-    --muted-foreground: 240 4% 46%;
-    --accent: 240 5% 94%;
-    --accent-foreground: 240 6% 10%;
+    /* Kept because shadcn's primitives reference them. Same two
+       colours as everything else — there is no third surface. */
+    --card: 60 20% 99%;
+    --card-foreground: 0 0% 7%;
+    --popover: 60 20% 99%;
+    --popover-foreground: 0 0% 7%;
+    --primary: 0 0% 7%;
+    --primary-foreground: 60 20% 99%;
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 7%;
+    --muted: 0 0% 95%;
+    --accent: 0 0% 95%;
+    --accent-foreground: 0 0% 7%;
     --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 6% 90%;
-    --input: 240 6% 90%;
-    --ring: 240 6% 10%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-  }
+    --destructive-foreground: 60 20% 99%;
+    --input: 0 0% 95%;
+    --ring: 0 0% 7%;
 
-  .dark {
-    /* Dark editorial (zinc-neutral) */
-    --background: 0 0% 4.7%; /* #0c0c0c dark charcoal */
-    --foreground: 0 0% 93%; /* zinc-200 */
-    --card: 0 0% 6%;
-    --card-foreground: 0 0% 93%;
-    --popover: 0 0% 6%;
-    --popover-foreground: 0 0% 93%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 93%;
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 56%; /* zinc-400 */
-    --accent: 0 0% 12%;
-    --accent-foreground: 0 0% 93%;
-    --destructive: 0 62% 45%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14%; /* zinc-800-ish */
-    --input: 0 0% 14%;
-    --ring: 0 0% 72%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    /* ── Measure and rhythm ──────────────────────────────────────
+       582px is a deliberately narrow column: at 14px it lands around
+       70 characters, which is why the article also carries a 70ch
+       cap for anyone reading at a larger text size. */
+    --measure: 36.375rem;
   }
 }
 
@@ -119,96 +85,166 @@
   * {
     @apply border-border;
   }
+
+  html {
+    background: hsl(var(--background));
+  }
+
   body {
-    @apply bg-background text-foreground;
+    /* optimizeLegibility + antialiased are doing real work at 14px —
+       without them the 460 weight renders chunky on Windows and
+       washed out on a Mac. */
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-size: 16px;
+    overflow-y: scroll;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    text-size-adjust: none;
   }
 }
 
 /*
-  ── 3. The type ramp ──────────────────────────────────────────────
-  Six steps, and that is the entire vocabulary of the site. Every
-  line-height is a multiple of 8 so text blocks land on the same grid
-  as the boxes around them.
+  ── The type ramp, such as it is ─────────────────────────────────
+  Three classes. That is the entire vocabulary of the site.
 
-  Do not write `text-lg` or `font-semibold` in a component. Pick a
-  step from this list. If a new component seems to need a seventh
-  step, it almost certainly needs one of these six instead.
+      class          size / line     weight   used for
+      ────────────────────────────────────────────────────────────
+      type-body      14 / 20         460      everything
+      type-strong    14 / 20         500      a name, and only a name
+      type-small     13 / normal     460      footer small print
 
-      step        size / line     weight
-      ──────────────────────────────────────
-      display     40/48 → 48/56   500
-      title       24/32           500
-      heading     18/24           500
-      body        16/24           400  (500 = -strong)
-      accent      16/24 italic    400
-      meta        14/24           400
-      micro       12/16           500  uppercase
-
-  Per-component budget: at most THREE sizes and THREE weights. The
-  hero uses display + body + micro. A project row uses heading + body
-  + micro. That ceiling is what keeps the hierarchy readable.
+  The letter-spacing is not optional: -0.00563rem at 14px and
+  -0.0025rem at 13px. Inter is drawn slightly wide for UI use and
+  needs the pull-in at this size or the line looks loose.
 */
 @layer components {
-  .type-display {
-    font-weight: 500;
-    font-size: 40px;
-    line-height: 48px;
-    letter-spacing: -0.03em;
+  .type-body {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 460;
+    letter-spacing: -0.00563rem;
   }
-  @media (min-width: 768px) {
-    .type-display {
-      font-size: 48px;
-      line-height: 56px;
+
+  .type-strong {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    letter-spacing: -0.00563rem;
+  }
+
+  .type-small {
+    font-size: 0.8125rem;
+    /* `normal`, not a number: Tailwind's preflight sets 1.5 on the root,
+       which would give this a 19.5px line box and knock the year in an
+       index row off the baseline of the name beside it. */
+    line-height: normal;
+    font-weight: 460;
+    letter-spacing: -0.0025rem;
+  }
+}
+
+@layer components {
+  /* ── The column ───────────────────────────────────────────────
+     80px of air above the name on desktop, 32px on a phone. The
+     generous top padding is most of why the page feels calm before
+     you have read a word of it. */
+  .container-page {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: 5rem 1rem 2.5rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    .container-page {
+      padding: 2rem 1.5rem 2.5rem;
     }
   }
 
-  .type-title {
-    font-weight: 500;
-    font-size: 24px;
-    line-height: 32px;
-    letter-spacing: -0.02em;
+  .article {
+    max-width: 70ch;
   }
 
-  /* Italic, used only to set a secondary phrase against a heading — job
-     titles beside a company name. */
-  .type-accent {
-    font-weight: 400;
-    font-style: italic;
-    font-size: 16px;
-    line-height: 24px;
+  /* Paragraph spacing is padding-TOP, not margin-bottom. It matters:
+     the first block after the header gets the same 16px as every
+     other, and nothing collapses into anything. */
+  .article > p {
+    padding-top: 1rem;
   }
 
-  .type-heading {
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 24px;
-    letter-spacing: -0.01em;
+  /* ── Index rows ───────────────────────────────────────────────
+     11.76px of vertical padding around a natural 14px line box makes
+     a 41px row. Not on any grid; it is what his rows measure.
+
+     The row sets its own type rather than borrowing `.type-body`,
+     for one reason: line-height. Body copy is locked to 20px so
+     paragraphs keep an even rhythm, but a single-line row wants the
+     font's natural line box (~17px) — use 20px here and every row
+     grows to 44px and the list loses three rows' worth of air over
+     eight entries. Same size, same weight, different leading. */
+  .index-row {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.735rem 0;
+    width: 100%;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 460;
+    line-height: normal;
+    letter-spacing: -0.00563rem;
   }
 
-  .type-body {
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
+  /* Hovering the list dims every row, and the row under the cursor
+     comes back. Reads as the list stepping back to let one item
+     through, rather than one item lighting up.
+
+     Pointer-only: on a touch screen there is no hover, so the :hover
+     that fires on tap would dim the list at the exact moment you are
+     trying to open something. */
+  @media (hover: hover) and (pointer: fine) {
+    .index-list:hover .index-row > * {
+      opacity: 0.3;
+    }
+    .index-list .index-row:hover > * {
+      opacity: 1;
+    }
   }
 
-  .type-body-strong {
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
+  .index-row > * {
+    transition: opacity 0.14s;
+  }
+}
+
+@layer components {
+  /* ── Overlays ─────────────────────────────────────────────────
+     On a light page you can't dim your way to depth — a black scrim
+     over an off-white sheet just looks like the lights went out. So
+     the scrim is white and blurred instead, and the panel is lifted
+     off it by a seven-layer shadow that is almost entirely
+     invisible: the largest step is 4% black. Stacked, they read as a
+     soft physical lift rather than a drop shadow. */
+  .overlay-scrim {
+    background: hsla(0, 0%, 100%, 0.8);
+    /* Unprefixed only, and that is deliberate. Writing the -webkit- line
+       here by hand made the minifier collapse the pair and keep ONLY the
+       prefixed one, which Chrome ignores — so the blur silently vanished
+       everywhere but Safari. The build adds prefixes from browserslist;
+       it doesn't need help. */
+    backdrop-filter: blur(1rem);
   }
 
-  .type-meta {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 24px;
-  }
-
-  .type-micro {
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 16px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  .overlay-panel {
+    background: hsl(var(--background));
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.04),
+      0 1.625rem 3.375rem rgba(0, 0, 0, 0.04),
+      0 1rem 2rem rgba(0, 0, 0, 0.03),
+      0 0.625rem 1rem rgba(0, 0, 0, 0.024),
+      0 0.3125rem 0.5rem rgba(0, 0, 0, 0.02),
+      0 0.125rem 0.25rem rgba(0, 0, 0, 0.016),
+      0 0 0.125rem rgba(0, 0, 0, 0.01);
   }
 }
 
@@ -216,99 +252,106 @@
   .text-balance {
     text-wrap: balance;
   }
-
-  .animate-fade-in {
-    animation: fadeIn 1s ease-out forwards;
-  }
-
-  .line-clamp-1 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-  }
-
-  .line-clamp-2 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  }
-
-  /* Hide scrollbar for the section rail, etc. */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
 }
 
-@keyframes fadeIn {
-  from {
+/*
+  ── The intro ────────────────────────────────────────────────────
+
+  The page does not fade in as one sheet. It arrives block by block
+  down the column, 50ms apart, each block rising 8px as it fades. It
+  reads like the page is being set in front of you, in reading order.
+  A flat crossfade has no rhythm, so it only reads as "slow".
+
+  Pure CSS on purpose. It runs on first paint with no JavaScript, no
+  hydration wait and no measuring, which is why it feels instant — and
+  it means `prefers-reduced-motion` below switches it off for free.
+
+  Two delays look like mistakes and are not. Everything past the 8th
+  block shares 0.4s, so a page that grows longer can never drip on
+  forever. And the sections restart at 0.45s rather than continuing
+  the count, which leaves a small gap before the lists arrive — that
+  gap is the best part, the copy lands and the index follows a beat
+  later.
+*/
+@keyframes staggerIn {
+  0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(8px);
   }
-  to {
+  100% {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* Flowing blue gradient for the Fwrd link in the hero.
-   The blue shades shift and flow smoothly across the text like a lava
-   lamp — blobs of color morphing and drifting, but more uniform. No
-   streak or glint; just living, moving color. */
-@keyframes mc-enchant-flow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+.stagger > .article > *,
+.stagger > section,
+.stagger > footer {
+  animation: staggerIn 0.5s ease both;
 }
 
-.mc-enchant {
-  background-image: linear-gradient(
-    120deg,
-    #1e3a8a,
-    #3b82f6,
-    #60a5fa,
-    #93c5fd,
-    #60a5fa,
-    #3b82f6,
-    #1d4ed8,
-    #3b82f6,
-    #1e3a8a
-  );
-  background-size: 400% 100%;
-  background-repeat: no-repeat;
-  background-position: 0% 50%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  animation: mc-enchant-flow 8s ease-in-out infinite;
+.stagger > .article > :first-child {
+  animation-delay: 0s;
+}
+.stagger > .article > :nth-child(2) {
+  animation-delay: 0.05s;
+}
+.stagger > .article > :nth-child(3) {
+  animation-delay: 0.1s;
+}
+.stagger > .article > :nth-child(4) {
+  animation-delay: 0.15s;
+}
+.stagger > .article > :nth-child(5) {
+  animation-delay: 0.2s;
+}
+.stagger > .article > :nth-child(6) {
+  animation-delay: 0.25s;
+}
+.stagger > .article > :nth-child(7) {
+  animation-delay: 0.3s;
+}
+.stagger > .article > :nth-child(8) {
+  animation-delay: 0.35s;
+}
+.stagger > .article > :nth-child(n + 9) {
+  animation-delay: 0.4s;
+}
+.stagger > section {
+  animation-delay: 0.45s;
+}
+.stagger > section:nth-of-type(2) {
+  animation-delay: 0.5s;
+}
+.stagger > footer {
+  animation-delay: 0.55s;
 }
 
-/* nested <a> inside .mc-enchant inherits the text clip */
-.mc-enchant :is(a, span) {
-  background: inherit;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+/* Links: a hairline under the text that darkens on hover. Not an
+   underline property — a positioned rule, so it clears the descenders
+   instead of cutting through them. */
+.link {
+  position: relative;
+  display: inline;
+  color: inherit;
+  transition: 0.2s;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .mc-enchant {
-    animation: none;
-    background-position: 0% 50%;
-  }
+.link::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  border-radius: 2px;
+  background: hsl(var(--rule));
+  transition: inherit;
+}
+
+.link:hover::before {
+  background: hsl(var(--foreground));
 }
 
 /* Smooth scrolling with respect for reduced motion */
@@ -329,7 +372,6 @@ html {
   }
 }
 
-/* Refined custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -340,33 +382,23 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(0 0% 22%);
-  border-radius: var(--radius-sm);
+  background: hsl(0 0% 80%);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(0 0% 32%);
-}
-
-.light ::-webkit-scrollbar-thumb {
-  background: hsl(0 0% 80%);
-}
-
-.light ::-webkit-scrollbar-thumb:hover {
   background: hsl(0 0% 70%);
 }
 
-/* Restore proper focus-visible rings for keyboard users (Emil's site is accessible) */
 :focus {
   outline: none;
 }
 :focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
-  border-radius: var(--radius-sm);
+  border-radius: 2px;
 }
 
-/* Restore sensible cursors (removes the old `cursor: default !important` hack) */
 button,
 a,
 [role="button"],

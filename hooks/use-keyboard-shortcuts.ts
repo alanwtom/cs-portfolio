@@ -1,29 +1,15 @@
 import { useEffect } from "react"
 
 interface KeyboardShortcutOptions {
-  onThemeToggle: () => void
   onEscapePress: () => void
 }
 
+// Cmd/Ctrl+L used to toggle the theme from here. There is only one theme
+// now, and that shortcut is the browser's own (focus the address bar), so
+// taking it back was never a good trade.
 export function useKeyboardShortcuts({
-  onThemeToggle,
   onEscapePress,
 }: KeyboardShortcutOptions) {
-
-  // Theme toggle shortcut (Cmd/Ctrl + L)
-  useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "l") {
-        e.preventDefault()
-        onThemeToggle()
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [onThemeToggle])
-
-  // Escape key handler
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {

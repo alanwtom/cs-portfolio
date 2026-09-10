@@ -1,50 +1,32 @@
 "use client";
 
-import { Reveal, STAGGER_STEP } from "@/components/Reveal";
 import type { Project } from "@/lib/constants";
 
 interface ProjectCardProps {
   project: Project;
-  /** Row's place in this list — staggers the reveal if you scroll to it. */
-  index: number;
-  /** Row's place on the whole page — its beat in the arrival cascade. */
-  order: number;
   onClick: () => void;
 }
 
 /**
- * One project, compressed to a single index row.
+ * One project, as a single index row.
  *
- * Budget: 1 size (14), 1 weight (400). Hierarchy comes entirely from
- * colour: the name is full-strength foreground, everything else is muted.
- * That is the trick that lets a whole row sit on one line without any of
- * it shouting.
+ * Budget: 2 type classes (body for the name, small for the year), 1 weight.
  *
- * A bullet and a name on the left, the year hard against the right edge.
- * Two anchors, so the row spans the full column width. An earlier version
- * put the year in a fixed left gutter sized for the longest value on the
- * page, which left every other row with a hole punched through its middle.
+ * Name hard against the left, year hard against the right, nothing in
+ * between. There is no bullet and no rule: the rows are separated by their
+ * own 11.76px of padding and nothing else, which is enough at this size.
  *
- * Everything cut from here still exists in the modal, which is what the
- * row opens — this is an index entry, not a summary.
+ * The row doesn't highlight on hover — the list dims around it. Hovering
+ * anywhere in the list drops every row to 30% and the one under the cursor
+ * stays at full, so the list steps back to let one item through rather than
+ * one item lighting up. That's in globals.css, on `.index-list`, because it
+ * needs the parent's hover state and can't be expressed from in here.
  *
- * 40px rows: 24px line-height plus 8px top and bottom, so the whole table
- * stays on the 8px grid. Rows are separated by a bullet per entry rather
- * than by hairline rules. Keyboard accessible (Enter / Space).
+ * Keyboard accessible (Enter / Space) — it opens the detail modal.
  */
-export function ProjectCard({
-  project,
-  index,
-  order,
-  onClick,
-}: ProjectCardProps) {
+export function ProjectCard({ project, onClick }: ProjectCardProps) {
   return (
-    <Reveal
-      as="li"
-      className="group"
-      order={order}
-      scrollDelay={index * STAGGER_STEP}
-    >
+    <li>
       <div
         role="button"
         tabIndex={0}
@@ -55,29 +37,13 @@ export function ProjectCard({
             onClick();
           }
         }}
-        className="type-meta flex w-full cursor-pointer items-baseline gap-2 py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="index-row"
       >
-        {/* Bullet sits against the name, 8px away, so it reads as a list
-            marker rather than as a column of its own. */}
-        <span
-          aria-hidden="true"
-          className="shrink-0 text-muted-foreground/40"
-        >
-          &bull;
-        </span>
-
-        {/* flex-1 on the name is what pushes the year to the right edge,
-            which is the whole trick: the row gets an anchor at each end and
-            spans the column, instead of huddling on the left with a void
-            beside it. */}
-        <span className="flex-1 truncate text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-200 group-hover:decoration-border">
-          {project.title}
-        </span>
-
-        <span className="shrink-0 whitespace-nowrap text-muted-foreground/60">
+        <span className="flex-1 truncate">{project.title}</span>
+        <span className="type-small shrink-0 whitespace-nowrap text-muted-foreground">
           {project.year}
         </span>
       </div>
-    </Reveal>
+    </li>
   );
 }

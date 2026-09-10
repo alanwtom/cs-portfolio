@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-// One family, two weights (400 and 500). Hierarchy comes from size and
-// weight, not from switching voice.
-import { GeistSans } from "geist/font/sans";
+// Inter, as a VARIABLE font — that part is load-bearing. The site sets
+// body copy at weight 460, which is a real position on Inter's weight
+// axis and not one of the static cuts. Pin this to fixed weights and
+// every line on the page silently snaps to 500.
+import { Inter } from "next/font/google";
 import { ASSET_VERSION } from "../lib/constants";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -67,9 +75,14 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <head>
         <link rel="icon" href={`/images/cockatiel.webp?v=${ASSET_VERSION}`} type="image/webp" />
+        {/* Light only — tell the browser, so form controls, scrollbars and
+            the mobile URL bar don't render themselves dark around a page
+            that has no dark mode. */}
+        <meta name="color-scheme" content="light" />
+        <meta name="theme-color" content="#fdfdfc" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script
           type="application/ld+json"
@@ -97,13 +110,10 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
           }}
         />
       </head>
-      <body
-        className={`${GeistSans.variable} font-sans antialiased`}
-      >
-        <main role="main" id="main-content">
-          {children}
-        </main>
-      </body>
+      {/* The page supplies its own <main>. This used to wrap children in a
+          second one that carried the same id, so the skip link and every
+          screen reader saw two "main" landmarks with a duplicate id. */}
+      <body className="font-sans">{children}</body>
     </html>
   );
 }

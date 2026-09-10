@@ -1,20 +1,12 @@
 "use client";
 
 import { Github } from "lucide-react";
-import { useTheme } from "./components/theme-provider";
 import { ProjectCard } from "./components/ProjectCard";
-import { SectionHeading } from "./components/SectionHeading";
 import dynamic from "next/dynamic";
 
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
-import {
-  PROJECTS,
-  EXPERIENCES,
-  GITHUB_URL,
-  X_URL,
-} from "./lib/constants";
+import { PROJECTS, EXPERIENCES, GITHUB_URL, X_URL } from "./lib/constants";
 import React, { useEffect, useRef, useState } from "react";
-import { Reveal, STAGGER_STEP } from "./components/Reveal";
 
 // Lazy-load modal to reduce initial bundle size
 const ProjectModal = dynamic(
@@ -22,32 +14,29 @@ const ProjectModal = dynamic(
   { ssr: false }
 );
 
-/* ── The arrival cascade ────────────────────────────────────────────────
-   Every block on the page, numbered top to bottom. Whatever is on the first
-   screen when you land uses its number to work out how long to wait before
-   it rises in, 50ms apart — see components/Reveal.tsx for the why.
-
-   Counted off the two content lists rather than written out, so adding a
-   project renumbers everything below it instead of quietly stacking two
-   blocks on the same beat. */
-const ORDER = {
-  name: 0,
-  role: 1,
-  intro: 2,
-  background: 3,
-  projectsHeading: 4,
-  projectRows: 5,
-  experienceHeading: 5 + PROJECTS.length,
-  experienceRows: 6 + PROJECTS.length,
-} as const;
-
+/**
+ * The whole site.
+ *
+ * Budget: 2 of the 3 type classes (body and strong); the footer adds small.
+ *
+ * The shape of this markup is load-bearing. The intro is pure CSS keyed to
+ * it — `.article > *` counts off at 50ms, then the sections restart at 0.45s
+ * and 0.5s, then the footer at 0.55s — so the page has to be header +
+ * paragraphs inside an article, then two sections, then a footer, in that
+ * order. Reorder them and the cascade quietly loses its timing. The intro
+ * block in globals.css is the other half of this file.
+ *
+ * This used to gate the whole page behind a theme-loading spinner, so the
+ * server sent nothing but a spinner and real content appeared only once
+ * JavaScript had run. With the theme gone the page renders on the server,
+ * which is what lets a CSS intro start on the first paint rather than
+ * waiting for hydration.
+ */
 export default function Portfolio() {
-  const { isLoaded } = useTheme();
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const lastFocusedRef = useRef<HTMLElement | null>(null);
 
   useKeyboardShortcuts({
-    onThemeToggle: () => {},
     onEscapePress: () => {
       if (selectedProject !== null) setSelectedProject(null);
     },
@@ -63,209 +52,126 @@ export default function Portfolio() {
     }
   }, [selectedProject]);
 
-  // Show loading state while theme is being loaded.
-  if (!isLoaded) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-foreground" />
-      </div>
-    );
-  }
-
-  /* The page used to crossfade in as one sheet over 0.8s. That's gone: the
-     blocks inside cascade instead, so fading the whole thing on top of them
-     would just double the fade and flatten the rhythm back out. */
   return (
-    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background text-foreground">
-      {/* Skip to main content link for accessibility */}
+    <>
       <a
         href="#main-content"
-        className="type-body sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 z-50 rounded-sm bg-primary px-4 py-2 text-primary-foreground transition-all duration-200"
+        className="type-body sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 z-50 rounded-sm bg-primary px-4 py-2 text-primary-foreground"
       >
         Skip to main content
       </a>
 
-      {/* Top progress bar is gone; sidebar rail handles section nav */}
-
-      {/* max-w-2xl is 672px = 84 × 8, and the 24px gutter matches --inset,
-          so the text column itself sits on the grid. */}
-      <main
-        id="main-content"
-        className="mx-auto w-full max-w-2xl flex-1 px-inset"
-      >
-        {/* ───────────────────────── Hero ─────────────────────────
-            Budget: 3 sizes (40 / 12 / 16), 2 weights (500, 400). Big name,
-            uppercase micro role line, body copy. */}
-        <section id="hero" className="scroll-mt-16 pt-20 pb-8 md:pb-10 md:pt-28">
-          {/* The profile photo used to sit to the right of this. It was a
-              3024x4032 phone photo being displayed at 112px, so the browser
-              downloaded 380KB to paint a thumbnail, and it was the slowest
-              thing on the page by a wide margin. The file is still in
-              public/images if it ever comes back; resize it first. */}
-          <div>
-            <Reveal order={ORDER.name}>
-              <h1 className="type-display text-foreground">Alan Tom</h1>
-            </Reveal>
-            <Reveal
-              as="p"
-              order={ORDER.role}
-              className="type-micro mt-4 text-muted-foreground"
-            >
+      <main id="main-content" className="container-page stagger">
+        {/* ── Article ──────────────────────────────────────────────
+            Header, then paragraphs. No display type anywhere: the name
+            is the same 14px as the copy beneath it and is set apart by
+            weight alone, which is the whole idea. */}
+        <article className="article">
+          <header className="pb-2">
+            <h1 className="type-strong">Alan Tom</h1>
+            <p className="type-body text-muted-foreground">
               Computer Science senior at Syracuse University
-            </Reveal>
-          </div>
+            </p>
+          </header>
 
-          {/* Each paragraph is its own beat in the cascade, so the two lines
-              of copy land one after the other rather than as a slab. */}
-          <div className="type-body mt-12 max-w-xl space-y-6 text-muted-foreground">
-            <Reveal as="p" order={ORDER.intro}>
-              Currently building{" "}
-              <span className="mc-enchant">
-                <Underline href="https://fwrdsms.com">Fwrd</Underline>
-              </span>
-              , a privacy-forward iOS app that automatically forwards SMS to
-              Discord, Slack, and Telegram.
-            </Reveal>
-            <Reveal as="p" order={ORDER.background}>
-              Former Researcher at{" "}
-              <Underline href="https://ischool.syracuse.edu/summer-paid-research-experience/">
-                iSchool NSF REU
-              </Underline>
-              , and President of{" "}
-              <Underline href="https://cusehacks.com">CuseHacks</Underline>
-              .
-            </Reveal>
-          </div>
-        </section>
+          <p className="type-body">
+            Currently building <Link href="https://fwrdsms.com">Fwrd</Link>, a
+            privacy-forward iOS app that automatically forwards SMS to Discord,
+            Slack, and Telegram.
+          </p>
 
-        {/* ───────────────────────── Projects ─────────────────────
-            An index, not a set of cards: one 40px row each, hairline
-            separated, click a row for the detail. */}
-        <section id="projects" className="scroll-mt-16 py-8 md:py-10">
-          <SectionHeading title="Projects" order={ORDER.projectsHeading} />
-          <ul className="flex flex-col">
+          <p className="type-body">
+            Former Researcher at{" "}
+            <Link href="https://ischool.syracuse.edu/summer-paid-research-experience/">
+              iSchool NSF REU
+            </Link>
+            , and President of{" "}
+            <Link href="https://cusehacks.com">CuseHacks</Link>.
+          </p>
+        </article>
+
+        {/* ── Projects ─────────────────────────────────────────────
+            An index, not cards. The section label is body copy at 40%
+            black rather than a heading — nothing on this page is set
+            larger than anything else. */}
+        <section className="pt-12">
+          <h2 className="type-body pb-2 text-muted-foreground">Projects</h2>
+          <ul className="index-list">
             {PROJECTS.map((project, index) => (
               <ProjectCard
                 key={project.title}
                 project={project}
-                index={index}
-                order={ORDER.projectRows + index}
                 onClick={() =>
-                  setSelectedProject(
-                    selectedProject === index ? null : index
-                  )
+                  setSelectedProject(selectedProject === index ? null : index)
                 }
               />
             ))}
           </ul>
         </section>
 
-        {/* ─────────────────────── Experience ─────────────────────── */}
-        <section id="experience" className="scroll-mt-16 py-8 md:py-10">
-          <SectionHeading title="Experience" order={ORDER.experienceHeading} />
-          {/* Same index row as Projects: 1 size (14), 1 weight, hierarchy
-              from colour alone. Bullet and company left, years right.
-
-              The role and the description are no longer rendered. Both are
-              still in constants.ts, and unlike Projects there's no modal to
-              open, so this section is now names and dates only.
-
-              `transition-colors`, not `transition-all`: Motion animates each
-              row's opacity on scroll-in, and `transition-all` makes CSS
-              transition opacity too, so the two fight over it every frame.
-              That was the flicker down this section in Firefox. */}
-          <ul className="flex flex-col">
-            {EXPERIENCES.map((item, idx) => (
-              <Reveal
-                as="li"
-                key={item.company + item.role}
-                className="type-meta flex items-baseline gap-2 py-2"
-                order={ORDER.experienceRows + idx}
-                scrollDelay={idx * STAGGER_STEP}
-              >
-                <span
-                  aria-hidden="true"
-                  className="shrink-0 text-muted-foreground/40"
-                >
-                  &bull;
-                </span>
-
-                <span className="flex-1 truncate text-foreground">
-                  {item.company}
-                </span>
-
-                {/* Right-aligned, so a longer range just runs further left
-                    instead of setting a gutter width for every other row. */}
-                <span className="shrink-0 whitespace-nowrap text-muted-foreground/60">
-                  {item.years}
-                </span>
-              </Reveal>
+        {/* ── Experience ───────────────────────────────────────────
+            The same row as Projects, minus the modal. Role and
+            description are still in constants.ts but aren't rendered. */}
+        <section className="pt-12">
+          <h2 className="type-body pb-2 text-muted-foreground">Experience</h2>
+          <ul className="index-list">
+            {EXPERIENCES.map((item) => (
+              <li key={item.company + item.role}>
+                <div className="index-row">
+                  <span className="flex-1 truncate">{item.company}</span>
+                  <span className="type-small shrink-0 whitespace-nowrap text-muted-foreground">
+                    {item.years}
+                  </span>
+                </div>
+              </li>
             ))}
           </ul>
         </section>
+
+        <footer className="pt-10 pb-20">
+          <div className="flex items-center gap-4 pb-2">
+            <FooterIcon href={X_URL} label="X">
+              <XIcon className="h-4 w-4" />
+            </FooterIcon>
+            <FooterIcon href={GITHUB_URL} label="GitHub">
+              <Github className="h-4 w-4" />
+            </FooterIcon>
+          </div>
+          {/* Read the year rather than hardcoding it, so this doesn't go
+              stale every January. The page is prerendered, so the year is
+              baked at build time and someone loading it after New Year
+              would otherwise trip a hydration mismatch on this one line. */}
+          <p
+            className="type-small text-muted-foreground"
+            suppressHydrationWarning
+          >
+            © {new Date().getFullYear()} Alan Tom
+          </p>
+        </footer>
       </main>
 
-      {/* Project Modal */}
       <ProjectModal
         project={selectedProject !== null ? PROJECTS[selectedProject] : null}
         isOpen={selectedProject !== null}
         onClose={() => setSelectedProject(null)}
       />
-
-      {/* Footer */}
-      {/* Budget: 1 size (12), 1 weight. Icons are 24px — one grid unit. */}
-      <footer className="border-t border-border">
-        <div className="mx-auto w-full max-w-2xl px-inset py-12">
-          <div className="mb-8 flex justify-center gap-8">
-            <FooterIcon href={X_URL} label="X">
-              <XIcon className="h-6 w-6" />
-            </FooterIcon>
-            <FooterIcon href={GITHUB_URL} label="GitHub">
-              <Github className="h-6 w-6" />
-            </FooterIcon>
-          </div>
-          {/* Read the year rather than hardcoding it, so the footer doesn't
-              quietly go stale every January. Safe to compute during render
-              here: the `!isLoaded` gate above means the server only ever
-              sends the spinner, so this footer is client-only and there's no
-              build-year-vs-today mismatch to reconcile. If that gate ever
-              goes away, this needs to move into an effect. */}
-          <p className="type-micro text-center text-muted-foreground/60">
-            © {new Date().getFullYear()} Alan Tom
-          </p>
-        </div>
-      </footer>
-    </div>
+    </>
   );
 }
 
 /* ───────────────────── Small presentational helpers ───────────────────── */
 
-function Underline({
-  children,
-  href,
-}: {
-  children: React.ReactNode;
-  href?: string;
-}) {
-  const className =
-    "text-foreground/90 underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground";
-  if (href) {
-    return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={className}
-      >
-        {children}
-      </a>
-    );
-  }
-  return <span className={className}>{children}</span>;
+/**
+ * A hairline rule under the text rather than `text-decoration`, so it clears
+ * the descenders instead of cutting through them. Styled in globals.css.
+ */
+function Link({ children, href }: { children: React.ReactNode; href: string }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="link">
+      {children}
+    </a>
+  );
 }
-
-
 
 function FooterIcon({
   href,
@@ -289,7 +195,7 @@ function FooterIcon({
   );
 }
 
-/* Brand logos (lucide has no X/Threads marks) — official glyphs as inline SVG */
+/* Brand logo (lucide has no X mark) — official glyph as inline SVG */
 
 function XIcon({ className }: { className?: string }) {
   return (
@@ -303,4 +209,3 @@ function XIcon({ className }: { className?: string }) {
     </svg>
   );
 }
-

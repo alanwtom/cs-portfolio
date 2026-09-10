@@ -49,14 +49,14 @@ export class ErrorBoundary extends Component<Props, State> {
       // tokens and 24px surface as everything else —
       // this used to be hardcoded grays that ignored the site's theme.
       return (
-        <div className="flex min-h-screen items-center justify-center bg-background p-inset">
-          <Card className="w-full max-w-md space-y-6 p-inset text-center">
+        <div className="flex min-h-screen items-center justify-center bg-background p-6">
+          <Card className="w-full max-w-md space-y-6 p-6 text-center">
             <div className="flex justify-center">
               <AlertTriangle className="h-12 w-12 text-destructive" />
             </div>
 
             <div className="space-y-2">
-              <h2 className="type-title text-foreground">
+              <h2 className="type-strong text-foreground">
                 Oops! Something went wrong
               </h2>
               <p className="type-body text-muted-foreground">
@@ -66,11 +66,11 @@ export class ErrorBoundary extends Component<Props, State> {
             </div>
 
             {process.env.NODE_ENV === "development" && this.state.error && (
-              <details className="rounded-md bg-secondary p-inset-sm text-left">
-                <summary className="type-micro mb-2 cursor-pointer text-muted-foreground">
+              <details className="rounded-md bg-secondary p-4 text-left">
+                <summary className="type-small mb-2 cursor-pointer text-muted-foreground">
                   Error Details (Development Only)
                 </summary>
-                <pre className="type-micro whitespace-pre-wrap normal-case tracking-normal text-destructive">
+                <pre className="type-small whitespace-pre-wrap normal-case tracking-normal text-destructive">
                   {this.state.error.toString()}
                   {this.state.error.stack}
                 </pre>
