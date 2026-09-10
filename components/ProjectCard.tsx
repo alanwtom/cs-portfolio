@@ -1,12 +1,14 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useReducedMotion } from "@/hooks/use-reduced-motion";
+import { Reveal, STAGGER_STEP } from "@/components/Reveal";
 import type { Project } from "@/lib/constants";
 
 interface ProjectCardProps {
   project: Project;
+  /** Row's place in this list — staggers the reveal if you scroll to it. */
   index: number;
+  /** Row's place on the whole page — its beat in the arrival cascade. */
+  order: number;
   onClick: () => void;
 }
 
@@ -30,16 +32,18 @@ interface ProjectCardProps {
  * stays on the 8px grid. Rows are separated by a bullet per entry rather
  * than by hairline rules. Keyboard accessible (Enter / Space).
  */
-export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
-  const reduced = useReducedMotion();
-
+export function ProjectCard({
+  project,
+  index,
+  order,
+  onClick,
+}: ProjectCardProps) {
   return (
-    <motion.li
+    <Reveal
+      as="li"
       className="group"
-      initial={reduced ? false : { opacity: 0 }}
-      whileInView={reduced ? undefined : { opacity: 1 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.4, delay: index * 0.04 }}
+      order={order}
+      scrollDelay={index * STAGGER_STEP}
     >
       <div
         role="button"
@@ -74,6 +78,6 @@ export function ProjectCard({ project, index, onClick }: ProjectCardProps) {
           {project.year}
         </span>
       </div>
-    </motion.li>
+    </Reveal>
   );
 }

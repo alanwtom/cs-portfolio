@@ -14,8 +14,7 @@ import {
   X_URL,
 } from "./lib/constants";
 import React, { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { useReducedMotion } from "./hooks/use-reduced-motion";
+import { Reveal, STAGGER_STEP } from "./components/Reveal";
 
 // Lazy-load modal to reduce initial bundle size
 const ProjectModal = dynamic(
@@ -23,11 +22,29 @@ const ProjectModal = dynamic(
   { ssr: false }
 );
 
+/* ── The arrival cascade ────────────────────────────────────────────────
+   Every block on the page, numbered top to bottom. Whatever is on the first
+   screen when you land uses its number to work out how long to wait before
+   it rises in, 50ms apart — see components/Reveal.tsx for the why.
+
+   Counted off the two content lists rather than written out, so adding a
+   project renumbers everything below it instead of quietly stacking two
+   blocks on the same beat. */
+const ORDER = {
+  name: 0,
+  role: 1,
+  intro: 2,
+  background: 3,
+  projectsHeading: 4,
+  projectRows: 5,
+  experienceHeading: 5 + PROJECTS.length,
+  experienceRows: 6 + PROJECTS.length,
+} as const;
+
 export default function Portfolio() {
   const { isLoaded } = useTheme();
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const lastFocusedRef = useRef<HTMLElement | null>(null);
-  const reduced = useReducedMotion();
 
   useKeyboardShortcuts({
     onThemeToggle: () => {},
@@ -55,13 +72,11 @@ export default function Portfolio() {
     );
   }
 
+  /* The page used to crossfade in as one sheet over 0.8s. That's gone: the
+     blocks inside cascade instead, so fading the whole thing on top of them
+     would just double the fade and flatten the rhythm back out. */
   return (
-    <motion.div
-      className="flex min-h-screen flex-col overflow-x-hidden bg-background text-foreground"
-      initial={reduced ? false : { opacity: 0 }}
-      animate={reduced ? undefined : { opacity: 1 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-    >
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-background text-foreground">
       {/* Skip to main content link for accessibility */}
       <a
         href="#main-content"
@@ -88,22 +103,30 @@ export default function Portfolio() {
               thing on the page by a wide margin. The file is still in
               public/images if it ever comes back; resize it first. */}
           <div>
-            <h1 className="type-display text-foreground">Alan Tom</h1>
-            <p className="type-micro mt-4 text-muted-foreground">
+            <Reveal order={ORDER.name}>
+              <h1 className="type-display text-foreground">Alan Tom</h1>
+            </Reveal>
+            <Reveal
+              as="p"
+              order={ORDER.role}
+              className="type-micro mt-4 text-muted-foreground"
+            >
               Computer Science senior at Syracuse University
-            </p>
+            </Reveal>
           </div>
 
+          {/* Each paragraph is its own beat in the cascade, so the two lines
+              of copy land one after the other rather than as a slab. */}
           <div className="type-body mt-12 max-w-xl space-y-6 text-muted-foreground">
-            <p>
+            <Reveal as="p" order={ORDER.intro}>
               Currently building{" "}
               <span className="mc-enchant">
                 <Underline href="https://fwrdsms.com">Fwrd</Underline>
               </span>
               , a privacy-forward iOS app that automatically forwards SMS to
               Discord, Slack, and Telegram.
-            </p>
-            <p>
+            </Reveal>
+            <Reveal as="p" order={ORDER.background}>
               Former Researcher at{" "}
               <Underline href="https://ischool.syracuse.edu/summer-paid-research-experience/">
                 iSchool NSF REU
@@ -111,7 +134,7 @@ export default function Portfolio() {
               , and President of{" "}
               <Underline href="https://cusehacks.com">CuseHacks</Underline>
               .
-            </p>
+            </Reveal>
           </div>
         </section>
 
@@ -119,13 +142,14 @@ export default function Portfolio() {
             An index, not a set of cards: one 40px row each, hairline
             separated, click a row for the detail. */}
         <section id="projects" className="scroll-mt-16 py-8 md:py-10">
-          <SectionHeading title="Projects" />
+          <SectionHeading title="Projects" order={ORDER.projectsHeading} />
           <ul className="flex flex-col">
             {PROJECTS.map((project, index) => (
               <ProjectCard
                 key={project.title}
                 project={project}
                 index={index}
+                order={ORDER.projectRows + index}
                 onClick={() =>
                   setSelectedProject(
                     selectedProject === index ? null : index
@@ -138,7 +162,7 @@ export default function Portfolio() {
 
         {/* ─────────────────────── Experience ─────────────────────── */}
         <section id="experience" className="scroll-mt-16 py-8 md:py-10">
-          <SectionHeading title="Experience" />
+          <SectionHeading title="Experience" order={ORDER.experienceHeading} />
           {/* Same index row as Projects: 1 size (14), 1 weight, hierarchy
               from colour alone. Bullet and company left, years right.
 
@@ -152,13 +176,12 @@ export default function Portfolio() {
               That was the flicker down this section in Firefox. */}
           <ul className="flex flex-col">
             {EXPERIENCES.map((item, idx) => (
-              <motion.li
+              <Reveal
+                as="li"
                 key={item.company + item.role}
                 className="type-meta flex items-baseline gap-2 py-2"
-                initial={reduced ? false : { opacity: 0 }}
-                whileInView={reduced ? undefined : { opacity: 1 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.4, delay: idx * 0.04 }}
+                order={ORDER.experienceRows + idx}
+                scrollDelay={idx * STAGGER_STEP}
               >
                 <span
                   aria-hidden="true"
@@ -176,7 +199,7 @@ export default function Portfolio() {
                 <span className="shrink-0 whitespace-nowrap text-muted-foreground/60">
                   {item.years}
                 </span>
-              </motion.li>
+              </Reveal>
             ))}
           </ul>
         </section>
@@ -212,7 +235,7 @@ export default function Portfolio() {
           </p>
         </div>
       </footer>
-    </motion.div>
+    </div>
   );
 }
 
