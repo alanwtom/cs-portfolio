@@ -167,10 +167,19 @@
   }
 
   /* Paragraph spacing is padding-TOP, not margin-bottom. It matters:
-     the first block after the header gets the same 16px as every
-     other, and nothing collapses into anything. */
+     every paragraph gets the same 16px above it and nothing collapses
+     into anything. */
   .article > p {
     padding-top: 1rem;
+  }
+
+  /* The line directly under the name. It sits tight against it — no
+     16px indent — and carries the 8px that used to belong to the
+     <header> wrapper, so the gap down to the first real paragraph is
+     still 8 + 16 = 24px. */
+  .article > .subtitle {
+    padding-top: 0;
+    padding-bottom: 0.5rem;
   }
 
   /* ── Index rows ───────────────────────────────────────────────

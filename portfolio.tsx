@@ -67,12 +67,18 @@ export default function Portfolio() {
             is the same 14px as the copy beneath it and is set apart by
             weight alone, which is the whole idea. */}
         <article className="article">
-          <header className="pb-2">
-            <h1 className="type-strong">Alan Tom</h1>
-            <p className="type-body text-muted-foreground">
-              Computer Science senior at Syracuse University
-            </p>
-          </header>
+          {/* Four separate blocks, not a <header> wrapper plus two
+              paragraphs. The cascade counts direct children of .article, so
+              wrapping the name and the line under it together made them
+              arrive on the same beat and the intro barely counted off before
+              the long pause. Split, they land 50ms apart like everything
+              else. The spacing is unchanged — .subtitle drops the paragraph
+              indent and carries the 8px itself. */}
+          <h1 className="type-strong">Alan Tom</h1>
+
+          <p className="subtitle type-body text-muted-foreground">
+            Computer Science senior at Syracuse University
+          </p>
 
           <p className="type-body">
             Currently building <Link href="https://fwrdsms.com">Fwrd</Link>, a
