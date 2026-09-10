@@ -134,25 +134,15 @@ export default function Portfolio() {
           </ul>
         </section>
 
-        <footer className="pt-10 pb-20">
-          <div className="flex items-center gap-4 pb-2">
-            <FooterIcon href={X_URL} label="X">
-              <XIcon className="h-4 w-4" />
-            </FooterIcon>
-            <FooterIcon href={GITHUB_URL} label="GitHub">
-              <Github className="h-4 w-4" />
-            </FooterIcon>
-          </div>
-          {/* Read the year rather than hardcoding it, so this doesn't go
-              stale every January. The page is prerendered, so the year is
-              baked at build time and someone loading it after New Year
-              would otherwise trip a hydration mismatch on this one line. */}
-          <p
-            className="type-small text-muted-foreground"
-            suppressHydrationWarning
-          >
-            © {new Date().getFullYear()} Alan Tom
-          </p>
+        {/* Two links, no copyright line. The footer is still its own
+            cascade block, so it arrives last at 0.55s. */}
+        <footer className="flex items-center gap-4 pt-10 pb-20">
+          <FooterIcon href={X_URL} label="X">
+            <XIcon className="h-4 w-4" />
+          </FooterIcon>
+          <FooterIcon href={GITHUB_URL} label="GitHub">
+            <Github className="h-4 w-4" />
+          </FooterIcon>
         </footer>
       </main>
 
