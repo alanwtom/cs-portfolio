@@ -90,6 +90,20 @@ pkill -f "next dev" 2>/dev/null; pkill -f "next-server" 2>/dev/null
 exits without deleting anything; the keep-set is echoed before any deletion.
 Deployments are irreversible — never bypass these abort checks.
 
+**Read the keep-set before trusting it.** "Second-newest Production deploy"
+is a proxy for "one step back", and it stops being true when a single change
+produces two deployments — which is exactly what happens if you `git push`
+and then run `vercel --prod`, because the GitHub integration builds the push
+as well. The script then keeps two copies of the *same* commit and deletes
+the last deploy of the previous design, which is the one thing worth having.
+
+So: check ages and count in `vercel ls` before deleting. If the top two are
+minutes apart and one change produced both, drop the duplicate and keep the
+older deploy that actually differs. Keeping exactly two is the rule; keeping
+a rollback you could actually use is the point. To avoid the situation
+entirely, deploy with `vercel --prod` **or** push and let the integration
+build it — not both.
+
 ## The design system (read before building any new component)
 
 **The whole site is one column of 14px text.** That is the entire idea, and
